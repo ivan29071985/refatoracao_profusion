@@ -1,0 +1,35 @@
+{
+  "name": "squad_financeiro",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@shelex/cypress-allure-plugin": "^2.40.2",
+    "allure-commandline": "^2.32.0",
+    "cross-env": "^7.0.3",
+    "cypress-downloadfile": "^1.2.4",
+    "cypress-plugin-tab": "^1.0.5",
+    "cypress-wait-until": "^3.0.2",
+    "cypress-xpath": "^2.0.1"
+  },
+  "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:run:homologacao": "cross-env CYPRESS_ENV=homologacao cypress run --env configFile=homologacao allure=true",
+    "cypress:run:staging": "cross-env CYPRESS_ENV=staging cypress run --env configFile=staging allure=true",
+    "cypress:open:homologacao": "cross-env CYPRESS_ENV=homologacao cypress open --env configFile=homologacao",
+    "cypress:open:staging": "cross-env CYPRESS_ENV=staging cypress open --env configFile=staging"
+  },
+  "cypress": {
+    "env": {
+      "homologacao": {
+        "baseUrl": "https://amei-homolog.amorsaude.com.br/auth/login"
+      },
+      "staging": {
+        "baseUrl": "https://amei-staging.amorsaude.com.br/auth/login"
+      }
+    }
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
+}
