@@ -16,8 +16,10 @@
     "cypress:open": "cypress open",
     "cypress:run:homologacao": "cross-env CYPRESS_ENV=homologacao cypress run --env configFile=homologacao allure=true",
     "cypress:run:staging": "cross-env CYPRESS_ENV=staging cypress run --env configFile=staging allure=true",
+    "cypress:run:producao": "cross-env CYPRESS_ENV=producao cypress run --env configFile=producao allure=true",
     "cypress:open:homologacao": "cross-env CYPRESS_ENV=homologacao cypress open --env configFile=homologacao",
-    "cypress:open:staging": "cross-env CYPRESS_ENV=staging cypress open --env configFile=staging"
+    "cypress:open:staging": "cross-env CYPRESS_ENV=staging cypress open --env configFile=staging",
+    "cypress:open:producao": "cross-env CYPRESS_ENV=producao cypress open --env configFile=producao"
   },
   "cypress": {
     "env": {
@@ -26,6 +28,9 @@
       },
       "staging": {
         "baseUrl": "https://amei-staging.amorsaude.com.br/auth/login"
+      },
+      "producao": {
+        "baseUrl": "https://amei.amorsaude.com.br/auth/login"
       }
     }
   },

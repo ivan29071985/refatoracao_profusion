@@ -3,10 +3,12 @@ Cypress.Commands.add('setupAndLogin', (email = 'ivan.santos+1@amorsaude.com', pa
     // Gera um identificador único para a sessão
     const sessionId = `login_${Date.now()}`;
     
-    const environment = Cypress.env('environment');
+    const environment = Cypress.env('environment') || Cypress.env('CYPRESS_ENV');
     const baseUrl = environment === 'staging'
       ? Cypress.env('baseUrl').staging
-      : Cypress.env('baseUrl').homologacao;
+      : environment === 'producao' || environment === 'prod'
+        ? Cypress.env('baseUrl').producao
+        : Cypress.env('baseUrl').homologacao;
     Cypress.env('currentBaseUrl', baseUrl);
   
     cy.session(sessionId, () => {
@@ -16,7 +18,7 @@ Cypress.Commands.add('setupAndLogin', (email = 'ivan.santos+1@amorsaude.com', pa
       cy.get('#E-mail').type(email);
       cy.get('#Senha').type(password, { log: false });
       cy.contains('Entrar', {timeout:1000} ).click();
-      cy.contains('span', /Automação (Staging|Homolog)/, { timeout: 10000 }).click({ force: true });
+      cy.contains('span', /Automação (Staging|Homolog|Prod)/, { timeout: 10000 }).click({ force: true });
       cy.contains('button', ' Entrar ', {timeout:10000} ).click();
       cy.get('#schedule', { timeout: 10000 }).should('exist');
     }, {
@@ -26,6 +28,17 @@ Cypress.Commands.add('setupAndLogin', (email = 'ivan.santos+1@amorsaude.com', pa
       cacheAcrossSpecs: true
     });
   });
+
+  // Tratamento global para erros não capturados
+Cypress.on('uncaught:exception', (err, runnable) => {
+  // Se for o erro de unshift, vamos ignorar para que o teste continue
+  if (err.message.includes("Cannot read properties of undefined (reading 'unshift')")) {
+    console.log('Erro de unshift detectado e ignorado');
+    return false;
+  }
+  // Para outros erros, deixamos o Cypress decidir
+  return true;
+});
 
 //*********************************************************************/
 

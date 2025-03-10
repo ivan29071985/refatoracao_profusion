@@ -24,6 +24,7 @@ module.exports = defineConfig({
     baseUrl: {
       homologacao: 'https://amei-homolog.amorsaude.com.br',
       staging: 'https://amei-staging.amorsaude.com.br',
+      producao: 'https://amei.amorsaude.com.br'
     },
   }
 });

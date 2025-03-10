@@ -409,5 +409,4 @@ describe('Contas a Receber - Pagamentos', () => {
     cy.wait(1000);
   });
 
-
 });

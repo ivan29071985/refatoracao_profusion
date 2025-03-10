@@ -916,7 +916,7 @@ describe('Fluxo Completo no Amei', () => {
         cy.contains('Ok').click()
     });
 
-    it.only('Validar Fluxo Checkin com Parcelamento no Cartão Crédito (Não tef)', () => {
+    it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito (Não tef)', () => {
         cy.visit('/')
         cy.get('#schedule', { timeout: 15000 }).click()
         cy.get('span').contains('Check-in').click()
@@ -934,7 +934,7 @@ describe('Fluxo Completo no Amei', () => {
 
     });
 
-    it.only('Validar Fluxo Checkin no Cartão Débito (Não tef)', () => {
+    it('Validar Fluxo Checkin no Cartão Débito (Não tef)', () => {
         cy.visit('/')
         cy.get('#schedule', { timeout: 15000 }).click()
         cy.get('span').contains('Check-in').click()
