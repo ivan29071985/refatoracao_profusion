@@ -18,6 +18,11 @@ require('cypress-xpath');
 require('cypress-wait-until')
 import 'cypress-plugin-tab'
 
+import '@shelex/cypress-allure-plugin';
+
+
+
+
 
 
 // Alternatively you can use CommonJS syntax:

@@ -5,22 +5,35 @@
   "license": "MIT",
   "devDependencies": {
     "@shelex/cypress-allure-plugin": "^2.40.2",
-    "allure-commandline": "^2.32.0",
+    "allure-commandline": "^2.33.0",
     "cross-env": "^7.0.3",
+    "cypress": "^12.2.0",
     "cypress-downloadfile": "^1.2.4",
     "cypress-plugin-tab": "^1.0.5",
     "cypress-wait-until": "^3.0.2",
-    "cypress-xpath": "^2.0.1"
+    "cypress-xpath": "^2.0.1",
+    "rimraf": "^6.0.1"
   },
   "scripts": {
-    "cypress:open": "cypress open",
-    "cypress:run:homologacao": "cross-env CYPRESS_ENV=homologacao cypress run --env configFile=homologacao allure=true",
-    "cypress:run:staging": "cross-env CYPRESS_ENV=staging cypress run --env configFile=staging allure=true",
-    "cypress:run:producao": "cross-env CYPRESS_ENV=producao cypress run --env configFile=producao allure=true",
-    "cypress:open:homologacao": "cross-env CYPRESS_ENV=homologacao cypress open --env configFile=homologacao",
-    "cypress:open:staging": "cross-env CYPRESS_ENV=staging cypress open --env configFile=staging",
-    "cypress:open:producao": "cross-env CYPRESS_ENV=producao cypress open --env configFile=producao"
-  },
+  "cypress:open": "cypress open",
+  "cypress:run:homologacao": "cross-env CYPRESS_ENV=homologacao cypress run --env configFile=homologacao",
+  "cypress:run:staging": "cross-env CYPRESS_ENV=staging cypress run --env configFile=staging",
+  "cypress:run:producao": "cross-env CYPRESS_ENV=producao cypress run --env configFile=producao",
+  "cypress:open:homologacao": "cross-env CYPRESS_ENV=homologacao cypress open --env configFile=homologacao",
+  "cypress:open:staging": "cross-env CYPRESS_ENV=staging cypress open --env configFile=staging",
+  "cypress:open:producao": "cross-env CYPRESS_ENV=producao cypress open --env configFile=producao",
+  
+  "cypress:run:homologacao:allure": "cross-env CYPRESS_ENV=homologacao cypress run --env configFile=homologacao,allure=true",
+  "cypress:run:staging:allure": "cross-env CYPRESS_ENV=staging cypress run --env configFile=staging,allure=true",
+  "cypress:run:producao:allure": "cross-env CYPRESS_ENV=producao cypress run --env configFile=producao,allure=true",
+  
+  "allure:generate": "allure generate allure-results --clean -o allure-report --report-name \"Automation-Amei-Report\"",
+  "allure:open": "allure open allure-report",
+  "allure:report": "npm run allure:generate && npm run allure:open",
+  "allure:clear": "rimraf allure-results",
+   "allure:executor": "node -e \"const fs=require('fs'); fs.writeFileSync('allure-results/executor.json', JSON.stringify({name: 'Ivan Santos', type: 'local', buildName: 'Ivan'}))\"",
+   "allure:prepare": "node -e \"const fs=require('fs'); fs.mkdirSync('allure-results', { recursive: true }); fs.writeFileSync('allure-results/executor.json', JSON.stringify({name: 'Ivan Santos', type: 'local', buildName: 'Automação Amei', buildOrder: '1'}))\""
+},
   "cypress": {
     "env": {
       "homologacao": {
@@ -35,6 +48,7 @@
     }
   },
   "dependencies": {
+    "date-fns": "^2.29.3",
     "xlsx": "^0.18.5"
   }
 }

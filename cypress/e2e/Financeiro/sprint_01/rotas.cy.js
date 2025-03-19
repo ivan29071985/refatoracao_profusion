@@ -2,12 +2,12 @@
 /// <reference types= "cypress" /> 
 /// <reference types="cypress-xpath" />
 
-describe('Fluxo Completo no Amei', () => {
+describe('Rotas Financeiro', () => {
     beforeEach(() => {
         cy.setupAndLogin(); // Usa o comando customizado
     });
 
-    it.only('Validar Rota da Tela Saldo', () => {
+    it('Validar Rota da Tela Saldo', () => {
         cy.visit('/');
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')

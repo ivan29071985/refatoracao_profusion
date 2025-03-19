@@ -2,7 +2,6 @@ describe('Royalties', () => {
   beforeEach(() => {
     cy.setupAndLogin(); // Usa o comando customizado
   });
-
   it('Validar Big Numbers Venda bruta total na tela de Royalties ', () => {
 
     let valorBrutoTotal;

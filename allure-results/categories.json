@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Aprovados",
+    "matchedStatuses": ["passed"]
+  },
+  {
+    "name": "Reprovados",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*element.*"
+  },
+  {
+    "name": "Falhas de API",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*request.*"
+  }
+]
