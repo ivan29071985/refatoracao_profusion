@@ -3,7 +3,11 @@
 /// <reference types="cypress-xpath" />
 
 describe('Permissoes', () => {
-
+    beforeEach(() => {
+        cy.setupAndLogin(); // Usa o comando customizado
+        cy.allure().epic('Financeiro');
+        cy.allure().feature('Check-in');
+    });
 
     it.only('Validar permissão', () => {
         // Intercept antes das requests
