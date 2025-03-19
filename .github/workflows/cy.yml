@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     
     strategy:
-      # Quando um teste falha, os outros continuam executando
+      # Quando um teste falha, os outros continuam executando ok
       fail-fast: false
       matrix:
         # Executa em Chrome
