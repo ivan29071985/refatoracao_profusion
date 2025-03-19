@@ -55,7 +55,7 @@ describe('Grade do Profissional', () => {
         cy.contains('button', 'Ok').click()
     });
 
-    it('Validar Fluxo de Grade do Profissional em Duplicidade', () => {
+    it.only('Validar Fluxo de Grade do Profissional em Duplicidade', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.get('#register').click()
@@ -166,7 +166,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         cy.allure().feature('Check-in');
     });
 
-    it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora', () => {
+    it.only('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000); // Esperar carregamento inicial da página

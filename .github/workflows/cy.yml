@@ -50,14 +50,14 @@ jobs:
         with:
           browser: ${{ matrix.browsers }}
           # Se a execução for manual, usa o ambiente escolhido, senão usa staging
-          command: npm run cypress:run:${{ github.event.inputs.environment || 'staging' }}
+          command: npm run cypress:run:${{ github.event.inputs.environment || 'staging' }}:allure
         env:
           CYPRESS_DEFAULT_COMMAND_TIMEOUT: 60000
           CYPRESS_DEFAULT_TIMEOUT: 60000
           CYPRESS_REQUESTTIMEOUT: 60000
           CYPRESS_RESPONSETIMEROUT: 60000
           CYPRESS_PAGELOADTIMEOUT: 90000
-          CYPRESS_RETRIES: 4
+          CYPRESS_RETRIES: 2
       
       - name: Armazenar screenshots em caso de falha
         uses: actions/upload-artifact@v4
@@ -65,4 +65,18 @@ jobs:
         with:
           name: cypress-screenshots-${{ matrix.browsers }}
           path: cypress/screenshots
+          retention-days: 7
+          
+      - name: Gerar relatório Allure
+        if: always()
+        run: |
+          npm run allure:prepare
+          npm run allure:generate
+          
+      - name: Publicar relatório Allure
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-report
+          path: allure-report
           retention-days: 7
