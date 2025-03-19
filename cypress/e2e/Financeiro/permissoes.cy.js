@@ -5,7 +5,7 @@
 describe('Permissoes', () => {
 
 
-    it('Validar permissão', () => {
+    it.only('Validar permissão', () => {
         // Intercept antes das requests
         //cy.intercept('POST', '/api/v1/security/refresh-token?clinicId=483').as('refreshToken')
         cy.intercept(
