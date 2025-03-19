@@ -53,15 +53,19 @@ jobs:
       - name: Verificar cypress
         run: npx cypress verify
         
-      - name: Executar testes Cypress
+      - name: Verificar estrutura de arquivos
+        run: |
+          echo "Diretório atual: $(pwd)"
+          echo "Listando todos os arquivos .cy.js:"
+          find . -name "*.cy.js"
+          echo "------------------------------"
+          
+      - name: Executar testes Cypress usando caminho encontrado
         uses: cypress-io/github-action@v5
         with:
           browser: ${{ matrix.browsers }}
-          command: npm run cypress:run:${{ github.event.inputs.environment || matrix.environment }} -- --spec "cypress/e2e/Financeiro/fluxo.cy.js"
-        env:
-          CYPRESS_DEFAULT_COMMAND_TIMEOUT: 30000
-          CYPRESS_DEFAULT_TIMEOUT: 30000
-          CYPRESS_RETRIES: 2
+          # Não especificamos o arquivo de teste diretamente, deixamos o Cypress encontrar
+          command: npm run cypress:run:${{ github.event.inputs.environment || matrix.environment }}
       
       - name: Armazenar screenshots em caso de falha
         uses: actions/upload-artifact@v4
