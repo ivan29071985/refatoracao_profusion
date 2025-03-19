@@ -19,8 +19,9 @@ Cypress.Commands.add('setupAndLogin', (email = 'ivan.santos+1@amorsaude.com', pa
     cy.wait(500)
 
     cy.visit(`${currentBaseUrl}`);
-    cy.get('#E-mail').type(email);
-    cy.get('#Senha').type(password, { log: false });
+    
+    cy.get('#E-mail').type(email, {timeout:30000});
+    cy.get('#Senha').type(password, { log: false }, {timeout:30000});
     cy.contains('Entrar', { timeout: 1000 }).click();
     cy.wait(500)
 
