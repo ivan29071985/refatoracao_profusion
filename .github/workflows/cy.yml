@@ -8,13 +8,9 @@ on:
   # Permite execução manual a partir da aba Actions no GitHub
   workflow_dispatch:
     inputs:
-      spec:
-        description: 'Arquivo de teste específico para executar (ex: cypress/e2e/Financeiro/fluxo.cy.js)'
-        required: false
-        default: 'cypress/e2e/Financeiro/fluxo.cy.js'
       environment:
-        description: 'Ambiente para executar os testes (staging, homolog, producao)'
-        required: false
+        description: 'Ambiente para executar os testes'
+        required: true
         default: 'staging'
         type: choice
         options:
@@ -26,17 +22,13 @@ jobs:
   cypress-run:
     runs-on: ubuntu-latest
     
-    # Condicional: executa apenas se for acionado manualmente ou para eventos automáticos
-    # Se for manual, passa o ambiente do input, caso contrário usa a matriz
     strategy:
       # Quando um teste falha, os outros continuam executando
       fail-fast: false
       matrix:
-        # Executa apenas em Chrome para simplificar
+        # Executa em Chrome
         browsers: [chrome]
-        # Define ambientes disponíveis para execução automática
-        environment: [staging]
-        
+    
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
@@ -53,19 +45,19 @@ jobs:
       - name: Verificar cypress
         run: npx cypress verify
         
-      - name: Verificar estrutura de arquivos
-        run: |
-          echo "Diretório atual: $(pwd)"
-          echo "Listando todos os arquivos .cy.js:"
-          find . -name "*.cy.js"
-          echo "------------------------------"
-          
-      - name: Executar testes Cypress usando caminho encontrado
+      - name: Executar testes Cypress
         uses: cypress-io/github-action@v5
         with:
           browser: ${{ matrix.browsers }}
-          # Não especificamos o arquivo de teste diretamente, deixamos o Cypress encontrar
-          command: npm run cypress:run:${{ github.event.inputs.environment || matrix.environment }}
+          # Se a execução for manual, usa o ambiente escolhido, senão usa staging
+          command: npm run cypress:run:${{ github.event.inputs.environment || 'staging' }}
+        env:
+          CYPRESS_DEFAULT_COMMAND_TIMEOUT: 60000
+          CYPRESS_DEFAULT_TIMEOUT: 60000
+          CYPRESS_REQUESTTIMEOUT: 60000
+          CYPRESS_RESPONSETIMEROUT: 60000
+          CYPRESS_PAGELOADTIMEOUT: 90000
+          CYPRESS_RETRIES: 2
       
       - name: Armazenar screenshots em caso de falha
         uses: actions/upload-artifact@v4
