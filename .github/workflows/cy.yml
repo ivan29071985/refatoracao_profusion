@@ -45,7 +45,7 @@ jobs:
           # command: npm run test:e2e
       
       - name: Armazenar screenshots em caso de falha
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: cypress-screenshots-${{ matrix.browsers }}
