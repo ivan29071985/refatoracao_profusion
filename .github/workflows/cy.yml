@@ -42,13 +42,20 @@ jobs:
       - name: Verificar cypress
         run: npx cypress verify
         
+      - name: Listar arquivos para depuração
+        run: |
+          ls -la
+          ls -la cypress/
+          ls -la cypress/e2e/ || echo "Directory e2e not found"
+          
       - name: Executar testes Cypress
         uses: cypress-io/github-action@v5
         with:
           browser: ${{ matrix.browsers }}
-          spec: "cypress/e2e/fluxo.cy.js"
-          # Se você tiver diferentes scripts de teste, especifique aqui
-          # command: npm run test:e2e
+          spec: "./cypress/e2e/fluxo.cy.js"
+          working-directory: ./
+          # Usando comando personalizado
+          command: npx cypress run --spec "cypress/e2e/fluxo.cy.js"
       
       - name: Armazenar screenshots em caso de falha
         uses: actions/upload-artifact@v4
