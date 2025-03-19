@@ -1211,7 +1211,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         });
     });
 
-    it('Validar Fluxo Completo no Agendamento Cartão de Todos por grade Semanal', () => {
+    it.only('Validar Fluxo Completo no Agendamento Cartão de Todos por grade Semanal', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -1535,7 +1535,7 @@ describe('Check-in', () => {
         cy.allure().feature('Check-in');
     });
 
-    it.only('Validar bread home', () => {
+    it('Validar bread home', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.get('#schedule', { timeout: 20000 }).click()
@@ -1560,7 +1560,7 @@ describe('Check-in', () => {
         checkEnvironmentUrl();
     });
 
-    it.only('Validar bread agenda', () => {
+    it('Validar bread agenda', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.get('#schedule', { timeout: 20000 }).click()
