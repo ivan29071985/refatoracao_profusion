@@ -12,8 +12,11 @@ module.exports = defineConfig({
     viewportWidth: 1920,
     video: false,
     viewportHeight: 1080,
+    retries: {
+      runMode: 3,      // 2 retentativas em modo headless (CLI)
+      openMode: 3      // 0 retentativas no modo interativo
+    },
     setupNodeEvents(on, config) {
-
       // Configura o Allure Reports
       if (config.env.allure) {
         allureWriter(on, config, {

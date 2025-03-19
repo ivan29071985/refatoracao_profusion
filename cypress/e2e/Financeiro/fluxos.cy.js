@@ -1820,6 +1820,9 @@ describe.only('Check-in', () => {
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
 
+        cy.get('span').contains('5').click()
+        cy.xpath("//span[normalize-space()='50']").click()
+
 
         // Capturar o número do texto de agendamento
         cy.contains(/(\d+) agendamento/)
