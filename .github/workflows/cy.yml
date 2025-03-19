@@ -26,15 +26,17 @@ jobs:
   cypress-run:
     runs-on: ubuntu-latest
     
+    # Condicional: executa apenas se for acionado manualmente ou para eventos automáticos
+    # Se for manual, passa o ambiente do input, caso contrário usa a matriz
     strategy:
       # Quando um teste falha, os outros continuam executando
       fail-fast: false
       matrix:
-        # Executa em diferentes navegadores
+        # Executa apenas em Chrome para simplificar
         browsers: [chrome]
-        # Executa em diferentes ambientes
-        environment: [staging, homolog, producao]
-    
+        # Define ambientes disponíveis para execução automática
+        environment: [staging]
+        
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
@@ -55,7 +57,7 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           browser: ${{ matrix.browsers }}
-          command: npm run cypress:run:${{ matrix.environment }} -- --spec "cypress/e2e/Financeiro/fluxo.cy.js"
+          command: npm run cypress:run:${{ github.event.inputs.environment || matrix.environment }} -- --spec "cypress/e2e/Financeiro/fluxo.cy.js"
         env:
           CYPRESS_DEFAULT_COMMAND_TIMEOUT: 30000
           CYPRESS_DEFAULT_TIMEOUT: 30000
