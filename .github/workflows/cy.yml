@@ -42,11 +42,28 @@ jobs:
       - name: Verificar cypress
         run: npx cypress verify
         
+      - name: Debug - Verificar estrutura de arquivos
+        run: |
+          pwd
+          echo "Conteúdo da pasta raiz:"
+          ls -la
+          echo "Conteúdo da pasta cypress:"
+          ls -la cypress || echo "Pasta cypress não encontrada"
+          echo "Conteúdo da pasta e2e:"
+          ls -la cypress/e2e || echo "Pasta e2e não encontrada"
+          echo "Conteúdo da pasta Financeiro:"
+          ls -la cypress/e2e/Financeiro || echo "Pasta Financeiro não encontrada"
+          echo "Verificando existência do arquivo específico:"
+          test -f cypress/e2e/Financeiro/fluxo.cy.js && echo "Arquivo encontrado!" || echo "Arquivo não encontrado!"
+          echo "Procurando por todos os arquivos .cy.js:"
+          find . -name "*.cy.js" || echo "Nenhum arquivo .cy.js encontrado"
+      
       - name: Executar testes Cypress
         uses: cypress-io/github-action@v5
         with:
           browser: ${{ matrix.browsers }}
-          spec: "cypress/e2e/Financeiro/fluxo.cy.js"
+          # Usando padrão glob para tentar encontrar todos os arquivos .cy.js
+          spec: "**/*.cy.js"
       
       - name: Armazenar screenshots em caso de falha
         uses: actions/upload-artifact@v4
