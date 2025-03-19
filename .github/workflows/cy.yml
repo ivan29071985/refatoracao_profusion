@@ -7,6 +7,11 @@ on:
     branches: [ main, master, develop ]
   # Permite execução manual a partir da aba Actions no GitHub
   workflow_dispatch:
+    inputs:
+      spec:
+        description: 'Arquivo de teste específico para executar (ex: cypress/e2e/login.cy.js)'
+        required: false
+        default: 'cypress/e2e/**/*.cy.js'
 
 jobs:
   cypress-run:
@@ -41,6 +46,7 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           browser: ${{ matrix.browsers }}
+          spec: "cypress/e2e/fluxo.cy.js"
           # Se você tiver diferentes scripts de teste, especifique aqui
           # command: npm run test:e2e
       
