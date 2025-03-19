@@ -1211,7 +1211,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         });
     });
 
-    it.only('Validar Fluxo Completo no Agendamento Cartão de Todos por grade Semanal', () => {
+    it('Validar Fluxo Completo no Agendamento Cartão de Todos por grade Semanal', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -1528,7 +1528,7 @@ describe('Reagendamento', () => {
     });
 })
 
-describe('Check-in', () => {
+describe.only('Check-in', () => {
     beforeEach(() => {
         cy.setupAndLogin()
         cy.allure().epic('Financeiro');
