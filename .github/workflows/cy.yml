@@ -45,11 +45,11 @@ jobs:
       - name: Verificar cypress
         run: npx cypress verify
         
-      - name: Executar testes Cypress com Allure
+      - name: Executar testes Cypress
         uses: cypress-io/github-action@v5
         with:
           browser: ${{ matrix.browsers }}
-          command: npm run cypress:run:${{ github.event.inputs.environment || 'staging' }}:allure
+          command: npm run cypress:run:${{ github.event.inputs.environment || 'staging' }}
         env:
           CYPRESS_DEFAULT_COMMAND_TIMEOUT: 60000
           CYPRESS_DEFAULT_TIMEOUT: 60000
@@ -65,47 +65,3 @@ jobs:
           name: cypress-screenshots-${{ matrix.browsers }}
           path: cypress/screenshots
           retention-days: 7
-          
-      - name: Verificar pasta allure-results
-        run: |
-          echo "Verificando conteúdo da pasta allure-results:"
-          ls -la allure-results || echo "Pasta allure-results não encontrada"
-          
-      - name: Preparar pasta allure-results se não existir
-        run: |
-          mkdir -p allure-results
-          echo "Criando executor.json"
-          echo '{"name": "Ivan Santos", "type": "github", "buildName": "Automação Amei", "buildOrder": "1"}' > allure-results/executor.json
-          
-      - name: Gerar relatório Allure
-        run: |
-          npx allure generate allure-results --clean -o allure-report --report-name "Automation-Amei-Report"
-          echo "Conteúdo da pasta allure-report:"
-          ls -la allure-report
-          
-      - name: Publicar pasta allure-results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: allure-results
-          path: allure-results
-          retention-days: 7
-          
-      - name: Publicar relatório Allure
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: allure-report
-          path: allure-report
-          retention-days: 7
-          
-      - name: Deploy to GitHub Pages
-        if: always()
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./allure-report
-          publish_branch: gh-pages
-          force_orphan: true
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
