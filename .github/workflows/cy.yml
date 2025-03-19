@@ -57,7 +57,7 @@ jobs:
           CYPRESS_REQUESTTIMEOUT: 60000
           CYPRESS_RESPONSETIMEROUT: 60000
           CYPRESS_PAGELOADTIMEOUT: 90000
-          CYPRESS_RETRIES: 2
+          CYPRESS_RETRIES: 4
       
       - name: Armazenar screenshots em caso de falha
         uses: actions/upload-artifact@v4

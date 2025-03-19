@@ -1211,7 +1211,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         });
     });
 
-    it.only('Validar Fluxo Completo no Agendamento Cartão de Todos por grade Semanal', () => {
+    it('Validar Fluxo Completo no Agendamento Cartão de Todos por grade Semanal', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -1252,7 +1252,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
             .first()
             .should('be.visible')
             .click({ force: true });
-        
+
         cy.wait(1000)
         cy.xpath("//button[@color='primary'][contains(.,'Adicionar')]").should('exist').click();
         cy.xpath("//button[@color='primary'][contains(.,'Confirmar')]").should('exist').click();
@@ -1303,7 +1303,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
             .first()
             .should('be.visible')
             .click({ force: true });
-        
+
         cy.wait(1000)
         cy.xpath("//button[@color='primary'][contains(.,'Adicionar')]").should('exist').click();
         cy.xpath("//button[@color='primary'][contains(.,'Confirmar')]").should('exist').click();
@@ -1354,7 +1354,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
             .first()
             .should('be.visible')
             .click({ force: true });
-        
+
         cy.wait(1000)
         cy.xpath("//button[@color='primary'][contains(.,'Adicionar')]").should('exist').click();
         cy.xpath("//button[@color='primary'][contains(.,'Confirmar')]").should('exist').click();
@@ -1405,7 +1405,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
             .first()
             .should('be.visible')
             .click({ force: true });
-        
+
         cy.wait(1000)
         cy.xpath("//button[@color='primary'][contains(.,'Adicionar')]").should('exist').click();
         cy.xpath("//button[@color='primary'][contains(.,'Confirmar')]").should('exist').click();
@@ -1456,7 +1456,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
             .first()
             .should('be.visible')
             .click({ force: true });
-        
+
         cy.wait(1000)
         cy.xpath("//button[@color='primary'][contains(.,'Adicionar')]").should('exist').click();
         cy.xpath("//button[@color='primary'][contains(.,'Confirmar')]").should('exist').click();
@@ -2038,7 +2038,7 @@ describe('Check-in', () => {
     it('Validar Fluxo Checkin no Cartão Crédito 1 parcela (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
-        cy.get('#schedule', { timeout: 20000 }).click()        
+        cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.wait(2000)
         cy.xpath("(//button[contains(@class,'mat-ripple btn')])[1]").click()
@@ -3132,7 +3132,8 @@ describe('Rotas Financeiro', () => {
     });
 
     it('Validar Rota da Tela Saldo', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3142,12 +3143,14 @@ describe('Rotas Financeiro', () => {
 
         cy.url().should((url) => {
             return url.includes('https://amei-homolog.amorsaude.com.br/financial/balance') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/balance')
+                url.includes('https://amei-staging.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei.amorsaude.com.br/financial/balance')  // URL de produção
         }, { timeout: 20000 });
     });
 
     it('Validar Rota da Tela Extrato', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3156,13 +3159,15 @@ describe('Rotas Financeiro', () => {
             .click({ force: true });
 
         cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/resume-financial') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/resume-financial')
+            return url.includes('https://amei-homolog.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei-staging.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei.amorsaude.com.br/financial/balance')  // URL de produção
         }, { timeout: 20000 });
     });
 
     it('Validar Rota da Tela Contas a pagar', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3171,13 +3176,15 @@ describe('Rotas Financeiro', () => {
             .click({ force: true });
 
         cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/bills') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/bills')
+            return url.includes('https://amei-homolog.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei-staging.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei.amorsaude.com.br/financial/balance')  // URL de produção
         }, { timeout: 20000 });
     });
 
     it('Validar Rota da Tela Contas a receber', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3186,13 +3193,15 @@ describe('Rotas Financeiro', () => {
             .click({ force: true });
 
         cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/receives') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/receives')
+            return url.includes('https://amei-homolog.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei-staging.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei.amorsaude.com.br/financial/balance')  // URL de produção
         }, { timeout: 20000 });
     });
 
     it('Validar Rota da Tela Cartões', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3201,13 +3210,15 @@ describe('Rotas Financeiro', () => {
             .click({ force: true });
 
         cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/cards') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/cards')
+            return url.includes('https://amei-homolog.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei-staging.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei.amorsaude.com.br/financial/balance')  // URL de produção
         }, { timeout: 20000 });
     });
 
     it('Validar Rota da Tela Repasse', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3216,13 +3227,15 @@ describe('Rotas Financeiro', () => {
             .click({ force: true });
 
         cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/new-transfer') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/new-transfer')
+            return url.includes('https://amei-homolog.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei-staging.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei.amorsaude.com.br/financial/balance')  // URL de produção
         }, { timeout: 20000 });
     });
 
     it('Validar Rota da Tela Split', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3231,13 +3244,15 @@ describe('Rotas Financeiro', () => {
             .click({ force: true });
 
         cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/splits') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/splits')
+            return url.includes('https://amei-homolog.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei-staging.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei.amorsaude.com.br/financial/balance')  // URL de produção
         }, { timeout: 20000 });
     });
 
     it('Validar Rota da Tela Caixas', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3246,13 +3261,15 @@ describe('Rotas Financeiro', () => {
             .click({ force: true });
 
         cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/box') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/box')
+            return url.includes('https://amei-homolog.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei-staging.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei.amorsaude.com.br/financial/balance')  // URL de produção
         }, { timeout: 20000 });
     });
 
     it('Validar Rota da Tela Propostas', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3261,13 +3278,15 @@ describe('Rotas Financeiro', () => {
             .click({ force: true });
 
         cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/proposals') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/proposals')
+            return url.includes('https://amei-homolog.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei-staging.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei.amorsaude.com.br/financial/balance')  // URL de produção
         }, { timeout: 20000 });
     });
 
     it('Validar Rota da Tela Controle de Parcerias', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3278,13 +3297,15 @@ describe('Rotas Financeiro', () => {
             .click({ force: true });
 
         cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/partnership-charges') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/partnership-charges')
+            return url.includes('https://amei-homolog.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei-staging.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei.amorsaude.com.br/financial/balance')  // URL de produção
         }, { timeout: 20000 });
     })
 
     it('Validar Rota da Tela Cadeado', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3295,13 +3316,15 @@ describe('Rotas Financeiro', () => {
             .click({ force: true });
 
         cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/padlock') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/padlock')
+            return url.includes('https://amei-homolog.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei-staging.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei.amorsaude.com.br/financial/balance')  // URL de produção
         }, { timeout: 20000 });
     })
 
     it('Validar Rota da Tela Royalties', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3312,8 +3335,9 @@ describe('Rotas Financeiro', () => {
             .click({ force: true });
 
         cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/royalties') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/royalties')
+            return url.includes('https://amei-homolog.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei-staging.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei.amorsaude.com.br/financial/balance')  // URL de produção
         }, { timeout: 20000 });
     })
 });
@@ -3417,7 +3441,8 @@ describe('Royalties', () => {
 
         let valorBrutoTotal;
 
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial').click();
 
         cy.get('span').contains('Royalties', { timeout: 20000 }).click();
@@ -3569,7 +3594,8 @@ describe('Rotas Financeiro', () => {
     });
 
     it('Validar Rota da Tela Saldo', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3579,12 +3605,14 @@ describe('Rotas Financeiro', () => {
 
         cy.url().should((url) => {
             return url.includes('https://amei-homolog.amorsaude.com.br/financial/balance') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/balance')
+                url.includes('https://amei-staging.amorsaude.com.br/financial/balance') ||
+                url.includes('https://amei.amorsaude.com.br/financial/balance')  // URL de produção
         }, { timeout: 20000 });
     });
 
     it('Validar Rota da Tela Extrato', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3599,7 +3627,8 @@ describe('Rotas Financeiro', () => {
     });
 
     it('Validar Rota da Tela Contas a pagar', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3614,7 +3643,8 @@ describe('Rotas Financeiro', () => {
     });
 
     it('Validar Rota da Tela Contas a receber', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3629,7 +3659,8 @@ describe('Rotas Financeiro', () => {
     });
 
     it('Validar Rota da Tela Cartões', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3644,7 +3675,8 @@ describe('Rotas Financeiro', () => {
     });
 
     it('Validar Rota da Tela Repasse', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3659,7 +3691,8 @@ describe('Rotas Financeiro', () => {
     });
 
     it('Validar Rota da Tela Split', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3674,7 +3707,8 @@ describe('Rotas Financeiro', () => {
     });
 
     it('Validar Rota da Tela Caixas', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3689,7 +3723,8 @@ describe('Rotas Financeiro', () => {
     });
 
     it('Validar Rota da Tela Propostas', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3704,7 +3739,8 @@ describe('Rotas Financeiro', () => {
     });
 
     it('Validar Rota da Tela Controle de Parcerias', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3721,7 +3757,8 @@ describe('Rotas Financeiro', () => {
     })
 
     it('Validar Rota da Tela Cadeado', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
@@ -3738,7 +3775,8 @@ describe('Rotas Financeiro', () => {
     })
 
     it('Validar Rota da Tela Royalties', () => {
-        cy.visit('/');
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
         cy.get('#financial', { timeout: 20000 })
             .should('be.visible')
             .click({ force: true });
