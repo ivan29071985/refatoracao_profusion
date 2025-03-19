@@ -1528,14 +1528,14 @@ describe('Reagendamento', () => {
     });
 })
 
-describe.only('Check-in', () => {
+describe('Check-in', () => {
     beforeEach(() => {
         cy.setupAndLogin()
         cy.allure().epic('Financeiro');
         cy.allure().feature('Check-in');
     });
 
-    it('Validar bread home', () => {
+    it.only('Validar bread home', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.get('#schedule', { timeout: 20000 }).click()
@@ -1560,7 +1560,7 @@ describe.only('Check-in', () => {
         checkEnvironmentUrl();
     });
 
-    it('Validar bread agenda', () => {
+    it.only('Validar bread agenda', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.get('#schedule', { timeout: 20000 }).click()
@@ -1585,7 +1585,7 @@ describe.only('Check-in', () => {
         checkEnvironmentUrl();
     });
 
-    it('Validar bread check-in', () => {
+    it.only('Validar bread check-in', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.get('#schedule', { timeout: 20000 }).click()
