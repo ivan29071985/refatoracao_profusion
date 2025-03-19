@@ -2,9 +2,9 @@ name: Cypress Tests
 
 on:
   push:
-    branches: [ main, staging, develop ]
+    branches: [ main, master, develop ]
   pull_request:
-    branches: [ main, staging, develop ]
+    branches: [ main, master, develop ]
   # Permite execução manual a partir da aba Actions no GitHub
   workflow_dispatch:
     inputs:
