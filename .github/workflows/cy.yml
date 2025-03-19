@@ -9,9 +9,9 @@ on:
   workflow_dispatch:
     inputs:
       spec:
-        description: 'Arquivo de teste específico para executar (ex: cypress/Financeiro/fluxo.cy.js)'
+        description: 'Arquivo de teste específico para executar (ex: cypress/e2e/Financeiro/fluxo.cy.js)'
         required: false
-        default: 'cypress/Financeiro/fluxo.cy.js'
+        default: 'cypress/e2e/Financeiro/fluxo.cy.js'
 
 jobs:
   cypress-run:
@@ -46,7 +46,7 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           browser: ${{ matrix.browsers }}
-          spec: "cypress/Financeiro/fluxo.cy.js"
+          spec: "cypress/e2e/Financeiro/fluxo.cy.js"
       
       - name: Armazenar screenshots em caso de falha
         uses: actions/upload-artifact@v4
