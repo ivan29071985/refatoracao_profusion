@@ -27,7 +27,7 @@ jobs:
       fail-fast: false
       matrix:
         # Executa em Chrome
-        browsers: [chrome]
+        browsers: [chrome, firefox, edge]
         
     steps:
       - name: Checkout código
