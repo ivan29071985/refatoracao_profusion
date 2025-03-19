@@ -1540,7 +1540,7 @@ describe.only('Check-in', () => {
         cy.visit(baseUrl);
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
-        cy.wait(1000)
+        cy.wait(2000)
         cy.xpath("//a[@routerlink='/home'][contains(.,'Home')]", { timeout: 20000 })
             .should('be.visible')
             .click()
@@ -1565,7 +1565,7 @@ describe.only('Check-in', () => {
         cy.visit(baseUrl);
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in', { timeout: 20000 }).click()
-        cy.wait(1000)
+        cy.wait(2000)
         cy.xpath("//a[@routerlink='/schedule/schedule-appointment'][contains(.,'Agenda')]", { timeout: 20000 })
             .should('be.visible')
             .click()
@@ -1590,7 +1590,7 @@ describe.only('Check-in', () => {
         cy.visit(baseUrl);
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
-        cy.wait(1000)
+        cy.wait(2000)
         cy.xpath("//a[@routerlink='/schedule/checkin'][contains(.,'Check-in')]")
             .should('be.visible')
             .click()
@@ -1611,6 +1611,7 @@ describe.only('Check-in', () => {
     it('Validar título Agenda', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.xpath("//h3[contains(.,'Agenda')]")
@@ -1620,6 +1621,7 @@ describe.only('Check-in', () => {
     it('Validar subtítulo Check-in', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.xpath("//h3[contains(.,'Check-in')]")
@@ -1629,6 +1631,7 @@ describe.only('Check-in', () => {
     it('Validar selector status', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.get('.row')
@@ -1640,6 +1643,7 @@ describe.only('Check-in', () => {
     it('Validar checkbox Selecionar Todos', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.get('.row')
@@ -1652,6 +1656,7 @@ describe.only('Check-in', () => {
     it('Validar checkbox Agendado', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.get('.row')
@@ -1676,6 +1681,7 @@ describe.only('Check-in', () => {
     it('Validar checkbox Não compareceu', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.get('.row')
@@ -1688,6 +1694,7 @@ describe.only('Check-in', () => {
     it('Validar input Paciente', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.xpath("//input[@formcontrolname='patient']")
@@ -1697,6 +1704,7 @@ describe.only('Check-in', () => {
     it('Validar selector Area de Atuação', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.wait(1000)
@@ -1709,9 +1717,10 @@ describe.only('Check-in', () => {
     it('Validar selector Profissional', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
-        cy.wait(1000)
+        cy.wait(2000)
         cy.get('#professional').click()
         cy.contains('Dr. Ivan Barros')
             .should('exist')
@@ -1720,21 +1729,20 @@ describe.only('Check-in', () => {
     it('Validar input Data', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.wait(1000)
-
         cy.get('#dataInit')
             .find('input')
             .invoke('val')
             .should('eq', format(new Date(), 'dd/MM/yyyy'));
-
-
     });
 
     it('Validar botão Limpar', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.get('button').contains('Limpar')
@@ -1744,6 +1752,7 @@ describe.only('Check-in', () => {
     it('Validar botão Filtrar', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.get('button').contains('Filtrar')
@@ -1753,6 +1762,7 @@ describe.only('Check-in', () => {
     it('Validar coluna Horário', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.contains('th', 'Horário')
@@ -1762,6 +1772,7 @@ describe.only('Check-in', () => {
     it('Validar coluna Paciente', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.contains('th', 'Paciente')
@@ -1771,6 +1782,7 @@ describe.only('Check-in', () => {
     it('Validar coluna Profissional', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.contains('th', 'Profissional')
@@ -1781,6 +1793,7 @@ describe.only('Check-in', () => {
     it('Validar coluna Especialidade', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.contains('th', 'Especialidade')
@@ -1790,6 +1803,7 @@ describe.only('Check-in', () => {
     it('Validar coluna Procedimento', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.contains('th', 'Procedimento')
@@ -1799,6 +1813,7 @@ describe.only('Check-in', () => {
     it('Validar coluna Locais', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.contains('th', 'Locais')
@@ -1808,6 +1823,7 @@ describe.only('Check-in', () => {
     it('Validar coluna Valor', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.contains('th', 'Valor')
@@ -1817,6 +1833,7 @@ describe.only('Check-in', () => {
     it('Validar total de Agendamento', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
 
@@ -1843,6 +1860,7 @@ describe.only('Check-in', () => {
     it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 2 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.wait(2000)
@@ -1861,6 +1879,7 @@ describe.only('Check-in', () => {
     it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 3 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.wait(2000)
@@ -1879,6 +1898,7 @@ describe.only('Check-in', () => {
     it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 4 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.wait(2000)
@@ -1897,6 +1917,7 @@ describe.only('Check-in', () => {
     it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 5 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.wait(2000)
@@ -1915,6 +1936,7 @@ describe.only('Check-in', () => {
     it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 6 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.wait(2000)
@@ -1933,6 +1955,7 @@ describe.only('Check-in', () => {
     it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 7 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.wait(2000)
@@ -1951,6 +1974,7 @@ describe.only('Check-in', () => {
     it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 8 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.wait(2000)
@@ -1969,6 +1993,7 @@ describe.only('Check-in', () => {
     it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 9 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.wait(2000)
@@ -1987,6 +2012,7 @@ describe.only('Check-in', () => {
     it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 10 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.wait(2000)
@@ -2005,6 +2031,7 @@ describe.only('Check-in', () => {
     it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 11 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.wait(2000)
@@ -2023,6 +2050,7 @@ describe.only('Check-in', () => {
     it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 12 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.wait(2000)
@@ -2041,6 +2069,7 @@ describe.only('Check-in', () => {
     it('Validar Fluxo Checkin no Cartão Crédito 1 parcela (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.wait(2000)
@@ -2075,6 +2104,7 @@ describe.only('Check-in', () => {
     it('Validar Fluxo Checkin no Cartão Débito (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.wait(2000)
@@ -2106,6 +2136,7 @@ describe.only('Check-in', () => {
     it('Validar Fluxo Checkin no PIX (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.wait(2000)
@@ -2137,6 +2168,7 @@ describe.only('Check-in', () => {
     it('Validar Fluxo Checkin no Dinheiro com Troco (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.wait(2000)
@@ -2158,6 +2190,7 @@ describe.only('Check-in', () => {
     it('Validar Fluxo Checkin no Dinheiro (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
         cy.wait(2000)
@@ -2168,7 +2201,6 @@ describe.only('Check-in', () => {
         cy.get('button').contains('Pagar').click()
         cy.get('button').contains('Ok').click()
         cy.contains('h2', 'Sucesso', { timeout: 20000 }).should('have.text', 'Sucesso')
-
     });
 });
 

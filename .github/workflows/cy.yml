@@ -15,7 +15,7 @@ on:
         type: choice
         options:
           - staging
-          - homolog
+          - homologacao
           - producao
 
 jobs:
@@ -28,11 +28,11 @@ jobs:
       matrix:
         # Executa em Chrome
         browsers: [chrome]
-    
+        
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
-      
+        
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -41,23 +41,42 @@ jobs:
           
       - name: Instalar dependências
         run: npm ci
-      
+        
       - name: Verificar cypress
         run: npx cypress verify
-        
+          
       - name: Executar testes Cypress
         uses: cypress-io/github-action@v5
         with:
           browser: ${{ matrix.browsers }}
-          command: npm run cypress:run:${{ github.event.inputs.environment || 'staging' }}
+          command: npm run cypress:run:${{ github.event.inputs.environment || 'staging' }}:allure
         env:
           CYPRESS_DEFAULT_COMMAND_TIMEOUT: 60000
           CYPRESS_DEFAULT_TIMEOUT: 60000
           CYPRESS_REQUESTTIMEOUT: 60000
           CYPRESS_RESPONSETIMEROUT: 60000
           CYPRESS_PAGELOADTIMEOUT: 90000
-          CYPRESS_RETRIES: 2
+          CYPRESS_RETRIES: 3
       
+      # Adicionar step para preparar relatório Allure
+      - name: Preparar relatório Allure
+        if: always()
+        run: npm run allure:prepare
+          
+      # Gerar relatório Allure
+      - name: Gerar relatório Allure
+        if: always()
+        run: npm run allure:generate
+          
+      # Armazenar relatório Allure como artefato
+      - name: Armazenar relatório Allure
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-report
+          path: allure-report
+          retention-days: 7
+          
       - name: Armazenar screenshots em caso de falha
         uses: actions/upload-artifact@v4
         if: failure()
