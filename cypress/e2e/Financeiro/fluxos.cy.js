@@ -55,7 +55,7 @@ describe('Grade do Profissional', () => {
         cy.contains('button', 'Ok').click()
     });
 
-    it.only('Validar Fluxo de Grade do Profissional em Duplicidade', () => {
+    it('Validar Fluxo de Grade do Profissional em Duplicidade', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.get('#register').click()
@@ -166,7 +166,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         cy.allure().feature('Check-in');
     });
 
-    it.only('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora', () => {
+    it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000); // Esperar carregamento inicial da página
@@ -1535,7 +1535,7 @@ describe('Check-in', () => {
         cy.allure().feature('Check-in');
     });
 
-    it('Validar bread home', () => {
+    it.only('Validar bread home', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.get('#schedule', { timeout: 20000 }).click()
@@ -1560,7 +1560,7 @@ describe('Check-in', () => {
         checkEnvironmentUrl();
     });
 
-    it('Validar bread agenda', () => {
+    it.only('Validar bread agenda', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.get('#schedule', { timeout: 20000 }).click()

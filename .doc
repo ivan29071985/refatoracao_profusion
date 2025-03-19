@@ -3,11 +3,7 @@
 /// <reference types="cypress-xpath" />
 
 describe('Permissoes', () => {
-    beforeEach(() => {
-        cy.setupAndLogin(); // Usa o comando customizado
-        cy.allure().epic('Financeiro');
-        cy.allure().feature('Check-in');
-    });
+
 
     it.only('Validar permissão', () => {
         // Intercept antes das requests
@@ -32,7 +28,7 @@ describe('Permissoes', () => {
         cy.get('#E-mail').type('ivan.santos+1@amorsaude.com')
         cy.get('#Senha').type('Iv@n198529', { log: false })
         cy.contains('Entrar').click()
-        cy.contains('span', ' Unidade Teste / Treinamento ', { timeout: 10000 }).click({ force: true })
+        cy.contains('span', /Automação (Staging|Homolog|Prod)/, { timeout: 10000 }).click({ force: true });
         cy.contains('button', ' Entrar ', { timeout: 10000 }).click()
 
 
