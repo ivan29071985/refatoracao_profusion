@@ -15,6 +15,7 @@ describe('Grade do Profissional', () => {
     it('Validar Fluxo Abertura de Grade do Profissional', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)        
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(5000)
@@ -22,6 +23,8 @@ describe('Grade do Profissional', () => {
         cy.contains('span', 'edit').click()
         cy.contains('span', 'Horários de atendimento').click()
         cy.contains('button', 'Incluir').click()
+
+        cy.wait(2000)  
 
         const today = new Date();
         const dayOfWeek = today.getDay()
@@ -47,10 +50,14 @@ describe('Grade do Profissional', () => {
         cy.get('#horaInicial').type('08:00')
         cy.get('#horaFinal').type('23:30')
         cy.contains('div', 'Áreas de atuação').click()
+        cy.wait(2000)  
         cy.contains('span', ' Área de Atuação - Teste Automação ').click()
+        cy.wait(2000)  
         cy.contains('div', 'Limitar procedimentos realizados no período').click()
+        cy.wait(2000)  
         cy.contains('span', ' Consulta Áreas de Atuação ').click()
         cy.contains('button', ' Confirmar ').click({ force: true })
+        cy.wait(2000)  
         cy.contains('h2', 'Grade criada com sucesso.').should('be.visible')
         cy.contains('button', 'Ok').click()
     });
