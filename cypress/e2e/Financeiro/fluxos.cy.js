@@ -62,7 +62,7 @@ describe('Grade do Profissional', () => {
         cy.contains('button', 'Ok').click()
     });
 
-    it('Validar Fluxo de Grade do Profissional em Duplicidade', () => {
+    it.only('Validar Fluxo de Grade do Profissional em Duplicidade', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -1493,7 +1493,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
 
 });
 
-describe.only('Reagendamento', () => {
+describe('Reagendamento', () => {
     beforeEach(() => {
         cy.setupAndLogin()
         cy.allure().epic('Financeiro');
