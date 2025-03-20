@@ -19,9 +19,9 @@ Cypress.Commands.add('setupAndLogin', (email = 'ivan.santos+1@amorsaude.com', pa
     cy.wait(500)
 
     cy.visit(`${currentBaseUrl}`);
-    
-    cy.get('#E-mail').type(email, {timeout:30000});
-    cy.get('#Senha').type(password, { log: false }, {timeout:30000});
+
+    cy.get('#E-mail').type(email, { timeout: 30000 });
+    cy.get('#Senha').type(password, { log: false }, { timeout: 30000 });
     cy.contains('Entrar', { timeout: 1000 }).click();
     cy.wait(500)
 
@@ -33,6 +33,16 @@ Cypress.Commands.add('setupAndLogin', (email = 'ivan.santos+1@amorsaude.com', pa
     cy.get('body').then($body => {
       if ($body.text().includes('Você não tem permissão')) {
         cy.contains('button', 'Ok').click();
+      }
+    });
+
+    // Verifica se a mensagem de erro de permissão aparece e clica em OK
+    cy.get('body').then($body => {
+      // Verifica se o texto da mensagem de erro está presente em qualquer lugar na página
+      if ($body.text().includes('Você não tem permissão para a rota Home')) {
+        // Clica no botão OK para fechar o modal
+        cy.contains('button', 'Ok').click();
+        cy.log('Mensagem de erro de permissão tratada com sucesso');
       }
     });
 

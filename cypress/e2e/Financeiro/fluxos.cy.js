@@ -3,7 +3,7 @@
 /// <reference types="cypress-xpath" />
 import { format } from 'date-fns';
 
-
+//
 
 describe('Grade do Profissional', () => {
     beforeEach(() => {
@@ -1490,26 +1490,9 @@ describe('Reagendamento', () => {
         cy.xpath("//button[contains(.,'Pesquisar')]").click();
         cy.xpath("//div[contains(@class,'cal-week-view')]").should('be.visible');
         cy.wait(3000)
+
         const today = new Date();
         const weekDay = today.getDay();
-        cy.get('.cal-day-columns .cal-day-column')
-            .eq(weekDay)
-            .find('.livre')
-            .first()
-            .click();
-        cy.get('#cpf').type('34921977879');
-        cy.wait(3000);
-        cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').click();
-        cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
-        cy.xpath("//span[@class='mat-option-text'][contains(.,'Consulta Áreas de Atuação')]")
-            .first()
-            .should('be.visible')
-            .click({ force: true });
-        cy.wait(3000)
-        cy.xpath("//button[@color='primary'][contains(.,'Adicionar')]").should('exist').click();
-        cy.xpath("//button[@color='primary'][contains(.,'Confirmar')]").should('exist').click();
-        cy.contains('h2', 'Agendamento criado com sucesso', { timeout: 20000 }).should('be.visible');
-        cy.contains('button', 'Ok').click();
 
         cy.get('.cal-day-columns .cal-day-column')
             .eq(weekDay)
@@ -1517,14 +1500,23 @@ describe('Reagendamento', () => {
             .last()
             .click();
 
-        cy.wait(8000)
+        cy.wait(5000)
 
-        cy.xpath("//button[@color='primary'][contains(.,'Confirmar')]", { timeout: 20000 }).should('exist').click();
+        cy.xpath("//button[@title='Reagendar']").click()
 
+        cy.get('.RescheduleAppointment')
+        cy.focused()// Pressiona Tab uma vez
+            .type('{enter}')
 
-        cy.contains('h2', 'Agendamento atualizado com sucesso', { timeout: 20000 }).should('be.visible');
+        cy.get('span').contains(' Problemas de conexão ').click()
 
-        cy.contains('button', 'Ok').click();
+        cy.wait(1000)
+
+        cy.get('button').contains(' Prosseguir ').click()
+
+        cy.get('span').contains('Reagendamento')
+            .should('exist')
+            .should('be.visible')
     });
 })
 
@@ -1535,7 +1527,7 @@ describe('Check-in', () => {
         cy.allure().feature('Check-in');
     });
 
-    it.only('Validar bread home', () => {
+    it('Validar bread home', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.get('#schedule', { timeout: 20000 }).click()
@@ -1560,7 +1552,7 @@ describe('Check-in', () => {
         checkEnvironmentUrl();
     });
 
-    it.only('Validar bread agenda', () => {
+    it('Validar bread agenda', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.get('#schedule', { timeout: 20000 }).click()
@@ -1585,7 +1577,7 @@ describe('Check-in', () => {
         checkEnvironmentUrl();
     });
 
-    it.only('Validar bread check-in', () => {
+    it('Validar bread check-in', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.get('#schedule', { timeout: 20000 }).click()
