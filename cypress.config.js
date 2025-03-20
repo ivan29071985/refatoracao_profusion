@@ -3,6 +3,10 @@ const allureWriter = require('@shelex/cypress-allure-plugin/writer');
 
 module.exports = defineConfig({
   e2e: {
+    specPattern: [
+      'cypress/e2e/Financeiro/fluxos.cy.js',
+      'cypress/e2e/Financeiro/fluxo_atendimento.cy.js'
+    ],
     defaultCommandTimeout: 10000, // Aumenta para 10 segundos
     requestTimeout: 10000,
     responseTimeout: 10000,
@@ -21,7 +25,12 @@ module.exports = defineConfig({
       if (config.env.allure) {
         allureWriter(on, config, {
           reportDir: 'allure-results',
-          reportTitle: 'Automation Report Amei'
+          reportTitle: 'Automation Report Amei',
+          testCasePrefix: 'TC-',  // Adiciona um prefixo único para cada teste
+          disableWebdriverStepsReporting: true,
+          disableWebdriverScreenshotsReporting: true,
+          addAnalyticLabels: true,
+          addRetryAnalyticLabels: true,  // Considera as retentativas na contagem
         });
       }
 

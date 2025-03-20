@@ -9,13 +9,13 @@ describe('Grade do Profissional', () => {
     beforeEach(() => {
         cy.setupAndLogin(); // Usa o comando customizado
         cy.allure().epic('Financeiro');
-        cy.allure().feature('Check-in');
+        cy.allure().severity('critical');
     });
 
-    it('Validar Fluxo Abertura de Grade do Profissional', () => {
+    it('Validar Fluxo Abertura de Grade do Profissional 1', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
-        cy.wait(2000)        
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(5000)
@@ -24,7 +24,7 @@ describe('Grade do Profissional', () => {
         cy.contains('span', 'Horários de atendimento').click()
         cy.contains('button', 'Incluir').click()
 
-        cy.wait(2000)  
+        cy.wait(2000)
 
         const today = new Date();
         const dayOfWeek = today.getDay()
@@ -48,16 +48,16 @@ describe('Grade do Profissional', () => {
         }
 
         cy.get('#horaInicial').type('08:00')
-        cy.get('#horaFinal').type('23:30')
+        cy.get('#horaFinal').type('23:50')
         cy.contains('div', 'Áreas de atuação').click()
-        cy.wait(2000)  
+        cy.wait(2000)
         cy.contains('span', ' Área de Atuação - Teste Automação ').click()
-        cy.wait(2000)  
+        cy.wait(2000)
         cy.contains('div', 'Limitar procedimentos realizados no período').click()
-        cy.wait(2000)  
+        cy.wait(2000)
         cy.contains('span', ' Consulta Áreas de Atuação ').click()
         cy.contains('button', ' Confirmar ').click({ force: true })
-        cy.wait(2000)  
+        cy.wait(2000)
         cy.contains('h2', 'Grade criada com sucesso.').should('be.visible')
         cy.contains('button', 'Ok').click()
     });
@@ -65,7 +65,7 @@ describe('Grade do Profissional', () => {
     it('Validar Fluxo de Grade do Profissional em Duplicidade', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
-        cy.wait(2000)        
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(5000)
@@ -74,7 +74,7 @@ describe('Grade do Profissional', () => {
         cy.contains('span', 'Horários de atendimento').click()
         cy.contains('button', 'Incluir').click()
 
-        cy.wait(2000)  
+        cy.wait(2000)
 
         const today = new Date();
         const dayOfWeek = today.getDay()
@@ -100,11 +100,11 @@ describe('Grade do Profissional', () => {
         cy.get('#horaInicial').type('08:00')
         cy.get('#horaFinal').type('23:30')
         cy.contains('div', 'Áreas de atuação').click()
-        cy.wait(2000)  
+        cy.wait(2000)
         cy.contains('span', ' Área de Atuação - Teste Automação ').click()
-        cy.wait(2000)  
+        cy.wait(2000)
         cy.contains('div', 'Limitar procedimentos realizados no período').click()
-        cy.wait(2000)  
+        cy.wait(2000)
         cy.contains('span', ' Consulta Áreas de Atuação ').click()
         cy.contains('button', ' Confirmar ').click({ force: true })
         cy.wait(2000)
@@ -133,10 +133,10 @@ describe('Grade do Profissional', () => {
         cy.contains('button', 'Ok').click()
     })
 
-    it('Validar Fluxo Abertura de Grade do Profissional', () => {
+    it('Validar Fluxo Abertura de Grade do Profissional 2', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
-        cy.wait(2000)        
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(5000)
@@ -145,7 +145,7 @@ describe('Grade do Profissional', () => {
         cy.contains('span', 'Horários de atendimento').click()
         cy.contains('button', 'Incluir').click()
 
-        cy.wait(2000)  
+        cy.wait(2000)
 
         const today = new Date();
         const dayOfWeek = today.getDay()
@@ -169,16 +169,16 @@ describe('Grade do Profissional', () => {
         }
 
         cy.get('#horaInicial').type('08:00')
-        cy.get('#horaFinal').type('23:30')
+        cy.get('#horaFinal').type('23:50')
         cy.contains('div', 'Áreas de atuação').click()
-        cy.wait(2000)  
+        cy.wait(2000)
         cy.contains('span', ' Área de Atuação - Teste Automação ').click()
-        cy.wait(2000)  
+        cy.wait(2000)
         cy.contains('div', 'Limitar procedimentos realizados no período').click()
-        cy.wait(2000)  
+        cy.wait(2000)
         cy.contains('span', ' Consulta Áreas de Atuação ').click()
         cy.contains('button', ' Confirmar ').click({ force: true })
-        cy.wait(2000)  
+        cy.wait(2000)
         cy.contains('h2', 'Grade criada com sucesso.').should('be.visible')
         cy.contains('button', 'Ok').click()
     });
@@ -188,10 +188,10 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
     beforeEach(() => {
         cy.setupAndLogin()
         cy.allure().epic('Financeiro');
-        cy.allure().feature('Check-in');
+        cy.allure().severity('critical');
     });
 
-    it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora', () => {
+    it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora 1', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000); // Esperar carregamento inicial da página
@@ -400,7 +400,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         });
     });
 
-    it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora', () => {
+    it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora 2', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000); // Esperar carregamento inicial da página
@@ -609,7 +609,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         });
     });
 
-    it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora', () => {
+    it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora 3', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000); // Esperar carregamento inicial da página
@@ -818,7 +818,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         });
     });
 
-    it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora', () => {
+    it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora 4', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000); // Esperar carregamento inicial da página
@@ -1027,7 +1027,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         });
     });
 
-    it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora', () => {
+    it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora 5', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000); // Esperar carregamento inicial da página
@@ -1236,7 +1236,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         });
     });
 
-    it('Validar Fluxo Completo no Agendamento Cartão de Todos por grade Semanal', () => {
+    it('Validar Fluxo Completo no Agendamento Cartão de Todos por grade Semanal 1', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -1287,7 +1287,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         cy.contains('button', 'Ok').click();
     });
 
-    it('Validar Fluxo Completo no Agendamento Cartão de Todos por grade Semanal', () => {
+    it('Validar Fluxo Completo no Agendamento Cartão de Todos por grade Semanal 2', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -1338,7 +1338,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         cy.contains('button', 'Ok').click();
     });
 
-    it('Validar Fluxo Completo no Agendamento Cartão de Todos por grade Semanal', () => {
+    it('Validar Fluxo Completo no Agendamento Cartão de Todos por grade Semanal 3', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -1389,7 +1389,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         cy.contains('button', 'Ok').click();
     });
 
-    it('Validar Fluxo Completo no Agendamento Cartão de Todos por grade Semanal', () => {
+    it('Validar Fluxo Completo no Agendamento Cartão de Todos por grade Semanal 4', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -1440,7 +1440,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         cy.contains('button', 'Ok').click();
     });
 
-    it('Validar Fluxo Completo no Agendamento Cartão de Todos por grade Semanal', () => {
+    it('Validar Fluxo Completo no Agendamento Cartão de Todos por grade Semanal 5', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -1493,14 +1493,14 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
 
 });
 
-describe('Reagendamento', () => {
+describe.only('Reagendamento', () => {
     beforeEach(() => {
         cy.setupAndLogin()
         cy.allure().epic('Financeiro');
-        cy.allure().feature('Check-in');
+        cy.allure().severity('critical');
     })
 
-    it('Validar Fluxo de Reagendamento', () => {
+    it('Validar Fluxo de Reagendamento - Motivo Problemas de conexão', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.get('#schedule', { timeout: 20000 })
@@ -1521,27 +1521,259 @@ describe('Reagendamento', () => {
 
         cy.get('.cal-day-columns .cal-day-column')
             .eq(weekDay)
-            .find('.agendado')
-            .last()
+            .find('.livre')
+            .first()
             .click();
 
-        cy.wait(5000)
+        cy.wait(3000)
 
+        cy.get('#cpf').type('34921977879');
+        cy.wait(1000);
+
+        cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').click();
+        cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
+        cy.xpath("//span[@class='mat-option-text'][contains(.,'Consulta Áreas de Atuação')]")
+            .first()
+            .should('be.visible')
+            .click({ force: true });
+        cy.wait(1000)
+        cy.xpath("//button[@color='primary'][contains(.,'Adicionar')]").should('exist').click();
+        cy.xpath("//button[@color='primary'][contains(.,'Confirmar')]").should('exist').click();
+        cy.wait(1000)
+        cy.contains('h2', 'Agendamento criado com sucesso', { timeout: 20000 }).should('be.visible');
+        cy.contains('button', 'Ok').click();
+        cy.wait(3000)
+        cy.get('.cal-day-columns .cal-day-column')
+            .eq(weekDay)
+            .find('.agendado')
+            .first()
+            .click();
         cy.xpath("//button[@title='Reagendar']").click()
-
         cy.get('.RescheduleAppointment')
         cy.focused()// Pressiona Tab uma vez
             .type('{enter}')
-
         cy.get('span').contains(' Problemas de conexão ').click()
-
-        cy.wait(1000)
-
+        cy.wait(3000)
         cy.get('button').contains(' Prosseguir ').click()
-
         cy.get('span').contains('Reagendamento')
             .should('exist')
             .should('be.visible')
+        cy.get('.cal-day-columns .cal-day-column')
+            .eq(weekDay)
+            .find('.livre')
+            .last()
+            .click();
+        cy.wait(3000)
+        cy.get('button').contains('Reagendar').click()
+
+        cy.contains('Reagendamento realizado com sucesso').should('be.visible')
+    });
+
+    it('Validar Fluxo de Reagendamento - Outros não especificado', () => {
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.get('#schedule', { timeout: 20000 })
+            .should('be.visible')
+            .click();
+        cy.contains('span', 'Agendar atendimento', { timeout: 20000 }).click();
+        cy.wait(3000);
+        cy.xpath("(//div[contains(.,'Área de atuação')])[11]", { timeout: 20000 }).click();
+        cy.xpath("//span[@class='mat-option-text'][contains(.,' Área de Atuação - Teste Automação ')]", { timeout: 20000 }).click({ force: true });
+        cy.get('mat-select[formcontrolname="professionals"]').click();
+        cy.xpath("//span[contains(.,'Dr. Ivan Barros')]").click({ force: true });
+        cy.xpath("//button[contains(.,'Pesquisar')]").click();
+        cy.xpath("//div[contains(@class,'cal-week-view')]").should('be.visible');
+        cy.wait(3000)
+
+        const today = new Date();
+        const weekDay = today.getDay();
+
+        cy.get('.cal-day-columns .cal-day-column')
+            .eq(weekDay)
+            .find('.livre')
+            .first()
+            .click();
+
+        cy.wait(3000)
+
+        cy.get('#cpf').type('34921977879');
+        cy.wait(1000);
+
+        cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').click();
+        cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
+        cy.xpath("//span[@class='mat-option-text'][contains(.,'Consulta Áreas de Atuação')]")
+            .first()
+            .should('be.visible')
+            .click({ force: true });
+        cy.wait(1000)
+        cy.xpath("//button[@color='primary'][contains(.,'Adicionar')]").should('exist').click();
+        cy.xpath("//button[@color='primary'][contains(.,'Confirmar')]").should('exist').click();
+        cy.wait(1000)
+        cy.contains('h2', 'Agendamento criado com sucesso', { timeout: 20000 }).should('be.visible');
+        cy.contains('button', 'Ok').click();
+        cy.wait(3000)
+        cy.get('.cal-day-columns .cal-day-column')
+            .eq(weekDay)
+            .find('.agendado')
+            .first()
+            .click();
+        cy.xpath("//button[@title='Reagendar']").click()
+        cy.get('.RescheduleAppointment')
+        cy.focused()// Pressiona Tab uma vez
+            .type('{enter}')
+        cy.get('span').contains(' Outros não especificado ').click()
+        cy.wait(3000)
+        cy.get('button').contains(' Prosseguir ').click()
+        cy.get('span').contains('Reagendamento')
+            .should('exist')
+            .should('be.visible')
+        cy.get('.cal-day-columns .cal-day-column')
+            .eq(weekDay)
+            .find('.livre')
+            .last()
+            .click();
+        cy.wait(3000)
+        cy.get('button').contains('Reagendar').click()
+
+        cy.contains('Reagendamento realizado com sucesso').should('be.visible')
+    });
+
+    it('Validar Fluxo de Reagendamento - Cancelamento de agenda do profissional', () => {
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.get('#schedule', { timeout: 20000 })
+            .should('be.visible')
+            .click();
+        cy.contains('span', 'Agendar atendimento', { timeout: 20000 }).click();
+        cy.wait(3000);
+        cy.xpath("(//div[contains(.,'Área de atuação')])[11]", { timeout: 20000 }).click();
+        cy.xpath("//span[@class='mat-option-text'][contains(.,' Área de Atuação - Teste Automação ')]", { timeout: 20000 }).click({ force: true });
+        cy.get('mat-select[formcontrolname="professionals"]').click();
+        cy.xpath("//span[contains(.,'Dr. Ivan Barros')]").click({ force: true });
+        cy.xpath("//button[contains(.,'Pesquisar')]").click();
+        cy.xpath("//div[contains(@class,'cal-week-view')]").should('be.visible');
+        cy.wait(3000)
+
+        const today = new Date();
+        const weekDay = today.getDay();
+
+        cy.get('.cal-day-columns .cal-day-column')
+            .eq(weekDay)
+            .find('.livre')
+            .first()
+            .click();
+
+        cy.wait(3000)
+
+        cy.get('#cpf').type('34921977879');
+        cy.wait(1000);
+
+        cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').click();
+        cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
+        cy.xpath("//span[@class='mat-option-text'][contains(.,'Consulta Áreas de Atuação')]")
+            .first()
+            .should('be.visible')
+            .click({ force: true });
+        cy.wait(1000)
+        cy.xpath("//button[@color='primary'][contains(.,'Adicionar')]").should('exist').click();
+        cy.xpath("//button[@color='primary'][contains(.,'Confirmar')]").should('exist').click();
+        cy.wait(1000)
+        cy.contains('h2', 'Agendamento criado com sucesso', { timeout: 20000 }).should('be.visible');
+        cy.contains('button', 'Ok').click();
+        cy.wait(3000)
+        cy.get('.cal-day-columns .cal-day-column')
+            .eq(weekDay)
+            .find('.agendado')
+            .first()
+            .click();
+        cy.xpath("//button[@title='Reagendar']").click()
+        cy.get('.RescheduleAppointment')
+        cy.focused()// Pressiona Tab uma vez
+            .type('{enter}')
+        cy.get('span').contains(' Cancelamento de agenda do profissional ').click()
+        cy.wait(3000)
+        cy.get('button').contains(' Prosseguir ').click()
+        cy.get('span').contains('Reagendamento')
+            .should('exist')
+            .should('be.visible')
+        cy.get('.cal-day-columns .cal-day-column')
+            .eq(weekDay)
+            .find('.livre')
+            .last()
+            .click();
+        cy.wait(3000)
+        cy.get('button').contains('Reagendar').click()
+
+        cy.contains('Reagendamento realizado com sucesso').should('be.visible')
+    });
+
+    it('Validar Fluxo de Reagendamento -  Paciente não compareceu e deseja remarcação', () => {
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.get('#schedule', { timeout: 20000 })
+            .should('be.visible')
+            .click();
+        cy.contains('span', 'Agendar atendimento', { timeout: 20000 }).click();
+        cy.wait(3000);
+        cy.xpath("(//div[contains(.,'Área de atuação')])[11]", { timeout: 20000 }).click();
+        cy.xpath("//span[@class='mat-option-text'][contains(.,' Área de Atuação - Teste Automação ')]", { timeout: 20000 }).click({ force: true });
+        cy.get('mat-select[formcontrolname="professionals"]').click();
+        cy.xpath("//span[contains(.,'Dr. Ivan Barros')]").click({ force: true });
+        cy.xpath("//button[contains(.,'Pesquisar')]").click();
+        cy.xpath("//div[contains(@class,'cal-week-view')]").should('be.visible');
+        cy.wait(3000)
+
+        const today = new Date();
+        const weekDay = today.getDay();
+
+        cy.get('.cal-day-columns .cal-day-column')
+            .eq(weekDay)
+            .find('.livre')
+            .first()
+            .click();
+
+        cy.wait(3000)
+
+        cy.get('#cpf').type('34921977879');
+        cy.wait(1000);
+
+        cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').click();
+        cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
+        cy.xpath("//span[@class='mat-option-text'][contains(.,'Consulta Áreas de Atuação')]")
+            .first()
+            .should('be.visible')
+            .click({ force: true });
+        cy.wait(1000)
+        cy.xpath("//button[@color='primary'][contains(.,'Adicionar')]").should('exist').click();
+        cy.xpath("//button[@color='primary'][contains(.,'Confirmar')]").should('exist').click();
+        cy.wait(1000)
+        cy.contains('h2', 'Agendamento criado com sucesso', { timeout: 20000 }).should('be.visible');
+        cy.contains('button', 'Ok').click();
+        cy.wait(3000)
+        cy.get('.cal-day-columns .cal-day-column')
+            .eq(weekDay)
+            .find('.agendado')
+            .first()
+            .click();
+        cy.xpath("//button[@title='Reagendar']").click()
+        cy.get('.RescheduleAppointment')
+        cy.focused()// Pressiona Tab uma vez
+            .type('{enter}')
+        cy.get('span').contains(' Paciente não compareceu e deseja remarcação ').click()
+        cy.wait(3000)
+        cy.get('button').contains(' Prosseguir ').click()
+        cy.get('span').contains('Reagendamento')
+            .should('exist')
+            .should('be.visible')
+        cy.get('.cal-day-columns .cal-day-column')
+            .eq(weekDay)
+            .find('.livre')
+            .last()
+            .click();
+        cy.wait(3000)
+        cy.get('button').contains('Reagendar').click()
+
+        cy.contains('Reagendamento realizado com sucesso').should('be.visible')
     });
 })
 
@@ -1550,6 +1782,7 @@ describe('Check-in', () => {
         cy.setupAndLogin()
         cy.allure().epic('Financeiro');
         cy.allure().feature('Check-in');
+        cy.allure().severity('critical');
     });
 
     it('Validar bread home', () => {
@@ -2225,7 +2458,7 @@ describe('Contas a Receber', () => {
     beforeEach(() => {
         cy.setupAndLogin(); // Usa o comando customizado
         cy.allure().epic('Financeiro');
-        cy.allure().feature('Check-in');
+        cy.allure().severity('critical');
     });
 
     it('Fluxo de Contas a receber - Dinheiro', () => {
@@ -2479,7 +2712,7 @@ describe('Contas a Pagar', () => {
     beforeEach(() => {
         cy.setupAndLogin(); // Usa o comando customizado
         cy.allure().epic('Financeiro');
-        cy.allure().feature('Check-in');
+        cy.allure().severity('critical');
     });
     it('Fluxo de Contas a Pagar - Dinheiro', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
@@ -2594,7 +2827,7 @@ describe('Proposta', () => {
     beforeEach(() => {
         cy.setupAndLogin()
         cy.allure().epic('Financeiro');
-        cy.allure().feature('Check-in');
+        cy.allure().severity('critical');
     });
 
     it('Validar Fluxo de Proposta para 1 exame com pagamento no Dinheiro com busca por CPF (Não tef)', () => {
@@ -3180,7 +3413,7 @@ describe('Rotas Financeiro', () => {
     beforeEach(() => {
         cy.setupAndLogin(); // Usa o comando customizado
         cy.allure().epic('Financeiro');
-        cy.allure().feature('Check-in');
+        cy.allure().severity('critical');
     });
 
     it('Validar Rota da Tela Saldo', () => {
@@ -3398,7 +3631,7 @@ describe('Tela Cartões', () => {
     beforeEach(() => {
         cy.setupAndLogin()
         cy.allure().epic('Financeiro');
-        cy.allure().feature('Check-in');
+        cy.allure().severity('critical');
     });
 
     it('Validar Fluxo de Parcelas na tela Cartões', () => {
@@ -3486,7 +3719,7 @@ describe('Royalties', () => {
     beforeEach(() => {
         cy.setupAndLogin(); // Usa o comando customizado
         cy.allure().epic('Financeiro');
-        cy.allure().feature('Check-in');
+        cy.allure().severity('critical');
     });
 
     it('Validar Big Numbers Venda bruta total na tela de Royalties ', () => {
@@ -3588,55 +3821,6 @@ describe('Royalties', () => {
                             });
                     });
             });
-    });
-});
-
-describe('Fluxo Atendimento sem Acolhimento', () => {
-    beforeEach(() => {
-        const baseUrl = Cypress.env('environment') === 'staging'
-            ? Cypress.env('baseUrl').staging
-            : Cypress.env('environment') === 'producao'
-                ? Cypress.env('baseUrl').producao
-                : Cypress.env('baseUrl').homologacao;
-
-        cy.visit(`${baseUrl}/auth/login`)
-        cy.loginDrBarros();
-    });
-
-    it('Validar Fluxo de Atendimento Médico sem Acolhimento', () => {
-        cy.get('span').contains('Atendimento médico', { timeout: 20000 }).click()
-        cy.wait(2000)
-        cy.get('span').contains(' Atender ', { timeout: 20000 }).should('be.visible')
-            .first()
-            .click();
-
-        cy.get('button').contains('Iniciar atendimento', { timeout: 20000 }).click()
-
-        cy.wait(3000)
-
-        cy.xpath("//textarea[@id='anamnesi_content']").type('Orientações Médicas Prezado paciente, Após nossa consulta de hoje, seguem as orientações para seu tratamento: Hidratação: É fundamental que você mantenha uma boa ingestão hídrica ao longo do dia.Recomendo o consumo de pelo menos 2 litros de água diariamente, distribuídos em pequenas quantidades várias vezes ao dia.Mantenha sempre uma garrafa de água por perto como lembrete. Atividade física: Realize exercícios físicos regulares, preferencialmente aeróbicos(caminhada, natação ou ciclismo), por no mínimo 30 minutos, 3 a 5 vezes por semana.Inicie gradualmente e aumente a intensidade conforme sua adaptação. Medicação para dor: Em caso de dor, você poderá fazer uso de dipirona 500mg a cada 8 horas, até que os sintomas diminuam.Não exceda a dose máxima de 4 comprimidos por dia. Retorno: Agende retorno em 30 dias para reavaliação. Estas medidas são importantes para seu bem - estar e melhora do quadro atual.Em caso de piora dos sintomas ou surgimento de novos sintomas, entre em contato imediatamente. Atenciosamente, Dr. [Nome do Médico] CRM[número]', { timeout: 20000 })
-
-        cy.wait(3000)
-
-        cy.xpath("//input[@placeholder='Buscar códigos CID-10 das Hipóteses Diagnósticas']").click()
-        cy.contains('span', ' (M154) (Osteo)Artrose Erosiva ').click()
-        cy.get('button').contains('Sim').click()
-
-        cy.wait(3000)
-
-        cy.get('button').contains('Finalizar atendimento', { timeout: 20000 }).click()
-
-        cy.xpath("//input[contains(@value,'false')]", { timeout: 20000 }).click()
-        cy.get('button').contains('Avançar', { timeout: 20000 }).click()
-        cy.get('button').contains(' Finalizar atendimento ', { timeout: 20000 }).click()
-
-        const url = Cypress.env('ambiente') === 'staging'
-            ? 'https://amei-staging.amorsaude.com.br/waiting-room-v2/medical-care'
-            : 'https://amei-homolog.amorsaude.com.br/waiting-room-v2/medical-care'
-
-
-        cy.url().should('include', '/waiting-room-v2/medical-care')
-
     });
 });
 
