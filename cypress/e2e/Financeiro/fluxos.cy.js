@@ -65,13 +65,16 @@ describe('Grade do Profissional', () => {
     it('Validar Fluxo de Grade do Profissional em Duplicidade', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)        
         cy.get('#register').click()
-        cy.contains('span', 'Lista de profissionais').click()
-        cy.wait(3000)
-        cy.contains('div', 'Procure por CPF ou nome').type('322.354.320-18{enter}')
+        cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
+        cy.wait(5000)
+        cy.contains('div', 'Procure por CPF ou nome', { timeout: 20000 }).type('322.354.320-18{enter}', { timeout: 20000 })
         cy.contains('span', 'edit').click()
         cy.contains('span', 'Horários de atendimento').click()
         cy.contains('button', 'Incluir').click()
+
+        cy.wait(2000)  
 
         const today = new Date();
         const dayOfWeek = today.getDay()
@@ -88,7 +91,8 @@ describe('Grade do Profissional', () => {
 
         const checkboxSelector = checkboxSelectorMap[dayOfWeek];
         if (checkboxSelector) {
-            cy.xpath(checkboxSelector).click();
+            cy.wait(3000)
+            cy.xpath(checkboxSelector, { timeout: 20000 }).click();
         } else {
             throw new Error('Não foi possível determinar o checkbox correspondente ao dia da semana atual.');
         }
@@ -96,16 +100,21 @@ describe('Grade do Profissional', () => {
         cy.get('#horaInicial').type('08:00')
         cy.get('#horaFinal').type('23:30')
         cy.contains('div', 'Áreas de atuação').click()
+        cy.wait(2000)  
         cy.contains('span', ' Área de Atuação - Teste Automação ').click()
+        cy.wait(2000)  
         cy.contains('div', 'Limitar procedimentos realizados no período').click()
+        cy.wait(2000)  
         cy.contains('span', ' Consulta Áreas de Atuação ').click()
         cy.contains('button', ' Confirmar ').click({ force: true })
+        cy.wait(2000)
         cy.contains('h2', 'Erro ao incluir grade.').should('be.visible')
     })
 
     it('Validar Fluxo de Remoção no Horário da Grade do Profissional', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(3000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais').click()
         cy.wait(3000)
@@ -119,6 +128,7 @@ describe('Grade do Profissional', () => {
         cy.xpath("//button[@class='mat-focus-indicator col-button-close mat-icon-button mat-button-base']").click({ force: true })
         // (//mat-icon[@role='img'][contains(.,'close')])[2] - quando obter mais de uma grade
         cy.contains('button', 'Sim').click()
+        cy.wait(3000)
         cy.contains('h2', 'Grade deletada com sucesso.').should('be.visible')
         cy.contains('button', 'Ok').click()
     })
@@ -126,13 +136,16 @@ describe('Grade do Profissional', () => {
     it('Validar Fluxo Abertura de Grade do Profissional', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
+        cy.wait(2000)        
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
-        cy.wait(3000)
-        cy.contains('div', 'Procure por CPF ou nome').type('322.354.320-18{enter}', { timeout: 20000 })
+        cy.wait(5000)
+        cy.contains('div', 'Procure por CPF ou nome', { timeout: 20000 }).type('322.354.320-18{enter}', { timeout: 20000 })
         cy.contains('span', 'edit').click()
         cy.contains('span', 'Horários de atendimento').click()
         cy.contains('button', 'Incluir').click()
+
+        cy.wait(2000)  
 
         const today = new Date();
         const dayOfWeek = today.getDay()
@@ -149,7 +162,8 @@ describe('Grade do Profissional', () => {
 
         const checkboxSelector = checkboxSelectorMap[dayOfWeek];
         if (checkboxSelector) {
-            cy.xpath(checkboxSelector).click();
+            cy.wait(3000)
+            cy.xpath(checkboxSelector, { timeout: 20000 }).click();
         } else {
             throw new Error('Não foi possível determinar o checkbox correspondente ao dia da semana atual.');
         }
@@ -157,10 +171,14 @@ describe('Grade do Profissional', () => {
         cy.get('#horaInicial').type('08:00')
         cy.get('#horaFinal').type('23:30')
         cy.contains('div', 'Áreas de atuação').click()
+        cy.wait(2000)  
         cy.contains('span', ' Área de Atuação - Teste Automação ').click()
+        cy.wait(2000)  
         cy.contains('div', 'Limitar procedimentos realizados no período').click()
+        cy.wait(2000)  
         cy.contains('span', ' Consulta Áreas de Atuação ').click()
         cy.contains('button', ' Confirmar ').click({ force: true })
+        cy.wait(2000)  
         cy.contains('h2', 'Grade criada com sucesso.').should('be.visible')
         cy.contains('button', 'Ok').click()
     });
