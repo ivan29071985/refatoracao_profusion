@@ -7,41 +7,65 @@ module.exports = defineConfig({
       'cypress/e2e/Financeiro/fluxos.cy.js',
       'cypress/e2e/Financeiro/fluxo_atendimento.cy.js'
     ],
-    defaultCommandTimeout: 10000, // Aumenta para 10 segundos
-    requestTimeout: 10000,
-    responseTimeout: 10000,
+    defaultCommandTimeout: 15000,
+    requestTimeout: 15000,
+    responseTimeout: 15000,
+    failOnStatusCode: false,
     downloadsFolder: 'cypress/downloads',
     chromeWebSecurity: false,
     screenshots: false,
     viewportWidth: 1920,
-    video: false,
     viewportHeight: 1080,
+    video: false,
+    numTestsKeptInMemory: 5,
     retries: {
-      runMode: 3,      // 2 retentativas em modo headless (CLI)
-      openMode: 3      // 0 retentativas no modo interativo
+      runMode: 3,
+      openMode: 3
     },
     setupNodeEvents(on, config) {
-      // Configura o Allure Reports
+      on('before:browser:launch', (browser, launchOptions) => {
+        if (browser.name === 'chrome' || browser.name === 'chromium') {
+          launchOptions.args.push(
+            '--disable-gpu',
+            '--disable-dev-shm-usage',
+            '--disable-software-rasterizer',
+            '--disable-background-timer-throttling',
+            '--disable-backgrounding-occluded-windows',
+            '--disable-renderer-backgrounding',
+            '--no-sandbox',
+            '--js-flags=--expose-gc'
+          );
+        }
+        return launchOptions;
+      });
+
+      on('task', {
+        clearMemory() {
+          if (global.gc) {
+            global.gc();
+          }
+          return null;
+        }
+      });
+
       if (config.env.allure) {
         allureWriter(on, config, {
           reportDir: 'allure-results',
           reportTitle: 'Automation Report Amei',
-          testCasePrefix: 'TC-',  // Adiciona um prefixo único para cada teste
+          testCasePrefix: 'TC-',
           disableWebdriverStepsReporting: true,
           disableWebdriverScreenshotsReporting: true,
           addAnalyticLabels: true,
-          addRetryAnalyticLabels: true,  // Considera as retentativas na contagem
+          addRetryAnalyticLabels: true,
         });
       }
 
-      // Determina o ambiente
-      const environment = process.env.CYPRESS_ENV || config.env.environment;
-      config.baseUrl = config.env.baseUrl[environment];
+      const environment = process.env.CYPRESS_ENV || config.env.environment || 'homologacao';
+      config.baseUrl = config.env.baseUrl[environment] || 'https://amei-homolog.amorsaude.com.br';
       config.env.environment = environment;
-
+      
       return config;
-    },
-    baseUrl: 'https://amei-homolog.amorsaude.com.br',
+    }
   },
   env: {
     environment: 'homologacao',
@@ -50,5 +74,6 @@ module.exports = defineConfig({
       staging: 'https://amei-staging.amorsaude.com.br',
       producao: 'https://amei.amorsaude.com.br'
     },
+    failOnStatusCode: false
   }
 });

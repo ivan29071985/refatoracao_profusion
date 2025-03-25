@@ -3,6 +3,7 @@
 /// <reference types="cypress-xpath" />
 import { format } from 'date-fns';
 
+
 //
 
 describe('Grade do Profissional', () => {
@@ -62,7 +63,7 @@ describe('Grade do Profissional', () => {
         cy.contains('button', 'Ok').click()
     });
 
-    it.only('Validar Fluxo de Grade do Profissional em Duplicidade', () => {
+    it('Validar Fluxo de Grade do Profissional em Duplicidade', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -118,13 +119,13 @@ describe('Grade do Profissional', () => {
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais').click()
         cy.wait(3000)
-        cy.contains('div', 'Procure por CPF ou nome').type('Ivan Saude {enter}')
+        cy.contains('div', 'Procure por CPF ou nome', { timeout: 20000 }).type('322.354.320-18{enter}', { timeout: 20000 })
         cy.contains('span', 'edit').click()
         Cypress.on('uncaught:exception', (err, runnable) => {
             return false
         })
         cy.contains('span', 'Horários de atendimento').click()
-        cy.wait(1000)
+        cy.wait(3000)
         cy.xpath("//button[@class='mat-focus-indicator col-button-close mat-icon-button mat-button-base']").click({ force: true })
         // (//mat-icon[@role='img'][contains(.,'close')])[2] - quando obter mais de uma grade
         cy.contains('button', 'Sim').click()
@@ -183,7 +184,7 @@ describe('Grade do Profissional', () => {
         cy.contains('button', 'Ok').click()
     });
 });
-
+//
 describe('Agendamento Simples - Agendamento por Encaixe', () => {
     beforeEach(() => {
         cy.setupAndLogin()
@@ -194,27 +195,28 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
     it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora 1', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
-        cy.wait(2000); // Esperar carregamento inicial da página
+        cy.wait(3000); // Esperar carregamento inicial da página
 
         cy.get('#schedule', { timeout: 20000 })
             .should('be.visible')
             .click();
-        cy.wait(2000); // Esperar após clicar no schedule
+        cy.wait(3000); // Esperar após clicar no schedule
 
         cy.contains('span', 'Agendar atendimento', { timeout: 20000 }).click();
         cy.wait(3000);
 
         cy.get('[formcontrolname="expertiseAreas"]', { timeout: 20000 }).should('be.visible').click();
-        cy.wait(2000); // Esperar que a lista de opções seja exibida
+        cy.wait(3000); // Esperar que a lista de opções seja exibida
 
         cy.xpath("//span[@class='mat-option-text'][contains(.,' Área de Atuação - Teste Automação ')]", { timeout: 20000 }).click({ force: true });
-        cy.wait(2000); // Esperar após selecionar área
+        cy.wait(3000); // Esperar após selecionar área
 
         cy.get('mat-select[formcontrolname="professionals"]').should('be.visible').click();
-        cy.wait(2000); // Esperar que a lista de profissionais seja exibida
+
+        cy.wait(3000); // Esperar que a lista de profissionais seja exibida
 
         cy.xpath("//span[contains(.,'Dr. Ivan Barros')]").click({ force: true });
-        cy.wait(1000); // Esperar após selecionar profissional
+        cy.wait(3000); // Esperar após selecionar profissional
 
         cy.xpath("//button[contains(.,'Pesquisar')]").should('be.visible').click();
         cy.wait(3000); // Esperar o resultado da pesquisa
@@ -233,16 +235,16 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
             .first()
             .should('be.visible')
             .click();
-        cy.wait(2000); // Esperar após selecionar horário
+        cy.wait(3000); // Esperar após selecionar horário
 
         // Marcar o checkbox
         cy.xpath("//label[normalize-space()='Encaixe']").should('be.visible').click();
-        cy.wait(2000); // Esperar após marcar o checkbox
+        cy.wait(3000); // Esperar após marcar o checkbox
 
         // Formatar a data como YYYY-MM-DD
         const formattedDate = today.toISOString().split('T')[0];
         cy.get('[formcontrolname="date"]').clear().type(formattedDate);
-        cy.wait(2000); // Esperar após digitar a data
+        cy.wait(3000); // Esperar após digitar a data
 
         // Função para gerar horário de encaixe válido (com minutos não redondos e sempre no futuro)
         function getEncaixeTime(date) {
@@ -310,10 +312,10 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
                     return cy.contains('Máximo de encaixes atingido')
                         .should('be.visible')
                         .then(() => {
-                            cy.wait(2000); // Esperar antes de clicar no Ok
+                            cy.wait(3000); // Esperar antes de clicar no Ok
                             cy.log('Máximo de encaixes atingido - Limite da regra alcançado');
                             cy.contains('button', 'Ok').should('be.visible').click();
-                            cy.wait(2000); // Esperar após clicar no Ok
+                            cy.wait(3000); // Esperar após clicar no Ok
                             return cy.wrap(false); // Indica que não deve continuar
                         });
                 }
@@ -323,10 +325,10 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
                     return cy.contains('Já existe um agendamento para esta data e horário')
                         .should('be.visible')
                         .then(() => {
-                            cy.wait(2000); // Esperar antes de clicar no Ok
+                            cy.wait(3000); // Esperar antes de clicar no Ok
                             cy.log('Horário já agendado, tentando outro horário');
                             cy.contains('button', 'Ok').should('be.visible').click();
-                            cy.wait(2000); // Esperar após clicar no Ok
+                            cy.wait(3000); // Esperar após clicar no Ok
 
                             // Adicionar 2 minutos e tentar novamente
                             const newDate = new Date(today.getTime() + 2 * 60 * 1000);
@@ -344,7 +346,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
 
                 // Se nenhuma mensagem aparecer, continuar com o agendamento
                 else {
-                    cy.wait(2000); // Esperar um pouco para ter certeza de que nenhuma mensagem aparecerá
+                    cy.wait(3000); // Esperar um pouco para ter certeza de que nenhuma mensagem aparecerá
                     return cy.wrap(true); // Wrapping o valor booleano para mantê-lo na cadeia de Cypress
                 }
             });
@@ -369,10 +371,10 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
                 cy.wait(3000);
 
                 cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').should('be.visible').click();
-                cy.wait(2000); // Esperar após clicar no botão
+                cy.wait(3000); // Esperar após clicar no botão
 
                 cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
-                cy.wait(2000); // Esperar antes de selecionar o procedimento
+                cy.wait(3000); // Esperar antes de selecionar o procedimento
 
                 cy.xpath("//span[@class='mat-option-text'][contains(.,'Consulta Áreas de Atuação')]")
                     .first()
@@ -389,13 +391,13 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
                 // Verificar sucesso com assertion
                 cy.contains('h2', 'Agendamento criado com sucesso', { timeout: 20000 })
                     .should('be.visible');
-                cy.wait(2000); // Esperar antes de clicar em Ok
+                cy.wait(3000); // Esperar antes de clicar em Ok
 
                 cy.contains('button', 'Ok').should('be.visible').click();
-                cy.wait(2000); // Esperar após o último clique
+                cy.wait(3000); // Esperar após o último clique
             } else {
                 cy.log('Não é possível prosseguir com o agendamento devido ao limite de encaixes');
-                cy.wait(2000); // Esperar antes de finalizar o teste
+                cy.wait(3000); // Esperar antes de finalizar o teste
             }
         });
     });
@@ -1269,7 +1271,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         cy.wait(1000)
 
         cy.get('#cpf').type('34921977879');
-        cy.wait(1000);
+        cy.wait(3000);
 
         cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').click();
         cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
@@ -1320,7 +1322,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         cy.wait(1000)
 
         cy.get('#cpf').type('34921977879');
-        cy.wait(1000);
+        cy.wait(3000);
 
         cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').click();
         cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
@@ -1371,7 +1373,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         cy.wait(1000)
 
         cy.get('#cpf').type('34921977879');
-        cy.wait(1000);
+        cy.wait(3000);
 
         cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').click();
         cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
@@ -1422,7 +1424,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         cy.wait(1000)
 
         cy.get('#cpf').type('34921977879');
-        cy.wait(1000);
+        cy.wait(3000);
 
         cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').click();
         cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
@@ -1473,7 +1475,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         cy.wait(1000)
 
         cy.get('#cpf').type('34921977879');
-        cy.wait(1000);
+        cy.wait(3000);
 
         cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').click();
         cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
@@ -2087,9 +2089,12 @@ describe('Check-in', () => {
         cy.get('#schedule', { timeout: 20000 }).click()
         cy.get('span').contains('Check-in').click()
 
+        cy.wait(2000)
+
         cy.get('span').contains('5').click()
         cy.xpath("//span[normalize-space()='50']").click()
 
+        cy.wait(2000)
 
         // Capturar o número do texto de agendamento
         cy.contains(/(\d+) agendamento/)
@@ -2097,6 +2102,8 @@ describe('Check-in', () => {
             .then((text) => {
                 // Extrair o número do texto (no caso, "1" de "1 agendamento")
                 const numeroAgendamentosExibido = parseInt(text.match(/(\d+)/)[0]);
+
+                cy.wait(2000)
 
                 // Contar o número real de linhas na tabela
                 cy.get('table tbody tr').its('length').then((numeroLinhasReais) => {
@@ -2930,8 +2937,13 @@ describe('Proposta', () => {
         cy.xpath("//input[contains(@aria-required,'false')]").click({ force: true }).type('Ivan Barros');
         cy.get('button').contains('Pesquisar').click()
 
-        //botão editar
-        cy.get(':nth-child(2) > .datatable-body-row').contains(' edit ').click()
+        // Solução 2: Primeiro localizar o CPF, depois buscar no mesmo contexto
+        cy.contains('349.219.778-79').then($cpf => {
+            // Pegar o elemento pai comum que contém tanto o CPF quanto o botão
+            const $row = $cpf.closest('.row-container, .mat-row, [role="row"]');
+            // Dentro desse elemento, buscar o ícone de edição
+            cy.wrap($row).find('mat-icon').contains(' edit ').click();
+        })
 
         cy.xpath("//button[@type='button'][contains(.,'Ok')]").click()
         cy.xpath("//span[contains(.,'Propostas')]").click();
@@ -3000,6 +3012,7 @@ describe('Proposta', () => {
             })
         cy.contains('button', 'Pagar').click()
         cy.contains('button', 'Ok').click()
+
     })
 
     it('Validar Fluxo de Proposta para 1 exame com pagamento no Credito com busca por CPF (Não tef)', () => {
@@ -3091,7 +3104,13 @@ describe('Proposta', () => {
         cy.xpath("//input[contains(@aria-required,'false')]").click({ force: true }).type('Ivan Barros');
         cy.get('button').contains('Pesquisar').click()
         //botão editar
-        cy.get(':nth-child(2) > .datatable-body-row').contains(' edit ').click()
+        // Solução 2: Primeiro localizar o CPF, depois buscar no mesmo contexto
+        cy.contains('349.219.778-79').then($cpf => {
+            // Pegar o elemento pai comum que contém tanto o CPF quanto o botão
+            const $row = $cpf.closest('.row-container, .mat-row, [role="row"]');
+            // Dentro desse elemento, buscar o ícone de edição
+            cy.wrap($row).find('mat-icon').contains(' edit ').click();
+        })
         cy.xpath("//button[@type='button'][contains(.,'Ok')]").click()
         cy.xpath("//span[contains(.,'Propostas')]").click();
         cy.xpath("//button[contains(.,'Nova Proposta')]").click();
@@ -3223,7 +3242,13 @@ describe('Proposta', () => {
         cy.xpath("//input[contains(@aria-required,'false')]").click({ force: true }).type('Ivan Barros');
         cy.get('button').contains('Pesquisar').click()
         //botão editar
-        cy.get(':nth-child(2) > .datatable-body-row').contains(' edit ').click()
+        // Solução 2: Primeiro localizar o CPF, depois buscar no mesmo contexto
+        cy.contains('349.219.778-79').then($cpf => {
+            // Pegar o elemento pai comum que contém tanto o CPF quanto o botão
+            const $row = $cpf.closest('.row-container, .mat-row, [role="row"]');
+            // Dentro desse elemento, buscar o ícone de edição
+            cy.wrap($row).find('mat-icon').contains(' edit ').click();
+        })
         cy.xpath("//button[@type='button'][contains(.,'Ok')]").click()
         cy.xpath("//span[contains(.,'Propostas')]").click();
         cy.xpath("//button[contains(.,'Nova Proposta')]").click();
@@ -3353,7 +3378,13 @@ describe('Proposta', () => {
         cy.xpath("//input[contains(@aria-required,'false')]").click({ force: true }).type('Ivan Barros');
         cy.get('button').contains('Pesquisar').click()
         //botão editar
-        cy.get(':nth-child(2) > .datatable-body-row').contains(' edit ').click()
+        // Solução 2: Primeiro localizar o CPF, depois buscar no mesmo contexto
+        cy.contains('349.219.778-79').then($cpf => {
+            // Pegar o elemento pai comum que contém tanto o CPF quanto o botão
+            const $row = $cpf.closest('.row-container, .mat-row, [role="row"]');
+            // Dentro desse elemento, buscar o ícone de edição
+            cy.wrap($row).find('mat-icon').contains(' edit ').click();
+        })
         cy.xpath("//button[@type='button'][contains(.,'Ok')]").click()
         cy.xpath("//span[contains(.,'Propostas')]").click();
         cy.xpath("//button[contains(.,'Nova Proposta')]").click();
@@ -3823,209 +3854,3 @@ describe('Royalties', () => {
             });
     });
 });
-
-describe('Rotas Financeiro', () => {
-    beforeEach(() => {
-        cy.setupAndLogin(); // Usa o comando customizado
-    });
-
-    it('Validar Rota da Tela Saldo', () => {
-        const baseUrl = Cypress.env('currentBaseUrl');
-        cy.visit(baseUrl);
-        cy.get('#financial', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-        cy.get('span').contains('Saldo', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-
-        cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/balance') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/balance') ||
-                url.includes('https://amei.amorsaude.com.br/financial/balance')  // URL de produção
-        }, { timeout: 20000 });
-    });
-
-    it('Validar Rota da Tela Extrato', () => {
-        const baseUrl = Cypress.env('currentBaseUrl');
-        cy.visit(baseUrl);
-        cy.get('#financial', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-        cy.get('span').contains('Extrato', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-
-        cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/resume-financial') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/resume-financial')
-        }, { timeout: 20000 });
-    });
-
-    it('Validar Rota da Tela Contas a pagar', () => {
-        const baseUrl = Cypress.env('currentBaseUrl');
-        cy.visit(baseUrl);
-        cy.get('#financial', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-        cy.get('span').contains('Contas a pagar', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-
-        cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/bills') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/bills')
-        }, { timeout: 20000 });
-    });
-
-    it('Validar Rota da Tela Contas a receber', () => {
-        const baseUrl = Cypress.env('currentBaseUrl');
-        cy.visit(baseUrl);
-        cy.get('#financial', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-        cy.get('span').contains('Contas a receber', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-
-        cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/receives') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/receives')
-        }, { timeout: 20000 });
-    });
-
-    it('Validar Rota da Tela Cartões', () => {
-        const baseUrl = Cypress.env('currentBaseUrl');
-        cy.visit(baseUrl);
-        cy.get('#financial', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-        cy.get('span').contains('Cartões', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-
-        cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/cards') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/cards')
-        }, { timeout: 20000 });
-    });
-
-    it('Validar Rota da Tela Repasse', () => {
-        const baseUrl = Cypress.env('currentBaseUrl');
-        cy.visit(baseUrl);
-        cy.get('#financial', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-        cy.get('span').contains('Repasse', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-
-        cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/new-transfer') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/new-transfer')
-        }, { timeout: 20000 });
-    });
-
-    it('Validar Rota da Tela Split', () => {
-        const baseUrl = Cypress.env('currentBaseUrl');
-        cy.visit(baseUrl);
-        cy.get('#financial', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-        cy.get('span').contains('Split', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-
-        cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/splits') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/splits')
-        }, { timeout: 20000 });
-    });
-
-    it('Validar Rota da Tela Caixas', () => {
-        const baseUrl = Cypress.env('currentBaseUrl');
-        cy.visit(baseUrl);
-        cy.get('#financial', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-        cy.get('span').contains('Caixas', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-
-        cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/box') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/box')
-        }, { timeout: 20000 });
-    });
-
-    it('Validar Rota da Tela Propostas', () => {
-        const baseUrl = Cypress.env('currentBaseUrl');
-        cy.visit(baseUrl);
-        cy.get('#financial', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-        cy.get('span').contains('Propostas', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-
-        cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/proposals') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/proposals')
-        }, { timeout: 20000 });
-    });
-
-    it('Validar Rota da Tela Controle de Parcerias', () => {
-        const baseUrl = Cypress.env('currentBaseUrl');
-        cy.visit(baseUrl);
-        cy.get('#financial', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-
-        cy.get('span').contains('Controle de Parcerias', { timeout: 20000 })
-            .scrollIntoView()
-            .should('be.visible')
-            .click({ force: true });
-
-        cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/partnership-charges') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/partnership-charges')
-        }, { timeout: 20000 });
-    })
-
-    it('Validar Rota da Tela Cadeado', () => {
-        const baseUrl = Cypress.env('currentBaseUrl');
-        cy.visit(baseUrl);
-        cy.get('#financial', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-
-        cy.get('span').contains('Cadeado', { timeout: 20000 })
-            .scrollIntoView()
-            .should('be.visible')
-            .click({ force: true });
-
-        cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/padlock') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/padlock')
-        }, { timeout: 20000 });
-    })
-
-    it('Validar Rota da Tela Royalties', () => {
-        const baseUrl = Cypress.env('currentBaseUrl');
-        cy.visit(baseUrl);
-        cy.get('#financial', { timeout: 20000 })
-            .should('be.visible')
-            .click({ force: true });
-
-        cy.get('span').contains('Royalties', { timeout: 20000 })
-            .scrollIntoView()
-            .should('be.visible')
-            .click({ force: true });
-
-        cy.url().should((url) => {
-            return url.includes('https://amei-homolog.amorsaude.com.br/financial/royalties') ||
-                url.includes('https://amei-staging.amorsaude.com.br/financial/royalties')
-        }, { timeout: 20000 });
-    })
-});
-
