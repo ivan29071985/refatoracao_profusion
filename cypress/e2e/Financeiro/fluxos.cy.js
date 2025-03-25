@@ -184,7 +184,7 @@ describe('Grade do Profissional', () => {
         cy.contains('button', 'Ok').click()
     });
 });
-//
+
 describe('Agendamento Simples - Agendamento por Encaixe', () => {
     beforeEach(() => {
         cy.setupAndLogin()
