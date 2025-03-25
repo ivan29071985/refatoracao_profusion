@@ -1501,7 +1501,7 @@ describe('Reagendamento', () => {
         cy.allure().epic('Financeiro');
         cy.allure().severity('critical');
     })
-//
+
     it('Validar Fluxo de Reagendamento - Motivo Problemas de conexão', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
