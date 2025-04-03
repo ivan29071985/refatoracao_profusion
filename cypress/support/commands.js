@@ -69,17 +69,49 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 //*********************************************************************/
 
 Cypress.Commands.add('loginDrBarros', () => {
-  cy.get('#E-mail').type('ivan.santos+drbarros@amorsaude.com');
-  cy.get('#Senha').type('Iv@n198529', { log: false });
-  cy.contains('Entrar', { timeout: 1000 }).click();
-  cy.contains('span', /Automação (Staging|Homolog|Prod)/, { timeout: 10000 }).click({ force: true });
-  cy.contains('button', ' Entrar ', { timeout: 10000 }).click();
+  // Criando um ID de sessão personalizado com timestamp atual
+  const sessionId = `sessao_personalizada_${Date.now()}`;
 
-  // Tratamento para o botão Ok quando aparecer mensagem de permissão negada
-  cy.get('body').then($body => {
-    if ($body.text().includes('Você não tem permissão')) {
-      cy.contains('button', 'Ok').click();
-    }
+  const environment = Cypress.env('environment') || Cypress.env('CYPRESS_ENV');
+  const baseUrl = environment === 'staging'
+    ? Cypress.env('baseUrl').staging
+    : environment === 'producao' || environment === 'prod'
+      ? Cypress.env('baseUrl').producao
+      : Cypress.env('baseUrl').homologacao;
+
+  Cypress.env('currentBaseUrl', baseUrl);
+
+  cy.session(sessionId, () => {
+    const currentBaseUrl = Cypress.env('currentBaseUrl');
+    cy.wait(500)
+    cy.visit(`${currentBaseUrl}`);
+    cy.get('#E-mail').type('ivan.santos+drbarros@amorsaude.com');
+    cy.get('#Senha').type('Iv@n198529', { log: false });
+    cy.contains('Entrar', { timeout: 1000 }).click();
+    cy.contains('span', /Automação (Staging|Homolog|Prod)/, { timeout: 10000 }).click({ force: true });
+    cy.contains('button', ' Entrar ', { timeout: 10000 }).click();
+
+    // Correção para o tratamento do botão Ok
+    cy.get('body').then($body => {
+      if ($body.text().includes('Você não tem permissão')) {
+        cy.contains('button', 'Ok').click();
+      }
+    });
+
+    // Verifica se a mensagem de erro de permissão aparece e clica em OK
+    cy.get('body').then($body => {
+      // Verifica se o texto da mensagem de erro está presente em qualquer lugar na página
+      if ($body.text().includes('Você não tem permissão para a rota Home')) {
+        // Clica no botão OK para fechar o modal
+        cy.contains('button', 'Ok').click();
+        cy.log('Mensagem de erro de permissão tratada com sucesso');
+      }
+    });
+
+
   });
+
+  // Log para confirmar a criação do ID de sessão
+  cy.log(`Sessão criada com ID: ${sessionId}`);
 });
 

@@ -3,7 +3,7 @@
 /// <reference types="cypress-xpath" />
 
 
-describe.only('Fluxo Atendimento sem Acolhimento', () => {
+describe('Fluxo Atendimento sem Acolhimento', () => {
     beforeEach(() => {
         const baseUrl = Cypress.env('environment') === 'staging'
             ? Cypress.env('baseUrl').staging
@@ -17,6 +17,10 @@ describe.only('Fluxo Atendimento sem Acolhimento', () => {
     });
 
     it('Validar Fluxo de Atendimento Médico sem Acolhimento', () => {
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
+        cy.get('#waiting-room').click()
         cy.get('span').contains('Atendimento médico', { timeout: 20000 }).click()
         cy.wait(2000)
         cy.get('span').contains(' Atender ', { timeout: 20000 }).should('be.visible')

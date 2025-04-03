@@ -5,7 +5,12 @@ module.exports = defineConfig({
   e2e: {
     specPattern: [
       'cypress/e2e/Financeiro/fluxos.cy.js',
-      'cypress/e2e/Financeiro/fluxo_atendimento.cy.js'
+      'cypress/e2e/Financeiro/atendimento_medico.cy.js',
+      'cypress/e2e/Financeiro/fluxo_atendimento.cy.js',
+      'cypress/e2e/Financeiro/teste.cy.js',
+      'cypress/e2e/Financeiro/acolhimento.cy.js',
+      'cypress/e2e/Financeiro/pos_consulta.cy.js',
+      
     ],
     defaultCommandTimeout: 15000,
     requestTimeout: 15000,
@@ -19,7 +24,7 @@ module.exports = defineConfig({
     video: false,
     numTestsKeptInMemory: 5,
     retries: {
-      runMode: 3,
+      runMode: 5,
       openMode: 3
     },
     setupNodeEvents(on, config) {

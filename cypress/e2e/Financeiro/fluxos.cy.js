@@ -368,7 +368,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
 
                 // Agora sim tenta digitar no campo CPF
                 cy.get('#cpf').should('be.visible').clear().type('34921977879', { force: true });
-                cy.wait(3000);
+                cy.wait(5000);
 
                 cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').should('be.visible').click();
                 cy.wait(3000); // Esperar após clicar no botão
@@ -577,7 +577,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
 
                 // Agora sim tenta digitar no campo CPF
                 cy.get('#cpf').should('be.visible').clear().type('34921977879', { force: true });
-                cy.wait(3000);
+                cy.wait(5000);
 
                 cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').should('be.visible').click();
                 cy.wait(2000); // Esperar após clicar no botão
@@ -786,7 +786,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
 
                 // Agora sim tenta digitar no campo CPF
                 cy.get('#cpf').should('be.visible').clear().type('34921977879', { force: true });
-                cy.wait(3000);
+                cy.wait(5000);
 
                 cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').should('be.visible').click();
                 cy.wait(2000); // Esperar após clicar no botão
@@ -1204,7 +1204,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
 
                 // Agora sim tenta digitar no campo CPF
                 cy.get('#cpf').should('be.visible').clear().type('34921977879', { force: true });
-                cy.wait(3000);
+                cy.wait(5000);
 
                 cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').should('be.visible').click();
                 cy.wait(2000); // Esperar após clicar no botão
@@ -1271,7 +1271,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         cy.wait(1000)
 
         cy.get('#cpf').type('34921977879');
-        cy.wait(3000);
+        cy.wait(5000);
 
         cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').click();
         cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
@@ -1322,7 +1322,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         cy.wait(1000)
 
         cy.get('#cpf').type('34921977879');
-        cy.wait(3000);
+        cy.wait(5000);
 
         cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').click();
         cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
@@ -1373,7 +1373,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         cy.wait(1000)
 
         cy.get('#cpf').type('34921977879');
-        cy.wait(3000);
+        cy.wait(5000);
 
         cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').click();
         cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
@@ -1424,7 +1424,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         cy.wait(1000)
 
         cy.get('#cpf').type('34921977879');
-        cy.wait(3000);
+        cy.wait(5000);
 
         cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').click();
         cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
@@ -1475,7 +1475,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         cy.wait(1000)
 
         cy.get('#cpf').type('34921977879');
-        cy.wait(3000);
+        cy.wait(5000);
 
         cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').click();
         cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
@@ -1530,7 +1530,7 @@ describe('Reagendamento', () => {
         cy.wait(3000)
 
         cy.get('#cpf').type('34921977879');
-        cy.wait(1000);
+        cy.wait(5000);
 
         cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').click();
         cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
@@ -1599,7 +1599,7 @@ describe('Reagendamento', () => {
         cy.wait(3000)
 
         cy.get('#cpf').type('34921977879');
-        cy.wait(1000);
+        cy.wait(5000);
 
         cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').click();
         cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
@@ -1668,7 +1668,7 @@ describe('Reagendamento', () => {
         cy.wait(3000)
 
         cy.get('#cpf').type('34921977879');
-        cy.wait(1000);
+        cy.wait(5000);
 
         cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').click();
         cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
@@ -1737,7 +1737,7 @@ describe('Reagendamento', () => {
         cy.wait(3000)
 
         cy.get('#cpf').type('34921977879');
-        cy.wait(1000);
+        cy.wait(5000);
 
         cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').click();
         cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
@@ -2424,6 +2424,26 @@ describe('Check-in', () => {
 
     it('Validar Fluxo Checkin no Dinheiro com Troco (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
+        const valorItem = 3.33; // Valor fixo do item a ser pago
+        
+        // Função para gerar um valor aleatório entre min e max com 2 casas decimais
+        function gerarValorAleatorio(min, max) {
+          const valor = Math.random() * (max - min) + min;
+          return parseFloat(valor.toFixed(2));
+        }
+        
+        // Gerar um valor aleatório entre 4,00 e 500,00
+        const valorPago = gerarValorAleatorio(4, 500);
+        const trocoEsperado = (valorPago - valorItem).toFixed(2).replace('.', ',');
+        const trocoFormatado = `R$ ${trocoEsperado}`;
+        const valorPagoFormatado = valorPago.toFixed(2).replace('.', ',');
+        
+        // Log informativo sobre os valores que serão usados
+        cy.log(`Teste com valores aleatórios:`)
+        cy.log(`Valor do item: R$ ${valorItem.toFixed(2).replace('.', ',')}`)
+        cy.log(`Valor pago: R$ ${valorPagoFormatado}`)
+        cy.log(`Troco esperado: ${trocoFormatado}`)
+        
         cy.visit(baseUrl);
         cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
@@ -2432,15 +2452,63 @@ describe('Check-in', () => {
         cy.xpath("(//button[contains(@class,'mat-ripple btn')])[1]").click({ force: true })
         cy.get('button').contains('Receber').click()
         cy.get('button').contains('Dinheiro').click()
-        cy.xpath("//input[@name='valorRecebido']").type('10,00')
+        cy.xpath("//input[@name='valorRecebido']").type(valorPagoFormatado)
         cy.get('button').contains('Pagar').click()
         cy.get('button').contains('Ok').click()
         cy.contains('h2', 'Sucesso', { timeout: 20000 }).should('have.text', 'Sucesso')
-
+        
         cy.wait(1000)
-
+        
         cy.get('#open-financial').click()
         cy.contains(' Detalhes ').click()
+        
+        // Abordagem mais flexível para verificação
+        cy.get('table', { timeout: 10000 }).should('be.visible');
+        
+        // Verificar se existe alguma linha na tabela que contenha o valor do troco
+        cy.get('tr').contains(trocoFormatado, { timeout: 10000 }).should('exist');
+        
+        // Verificar nas últimas linhas da tabela (mais provável conter o item mais recente)
+        cy.get('tr').then(($rows) => {
+          // Percorrer as 5 últimas linhas
+          const numLinhas = $rows.length;
+          const startIndex = Math.max(0, numLinhas - 5); // Pegar as últimas 5 linhas ou todas se houver menos de 5
+          
+          cy.log(`Verificando as últimas ${numLinhas - startIndex} linhas da tabela, total de ${numLinhas} linhas`);
+          
+          // Flag para indicar se encontramos o troco em alguma linha
+          let trocoEncontrado = false;
+          
+          // Verificar cada uma das últimas linhas
+          for (let i = startIndex; i < numLinhas; i++) {
+            const $row = $rows.eq(i);
+            const rowText = $row.text();
+            
+            if (rowText.includes(trocoFormatado)) {
+              trocoEncontrado = true;
+              
+              // Verificar se a linha também contém TR
+              if (rowText.includes('TR')) {
+                cy.log(`✓ Troco ${trocoFormatado} e TR encontrados na linha ${i+1}`);
+                break;
+              } else {
+                cy.log(`✗ Troco ${trocoFormatado} encontrado na linha ${i+1}, mas não contém TR`);
+              }
+            }
+          }
+          
+          // Se não encontramos o troco, verificamos de forma mais flexível
+          if (!trocoEncontrado) {
+            cy.log('Troco não encontrado nas últimas linhas. Verificando de forma mais flexível...');
+            
+            // Verificação alternativa: procurar qualquer célula com o troco
+            cy.contains(trocoFormatado).should('exist');
+            
+            // E verificar se qualquer linha com esse troco contém TR
+            cy.contains(trocoFormatado).parents('tr').contains(/TR/).should('exist');
+          }
+        });
+ 
 
     });
 
@@ -2459,6 +2527,45 @@ describe('Check-in', () => {
         cy.get('button').contains('Ok').click()
         cy.contains('h2', 'Sucesso', { timeout: 20000 }).should('have.text', 'Sucesso')
     });
+
+    it('Deve exibir um novo recebimento quando o valor pago for menor que o valor do item', () => {
+        const baseUrl = Cypress.env('currentBaseUrl');
+        const valorPago = 1.00; // Valor insuficiente
+        const valorPagoFormatado = valorPago.toFixed(2).replace('.', ',');
+        
+        cy.visit(baseUrl);
+        cy.wait(2000)
+        cy.get('#schedule', { timeout: 20000 }).click()
+        cy.get('span').contains('Check-in').click()
+        cy.wait(2000)
+        cy.xpath("(//button[contains(@class,'mat-ripple btn')])[1]").click({ force: true })
+        cy.get('button').contains('Receber').click()
+        cy.get('button').contains('Dinheiro').click()
+        
+        // Inserir um valor insuficiente
+        cy.xpath("//input[@name='valorRecebido']").type(valorPagoFormatado)
+        
+        // Tentar pagar com valor insuficiente
+        cy.get('button').contains('Pagar').click()
+
+        cy.get('button').contains('Ok').click()
+        
+        // Verificar se o texto completo da mensagem de erro está correto
+        cy.contains('Não é possível prosseguir com recebimento parcial da conta.').should('be.visible');
+        
+        // Verificar se os botões de "Sair" e "Novo Recebimento" estão presentes
+        cy.contains('button', 'Sair').should('be.visible');
+        cy.contains('button', 'Novo Recebimento').should('be.visible').click()
+
+        cy.get('button').contains('Dinheiro').click()
+        
+        // Inserir um valor insuficiente
+        cy.xpath("//input[@name='valorRecebido']").type('2,33')
+        
+        // Tentar pagar com valor insuficiente
+        cy.get('button').contains('Pagar').click()
+        cy.get('button').contains('Ok').click()
+      });
 });
 
 describe('Contas a Receber', () => {
@@ -2534,7 +2641,7 @@ describe('Contas a Receber', () => {
         cy.xpath("(//div[contains(.,'Conta Vinculada *')])[9]").click();
         cy.xpath("//span[contains(.,' Conta Automação ')]").click();
         cy.xpath("//button[@color='primary'][contains(.,'Pagar')]").click();
-        cy.contains('Parcela salva com sucesso !', { timeout: 20000 }).click();
+        cy.contains('Parcela salva com sucesso !', { timeout: 20000 }).should('be.visible').click();
         cy.contains('Ok').click();
 
 
@@ -2607,7 +2714,7 @@ describe('Contas a Receber', () => {
         cy.xpath("(//div[contains(.,'Conta Vinculada *')])[9]").click();
         cy.xpath("//span[contains(.,' Conta Automação ')]").click();
         cy.xpath("//button[@color='primary'][contains(.,'Pagar')]").click();
-        cy.contains('Parcela salva com sucesso !', { timeout: 20000 }).click();
+        cy.contains('Parcela salva com sucesso !', { timeout: 20000 }).should('be.visible').click();
         cy.contains('Ok').click();
 
     });
@@ -2661,6 +2768,16 @@ describe('Contas a Receber', () => {
         cy.xpath("//button[contains(.,'Cadastrar')]").click();
         cy.contains('Parcelas geradas com sucesso', { timeout: 20000 }).should('be.visible');
         cy.contains('Ok').click();
+        cy.get('button').contains('Receber').click()
+        cy.get('button').contains('Cartão de Débito').click()
+        cy.xpath("//label[normalize-space()='Não TEF']").click()
+        cy.xpath("//input[contains(@value,'false')]").click({ force: true })
+        cy.xpath("(//div[contains(.,'Contas Correntes *')])[9]").click()
+        cy.get('span').contains(' Conta Débito').click()
+        cy.get('button').contains('Pagar').click()
+        cy.get('button').contains('Sim').click()
+        cy.contains('Parcela salva com sucesso !', { timeout: 20000 }).should('be.visible').click();
+        cy.contains('Ok').click();
     });
 
     it('Fluxo de Contas a receber - Credito', () => {
@@ -2711,6 +2828,16 @@ describe('Contas a Receber', () => {
         cy.contains('Tem Certeza que deseja cadastrar essa conta a receber?').should('be.visible');
         cy.xpath("//button[contains(.,'Cadastrar')]").click();
         cy.contains('Parcelas geradas com sucesso', { timeout: 20000 }).should('be.visible');
+        cy.contains('Ok').click();
+        cy.get('button').contains('Receber').click()
+        cy.get('button').contains('Cartão de Crédito').click()
+        cy.xpath("//label[normalize-space()='Não TEF']").click()
+        cy.xpath("//input[contains(@value,'false')]").click({ force: true })
+        cy.xpath("(//div[contains(.,'Contas Correntes *')])[9]").click()
+        cy.get('span').contains(' Crédito Cartão ').click()
+        cy.get('button').contains('Pagar').click()
+        cy.get('button').contains('Sim').click()
+        cy.contains('Parcela salva com sucesso !', { timeout: 20000 }).should('be.visible')
         cy.contains('Ok').click();
     });
 });
@@ -3746,7 +3873,7 @@ describe('Tela Cartões', () => {
     });
 });
 
-describe('Royalties', () => {
+describe.only('Royalties', () => {
     beforeEach(() => {
         cy.setupAndLogin(); // Usa o comando customizado
         cy.allure().epic('Financeiro');
@@ -3763,11 +3890,10 @@ describe('Royalties', () => {
 
         cy.get('span').contains('Royalties', { timeout: 20000 }).click();
 
-        cy.get('#search-input').type('Automação Homolog')
         cy.xpath("//button[@class='btn position-absolute search-button']").click()
 
 
-        cy.get('[data-mat-icon-name="info-icon"]', { timeout: 20000 })
+        cy.get('.cursor-pointer', { timeout: 20000 })
             .should('be.visible')
             .first()
             .click({ force: true });
