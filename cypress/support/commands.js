@@ -1,59 +1,54 @@
-// commands.js
 Cypress.Commands.add('setupAndLogin', (email = 'ivan.santos+1@amorsaude.com', password = 'Iv@n198529') => {
-  // Gera um identificador único para a sessão
-  const sessionId = `login_${Date.now()}`;
+  const sessionVersion = 'v3';
+  const sessionId = `login_${email}_${sessionVersion}`;
 
   const environment = Cypress.env('environment') || Cypress.env('CYPRESS_ENV');
   const baseUrl = environment === 'staging'
-
     ? Cypress.env('baseUrl').staging
     : environment === 'producao' || environment === 'prod'
       ? Cypress.env('baseUrl').producao
       : Cypress.env('baseUrl').homologacao;
 
-
   Cypress.env('currentBaseUrl', baseUrl);
 
   cy.session(sessionId, () => {
-    const currentBaseUrl = Cypress.env('currentBaseUrl');
-    cy.wait(500)
+    cy.visit(baseUrl);
 
-    cy.visit(`${currentBaseUrl}`);
 
     cy.get('#E-mail').type(email, { timeout: 30000 });
-    cy.get('#Senha').type(password, { log: false }, { timeout: 30000 });
+    cy.get('#Senha').type(password, { log: false, timeout: 30000 });
     cy.contains('Entrar', { timeout: 1000 }).click();
-    cy.wait(500)
+    cy.wait(500);
 
+    
     cy.contains('span', /Automação (Staging|Homolog|Prod)/, { timeout: 10000 }).click({ force: true });
     cy.contains('button', ' Entrar ', { timeout: 10000 }).click();
-    cy.wait(500)
+    cy.wait(500);
 
-    // Correção para o tratamento do botão Ok
     cy.get('body').then($body => {
       if ($body.text().includes('Você não tem permissão')) {
         cy.contains('button', 'Ok').click();
       }
-    });
-
-    // Verifica se a mensagem de erro de permissão aparece e clica em OK
-    cy.get('body').then($body => {
-      // Verifica se o texto da mensagem de erro está presente em qualquer lugar na página
       if ($body.text().includes('Você não tem permissão para a rota Home')) {
-        // Clica no botão OK para fechar o modal
         cy.contains('button', 'Ok').click();
         cy.log('Mensagem de erro de permissão tratada com sucesso');
       }
     });
 
+    // Salvar token em localStorage, se necessário
     cy.get('#schedule', { timeout: 10000 }).should('exist');
   }, {
     validate: () => {
-      cy.get('#schedule', { timeout: 10000 }).should('exist');
+      // Verifica se está autenticado via localStorage ou cookie (ajuste conforme necessário)
+      cy.window().then(win => {
+        const isLoggedIn = Boolean(win.localStorage.getItem('user') || win.localStorage.getItem('auth_token'));
+        expect(isLoggedIn).to.be.true;
+      });
     },
     cacheAcrossSpecs: true
   });
 });
+
 
 // Tratamento global para erros não capturados
 Cypress.on('uncaught:exception', (err, runnable) => {

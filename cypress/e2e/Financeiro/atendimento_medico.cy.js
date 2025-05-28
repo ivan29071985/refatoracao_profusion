@@ -19,13 +19,13 @@ describe('Profusion - Sala de espera > Visão Médico', () => {
 
         // Mapeamento de ambientes para domínios (sem duplicações)
         const domainMap = {
-          'staging': 'https://amei-staging.amorsaude.com.br',
-          'homologacao': 'https://amei-homolog.amorsaude.com.br',
-          'producao': 'https://amei.amorsaude.com.br'
+            'staging': 'https://amei-staging.amorsaude.com.br',
+            'homologacao': 'https://amei-homolog.amorsaude.com.br',
+            'producao': 'https://amei.amorsaude.com.br'
         };
-        
+
         const baseDomain = domainMap[environment] || Cypress.env('currentBaseUrl');
-        
+
         // Verificação da URL
         cy.url().should('include', `${baseDomain}/waiting-room-v2`);
     })
@@ -42,13 +42,13 @@ describe('Profusion - Sala de espera > Visão Médico', () => {
 
         // Mapeamento de ambientes para domínios
         const domainMap = {
-          'staging': 'https://amei-staging.amorsaude.com.br',
-          'homologacao': 'https://amei-homolog.amorsaude.com.br',
-          'producao': 'https://amei.amorsaude.com.br'
+            'staging': 'https://amei-staging.amorsaude.com.br',
+            'homologacao': 'https://amei-homolog.amorsaude.com.br',
+            'producao': 'https://amei.amorsaude.com.br'
         };
-        
+
         const baseDomain = domainMap[environment] || Cypress.env('currentBaseUrl');
-        
+
         // Verificar apenas o domínio base, sem o caminho específico
         cy.url().should('include', baseDomain);
     });
@@ -65,13 +65,13 @@ describe('Profusion - Sala de espera > Visão Médico', () => {
 
         // Mapeamento de ambientes para domínios
         const domainMap = {
-          'staging': 'https://amei-staging.amorsaude.com.br',
-          'homologacao': 'https://amei-homolog.amorsaude.com.br',
-          'producao': 'https://amei.amorsaude.com.br'
+            'staging': 'https://amei-staging.amorsaude.com.br',
+            'homologacao': 'https://amei-homolog.amorsaude.com.br',
+            'producao': 'https://amei.amorsaude.com.br'
         };
-        
+
         const baseDomain = domainMap[environment] || Cypress.env('currentBaseUrl');
-        
+
         // Verificar apenas o domínio base, sem o caminho específico
         cy.url().should('include', baseDomain);
     });
@@ -84,7 +84,19 @@ describe('Profusion - Sala de espera > Visão Médico', () => {
         cy.wait(3000)
         cy.contains('span', 'Atendimento médico').click()
         cy.xpath("//a[@class='text-gray-medium'][contains(.,'Atendimento médico')]").click()
-        cy.url().should('include', 'https://amei-staging.amorsaude.com.br/waiting-room-v2/medical-care')
+
+        const environment = Cypress.env('environment') || Cypress.env('CYPRESS_ENV');
+
+        // Mapeamento de ambientes para domínios (sem duplicações)
+        const domainMap = {
+            'staging': 'https://amei-staging.amorsaude.com.br',
+            'homologacao': 'https://amei-homolog.amorsaude.com.br',
+            'producao': 'https://amei.amorsaude.com.br'
+        };
+
+      const baseDomain = domainMap[environment] || Cypress.env('currentBaseUrl');
+
+        cy.url().should('include', `${baseDomain}/waiting-room-v2/medical-care`);
     });
 
     it('Validar título Sala de espera', () => {
@@ -205,7 +217,7 @@ describe('Profusion - Sala de espera > Visão Médico', () => {
         cy.wait(3000)
         cy.contains('span', 'Atendimento médico').click()
         cy.xpath("//input[contains(@placeholder,'Status')]").click()
-        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Todos')]").should('be.visible')        
+        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Todos')]").should('be.visible')
     });
 
     it('Validar check Em atendimento', () => {
@@ -216,7 +228,7 @@ describe('Profusion - Sala de espera > Visão Médico', () => {
         cy.wait(3000)
         cy.contains('span', 'Atendimento médico').click()
         cy.xpath("//input[contains(@placeholder,'Status')]").click()
-        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Em atendimento')]").should('be.visible')        
+        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Em atendimento')]").should('be.visible')
     });
 
     it('Validar check Aguardando acolhimento assistido', () => {
@@ -227,7 +239,7 @@ describe('Profusion - Sala de espera > Visão Médico', () => {
         cy.wait(3000)
         cy.contains('span', 'Atendimento médico').click()
         cy.xpath("//input[contains(@placeholder,'Status')]").click()
-        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Aguardando acolhimento assistido')]").should('be.visible')        
+        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Aguardando acolhimento assistido')]").should('be.visible')
     });
 
     it('Validar check Aguardando atendimento', () => {
@@ -238,7 +250,7 @@ describe('Profusion - Sala de espera > Visão Médico', () => {
         cy.wait(3000)
         cy.contains('span', 'Atendimento médico').click()
         cy.xpath("//input[contains(@placeholder,'Status')]").click()
-        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Aguardando atendimento')]").scrollIntoView().should('be.visible')        
+        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Aguardando atendimento')]").scrollIntoView().should('be.visible')
     });
 
     it('Validar check Marcado - confirmado', () => {
@@ -249,7 +261,7 @@ describe('Profusion - Sala de espera > Visão Médico', () => {
         cy.wait(3000)
         cy.contains('span', 'Atendimento médico').click()
         cy.xpath("//input[contains(@placeholder,'Status')]").click()
-        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Marcado - confirmado')]").scrollIntoView().should('be.visible')        
+        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Marcado - confirmado')]").scrollIntoView().should('be.visible')
     });
 
     it('Validar check Não compareceu', () => {
@@ -260,7 +272,7 @@ describe('Profusion - Sala de espera > Visão Médico', () => {
         cy.wait(3000)
         cy.contains('span', 'Atendimento médico').click()
         cy.xpath("//input[contains(@placeholder,'Status')]").click()
-        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Não compareceu')]").scrollIntoView().should('be.visible')        
+        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Não compareceu')]").scrollIntoView().should('be.visible')
     });
 
     it('Validar check Atendimento pausado', () => {
@@ -271,7 +283,7 @@ describe('Profusion - Sala de espera > Visão Médico', () => {
         cy.wait(3000)
         cy.contains('span', 'Atendimento médico').click()
         cy.xpath("//input[contains(@placeholder,'Status')]").click()
-        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Atendimento pausado')]").scrollIntoView().should('be.visible')        
+        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Atendimento pausado')]").scrollIntoView().should('be.visible')
     });
 
     it('Validar check Agendado', () => {
@@ -282,7 +294,7 @@ describe('Profusion - Sala de espera > Visão Médico', () => {
         cy.wait(3000)
         cy.contains('span', 'Atendimento médico').click()
         cy.xpath("//input[contains(@placeholder,'Status')]").click()
-        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Agendado')]").scrollIntoView().should('be.visible')        
+        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Agendado')]").scrollIntoView().should('be.visible')
     });
 
     it('Validar check Atendimento Não Finalizado', () => {
@@ -293,7 +305,7 @@ describe('Profusion - Sala de espera > Visão Médico', () => {
         cy.wait(3000)
         cy.contains('span', 'Atendimento médico').click()
         cy.xpath("//input[contains(@placeholder,'Status')]").click()
-        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Atendimento Não Finalizado')]").scrollIntoView().should('be.visible')        
+        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Atendimento Não Finalizado')]").scrollIntoView().should('be.visible')
     });
 
     it('Validar check Atendido', () => {
@@ -304,7 +316,7 @@ describe('Profusion - Sala de espera > Visão Médico', () => {
         cy.wait(3000)
         cy.contains('span', 'Atendimento médico').click()
         cy.xpath("//input[contains(@placeholder,'Status')]").click()
-        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Atendido')]").scrollIntoView().should('be.visible')        
+        cy.xpath("//span[@class='mat-checkbox-label'][contains(.,'Atendido')]").scrollIntoView().should('be.visible')
     });
 
     it('Validar botão Pesquisar', () => {

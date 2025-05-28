@@ -1,16 +1,20 @@
 const { defineConfig } = require("cypress");
 const allureWriter = require('@shelex/cypress-allure-plugin/writer');
+const fs = require('fs');
+const path = require('path');
 
 module.exports = defineConfig({
   e2e: {
     specPattern: [
+      'cypress/e2e/Profusion/grade_horario.cy.js',
       'cypress/e2e/Financeiro/fluxos.cy.js',
       'cypress/e2e/Financeiro/atendimento_medico.cy.js',
       'cypress/e2e/Financeiro/fluxo_atendimento.cy.js',
       'cypress/e2e/Financeiro/teste.cy.js',
       'cypress/e2e/Financeiro/acolhimento.cy.js',
       'cypress/e2e/Financeiro/pos_consulta.cy.js',
-      
+      'cypress/e2e/Financeiro/fluxos_tef.cy.js',
+      'cypress/e2e/Financeiro/login.cy.js'
     ],
     defaultCommandTimeout: 15000,
     requestTimeout: 15000,
@@ -50,6 +54,48 @@ module.exports = defineConfig({
             global.gc();
           }
           return null;
+        },
+
+        // Limpa a pasta de downloads
+        clearDownloads() {
+          const downloadsFolder = config.downloadsFolder;
+          if (fs.existsSync(downloadsFolder)) {
+            fs.readdirSync(downloadsFolder).forEach(file => {
+              fs.unlinkSync(path.join(downloadsFolder, file));
+            });
+          }
+          return null;
+        },
+
+        // Pega o caminho completo do arquivo mais recente
+        getLatestDownloadedFile() {
+          const downloadsFolder = config.downloadsFolder;
+
+          if (!fs.existsSync(downloadsFolder)) {
+            return null;
+          }
+
+          const files = fs.readdirSync(downloadsFolder);
+          const xlsxFiles = files.filter(f => f.endsWith('.xlsx') || f.endsWith('.xls'));
+
+          if (xlsxFiles.length === 0) return null;
+
+          const sortedFiles = xlsxFiles.map(file => ({
+            name: file,
+            fullPath: path.join(downloadsFolder, file),
+            time: fs.statSync(path.join(downloadsFolder, file)).mtime.getTime()
+          })).sort((a, b) => b.time - a.time);
+
+          return sortedFiles[0].fullPath;
+        },
+
+        // Lê o conteúdo do Excel com base no caminho completo
+        readExcelFile(filePath) {
+          if (!fs.existsSync(filePath)) {
+            throw new Error(`Arquivo não encontrado: ${filePath}`);
+          }
+
+          return fs.readFileSync(filePath, 'base64');
         }
       });
 
@@ -65,10 +111,13 @@ module.exports = defineConfig({
         });
       }
 
+      config.env.MAILOSAUR_API_KEY = config.env.MAILOSAUR_API_KEY || process.env.MAILOSAUR_API_KEY;
+      config.env.MAILOSAUR_SERVER_ID = config.env.MAILOSAUR_SERVER_ID || process.env.MAILOSAUR_SERVER_ID || 'pcph7thc';
+
       const environment = process.env.CYPRESS_ENV || config.env.environment || 'homologacao';
       config.baseUrl = config.env.baseUrl[environment] || 'https://amei-homolog.amorsaude.com.br';
       config.env.environment = environment;
-      
+
       return config;
     }
   },
@@ -79,6 +128,6 @@ module.exports = defineConfig({
       staging: 'https://amei-staging.amorsaude.com.br',
       producao: 'https://amei.amorsaude.com.br'
     },
-    failOnStatusCode: false
+    failOnStatusCode: false,
   }
 });

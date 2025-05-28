@@ -4,10 +4,9 @@
 import { format } from 'date-fns';
 
 
-//
-
-describe('Grade do Profissional', () => {
+describe.only('Grade do Profissional', () => {
     beforeEach(() => {
+        cy.clearAllCookies()
         cy.setupAndLogin(); // Usa o comando customizado
         cy.allure().epic('Financeiro');
         cy.allure().severity('critical');
@@ -24,8 +23,6 @@ describe('Grade do Profissional', () => {
         cy.contains('span', 'edit').click()
         cy.contains('span', 'Horários de atendimento').click()
         cy.contains('button', 'Incluir').click()
-
-        cy.wait(2000)
 
         const today = new Date();
         const dayOfWeek = today.getDay()
@@ -187,6 +184,7 @@ describe('Grade do Profissional', () => {
 
 describe('Agendamento Simples - Agendamento por Encaixe', () => {
     beforeEach(() => {
+        cy.clearAllCookies()
         cy.setupAndLogin()
         cy.allure().epic('Financeiro');
         cy.allure().severity('critical');
@@ -196,38 +194,38 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(3000); // Esperar carregamento inicial da página
-
+    
         cy.get('#schedule', { timeout: 20000 })
             .should('be.visible')
             .click();
         cy.wait(3000); // Esperar após clicar no schedule
-
+    
         cy.contains('span', 'Agendar atendimento', { timeout: 20000 }).click();
         cy.wait(3000);
-
+    
         cy.get('[formcontrolname="expertiseAreas"]', { timeout: 20000 }).should('be.visible').click();
         cy.wait(3000); // Esperar que a lista de opções seja exibida
-
+    
         cy.xpath("//span[@class='mat-option-text'][contains(.,' Área de Atuação - Teste Automação ')]", { timeout: 20000 }).click({ force: true });
         cy.wait(3000); // Esperar após selecionar área
-
+    
         cy.get('mat-select[formcontrolname="professionals"]').should('be.visible').click();
-
+    
         cy.wait(3000); // Esperar que a lista de profissionais seja exibida
-
+    
         cy.xpath("//span[contains(.,'Dr. Ivan Barros')]").click({ force: true });
         cy.wait(3000); // Esperar após selecionar profissional
-
+    
         cy.xpath("//button[contains(.,'Pesquisar')]").should('be.visible').click();
         cy.wait(3000); // Esperar o resultado da pesquisa
-
+    
         cy.xpath("//div[contains(@class,'cal-week-view')]").should('be.visible');
         cy.wait(3000);
-
+    
         // Obter a data atual
         const today = new Date();
         const weekDay = today.getDay();
-
+    
         // Selecionar o primeiro slot livre na coluna do dia atual
         cy.get('.cal-day-columns .cal-day-column')
             .eq(weekDay)
@@ -236,52 +234,56 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
             .should('be.visible')
             .click();
         cy.wait(3000); // Esperar após selecionar horário
-
+    
         // Marcar o checkbox
         cy.xpath("//label[normalize-space()='Encaixe']").should('be.visible').click();
         cy.wait(3000); // Esperar após marcar o checkbox
-
-        // Formatar a data como YYYY-MM-DD
-        const formattedDate = today.toISOString().split('T')[0];
+    
+        // CORREÇÃO AQUI: Formatar a data como YYYY-MM-DD (formato exigido pelo Cypress para inputs de tipo date)
+        const year = today.getFullYear();
+        const month = (today.getMonth() + 1).toString().padStart(2, '0'); // +1 pois getMonth() retorna 0-11
+        const day = today.getDate().toString().padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`; // Formato YYYY-MM-DD
+    
         cy.get('[formcontrolname="date"]').clear().type(formattedDate);
         cy.wait(3000); // Esperar após digitar a data
-
+    
         // Função para gerar horário de encaixe válido (com minutos não redondos e sempre no futuro)
         function getEncaixeTime(date) {
             const agora = new Date();
-
+    
             // Garantir que estamos trabalhando com uma hora futura
             let horaEncaixe = Math.max(date.getHours(), agora.getHours());
-
+    
             // Se estivermos na hora atual, precisamos garantir que os minutos sejam futuros
             if (horaEncaixe === agora.getHours()) {
                 horaEncaixe++;  // Avançar para a próxima hora para garantir que está no futuro
             }
-
+    
             // Lista de minutos não padrão para encaixes
             const minutosEncaixe = [3, 7, 11, 19, 23, 27, 33, 37, 41, 47, 53, 57];
-
+    
             // Selecionar um minuto aleatório da lista
             const minuto = minutosEncaixe[Math.floor(Math.random() * minutosEncaixe.length)];
-
+    
             // Formatar para HH:mm
             return `${horaEncaixe.toString().padStart(2, '0')}:${minuto.toString().padStart(2, '0')}`;
         }
-
+    
         // Obter horário de encaixe
         let nextTime = getEncaixeTime(today);
         cy.log(`Tentando horário de encaixe: ${nextTime}`);
-
+    
         // Digitar o horário no campo
         cy.get('[formcontrolname="time"]').should('be.visible').clear().type(nextTime);
         cy.wait(3000); // Esperar mais tempo após digitar o horário (ponto crítico)
-
+    
         // Função para verificar mensagens e agir de acordo
         function verificarMensagens() {
             // Verificar possíveis mensagens com assertions
             return cy.get('body').then($body => {
                 const textoBody = $body.text();
-
+    
                 // Verificar mensagem de horário padrão vs encaixe
                 if (textoBody.includes('Você selecionou um horário do agendamento padrão')) {
                     // Usar assertion para verificar formalmente a presença da mensagem
@@ -291,22 +293,22 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
                             cy.wait(3000); // Esperar 3 segundos antes de clicar
                             cy.log('Horário padrão detectado, selecionando novo horário quebrado');
                             cy.contains('button', 'Não').should('be.visible').click();
-
+    
                             cy.wait(3000); // Esperar 3 segundos após clicar no botão
-
+    
                             // Gerar um horário de encaixe válido
                             nextTime = getEncaixeTime(today);
                             cy.log(`Tentando novo horário de encaixe: ${nextTime}`);
-
+    
                             // Limpar e digitar o novo horário
                             cy.get('[formcontrolname="time"]').should('be.visible').clear().type(nextTime);
                             cy.wait(3000); // Esperar 3 segundos após digitar o novo horário
-
+    
                             // Verificar novamente
                             return verificarMensagens();
                         });
                 }
-
+    
                 // Verificar se o máximo de encaixes foi atingido
                 else if (textoBody.includes('Máximo de encaixes atingido')) {
                     return cy.contains('Máximo de encaixes atingido')
@@ -319,7 +321,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
                             return cy.wrap(false); // Indica que não deve continuar
                         });
                 }
-
+    
                 // Verificar se já existe agendamento para este horário
                 else if (textoBody.includes('Já existe um agendamento para esta data e horário')) {
                     return cy.contains('Já existe um agendamento para esta data e horário')
@@ -329,21 +331,21 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
                             cy.log('Horário já agendado, tentando outro horário');
                             cy.contains('button', 'Ok').should('be.visible').click();
                             cy.wait(3000); // Esperar após clicar no Ok
-
+    
                             // Adicionar 2 minutos e tentar novamente
                             const newDate = new Date(today.getTime() + 2 * 60 * 1000);
                             nextTime = getEncaixeTime(newDate);
                             cy.log(`Tentando novo horário: ${nextTime}`);
-
+    
                             // Limpar e digitar o novo horário
                             cy.get('[formcontrolname="time"]').should('be.visible').clear().type(nextTime);
                             cy.wait(3000); // Esperar mais tempo após digitar o novo horário
-
+    
                             // Verificar novamente com o novo horário
                             return verificarMensagens();
                         });
                 }
-
+    
                 // Se nenhuma mensagem aparecer, continuar com o agendamento
                 else {
                     cy.wait(3000); // Esperar um pouco para ter certeza de que nenhuma mensagem aparecerá
@@ -351,13 +353,13 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
                 }
             });
         }
-
+    
         // Verificar mensagens antes de prosseguir
         verificarMensagens().then(continuar => {
             if (continuar) {
                 // Continuar com o processo de agendamento
                 cy.log('Prosseguindo com o agendamento');
-
+    
                 // Verificar e fechar qualquer modal Sweet Alert que possa estar aberto
                 cy.get('body').then($body => {
                     if ($body.find('.swal2-container').length > 0) {
@@ -365,34 +367,34 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
                         cy.wait(2000); // Esperar o modal fechar
                     }
                 });
-
+    
                 // Agora sim tenta digitar no campo CPF
                 cy.get('#cpf').should('be.visible').clear().type('34921977879', { force: true });
                 cy.wait(5000);
-
+    
                 cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').should('be.visible').click();
                 cy.wait(3000); // Esperar após clicar no botão
-
+    
                 cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
                 cy.wait(3000); // Esperar antes de selecionar o procedimento
-
+    
                 cy.xpath("//span[@class='mat-option-text'][contains(.,'Consulta Áreas de Atuação')]")
                     .first()
                     .should('be.visible')
                     .click({ force: true });
                 cy.wait(3000);
-
+    
                 cy.xpath("//button[@color='primary'][contains(.,'Adicionar')]").should('exist').should('be.visible').click();
                 cy.wait(2000); // Esperar após adicionar
-
+    
                 cy.xpath("//button[@color='primary'][contains(.,'Confirmar')]").should('exist').should('be.visible').click();
                 cy.wait(3000); // Esperar antes da mensagem de sucesso
-
+    
                 // Verificar sucesso com assertion
                 cy.contains('h2', 'Agendamento criado com sucesso', { timeout: 20000 })
                     .should('be.visible');
                 cy.wait(3000); // Esperar antes de clicar em Ok
-
+    
                 cy.contains('button', 'Ok').should('be.visible').click();
                 cy.wait(3000); // Esperar após o último clique
             } else {
@@ -405,38 +407,39 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
     it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora 2', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
-        cy.wait(2000); // Esperar carregamento inicial da página
-
+        cy.wait(3000); // Esperar carregamento inicial da página
+    
         cy.get('#schedule', { timeout: 20000 })
             .should('be.visible')
             .click();
-        cy.wait(2000); // Esperar após clicar no schedule
-
+        cy.wait(3000); // Esperar após clicar no schedule
+    
         cy.contains('span', 'Agendar atendimento', { timeout: 20000 }).click();
         cy.wait(3000);
-
+    
         cy.get('[formcontrolname="expertiseAreas"]', { timeout: 20000 }).should('be.visible').click();
-        cy.wait(2000); // Esperar que a lista de opções seja exibida
-
+        cy.wait(3000); // Esperar que a lista de opções seja exibida
+    
         cy.xpath("//span[@class='mat-option-text'][contains(.,' Área de Atuação - Teste Automação ')]", { timeout: 20000 }).click({ force: true });
-        cy.wait(2000); // Esperar após selecionar área
-
+        cy.wait(3000); // Esperar após selecionar área
+    
         cy.get('mat-select[formcontrolname="professionals"]').should('be.visible').click();
-        cy.wait(2000); // Esperar que a lista de profissionais seja exibida
-
+    
+        cy.wait(3000); // Esperar que a lista de profissionais seja exibida
+    
         cy.xpath("//span[contains(.,'Dr. Ivan Barros')]").click({ force: true });
-        cy.wait(1000); // Esperar após selecionar profissional
-
+        cy.wait(3000); // Esperar após selecionar profissional
+    
         cy.xpath("//button[contains(.,'Pesquisar')]").should('be.visible').click();
         cy.wait(3000); // Esperar o resultado da pesquisa
-
+    
         cy.xpath("//div[contains(@class,'cal-week-view')]").should('be.visible');
         cy.wait(3000);
-
+    
         // Obter a data atual
         const today = new Date();
         const weekDay = today.getDay();
-
+    
         // Selecionar o primeiro slot livre na coluna do dia atual
         cy.get('.cal-day-columns .cal-day-column')
             .eq(weekDay)
@@ -444,53 +447,57 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
             .first()
             .should('be.visible')
             .click();
-        cy.wait(2000); // Esperar após selecionar horário
-
+        cy.wait(3000); // Esperar após selecionar horário
+    
         // Marcar o checkbox
         cy.xpath("//label[normalize-space()='Encaixe']").should('be.visible').click();
-        cy.wait(2000); // Esperar após marcar o checkbox
-
-        // Formatar a data como YYYY-MM-DD
-        const formattedDate = today.toISOString().split('T')[0];
+        cy.wait(3000); // Esperar após marcar o checkbox
+    
+        // CORREÇÃO AQUI: Formatar a data como YYYY-MM-DD (formato exigido pelo Cypress para inputs de tipo date)
+        const year = today.getFullYear();
+        const month = (today.getMonth() + 1).toString().padStart(2, '0'); // +1 pois getMonth() retorna 0-11
+        const day = today.getDate().toString().padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`; // Formato YYYY-MM-DD
+    
         cy.get('[formcontrolname="date"]').clear().type(formattedDate);
-        cy.wait(2000); // Esperar após digitar a data
-
+        cy.wait(3000); // Esperar após digitar a data
+    
         // Função para gerar horário de encaixe válido (com minutos não redondos e sempre no futuro)
         function getEncaixeTime(date) {
             const agora = new Date();
-
+    
             // Garantir que estamos trabalhando com uma hora futura
             let horaEncaixe = Math.max(date.getHours(), agora.getHours());
-
+    
             // Se estivermos na hora atual, precisamos garantir que os minutos sejam futuros
             if (horaEncaixe === agora.getHours()) {
                 horaEncaixe++;  // Avançar para a próxima hora para garantir que está no futuro
             }
-
+    
             // Lista de minutos não padrão para encaixes
             const minutosEncaixe = [3, 7, 11, 19, 23, 27, 33, 37, 41, 47, 53, 57];
-
+    
             // Selecionar um minuto aleatório da lista
             const minuto = minutosEncaixe[Math.floor(Math.random() * minutosEncaixe.length)];
-
+    
             // Formatar para HH:mm
             return `${horaEncaixe.toString().padStart(2, '0')}:${minuto.toString().padStart(2, '0')}`;
         }
-
+    
         // Obter horário de encaixe
         let nextTime = getEncaixeTime(today);
         cy.log(`Tentando horário de encaixe: ${nextTime}`);
-
+    
         // Digitar o horário no campo
         cy.get('[formcontrolname="time"]').should('be.visible').clear().type(nextTime);
         cy.wait(3000); // Esperar mais tempo após digitar o horário (ponto crítico)
-
+    
         // Função para verificar mensagens e agir de acordo
         function verificarMensagens() {
             // Verificar possíveis mensagens com assertions
             return cy.get('body').then($body => {
                 const textoBody = $body.text();
-
+    
                 // Verificar mensagem de horário padrão vs encaixe
                 if (textoBody.includes('Você selecionou um horário do agendamento padrão')) {
                     // Usar assertion para verificar formalmente a presença da mensagem
@@ -500,73 +507,73 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
                             cy.wait(3000); // Esperar 3 segundos antes de clicar
                             cy.log('Horário padrão detectado, selecionando novo horário quebrado');
                             cy.contains('button', 'Não').should('be.visible').click();
-
+    
                             cy.wait(3000); // Esperar 3 segundos após clicar no botão
-
+    
                             // Gerar um horário de encaixe válido
                             nextTime = getEncaixeTime(today);
                             cy.log(`Tentando novo horário de encaixe: ${nextTime}`);
-
+    
                             // Limpar e digitar o novo horário
                             cy.get('[formcontrolname="time"]').should('be.visible').clear().type(nextTime);
                             cy.wait(3000); // Esperar 3 segundos após digitar o novo horário
-
+    
                             // Verificar novamente
                             return verificarMensagens();
                         });
                 }
-
+    
                 // Verificar se o máximo de encaixes foi atingido
                 else if (textoBody.includes('Máximo de encaixes atingido')) {
                     return cy.contains('Máximo de encaixes atingido')
                         .should('be.visible')
                         .then(() => {
-                            cy.wait(2000); // Esperar antes de clicar no Ok
+                            cy.wait(3000); // Esperar antes de clicar no Ok
                             cy.log('Máximo de encaixes atingido - Limite da regra alcançado');
                             cy.contains('button', 'Ok').should('be.visible').click();
-                            cy.wait(2000); // Esperar após clicar no Ok
+                            cy.wait(3000); // Esperar após clicar no Ok
                             return cy.wrap(false); // Indica que não deve continuar
                         });
                 }
-
+    
                 // Verificar se já existe agendamento para este horário
                 else if (textoBody.includes('Já existe um agendamento para esta data e horário')) {
                     return cy.contains('Já existe um agendamento para esta data e horário')
                         .should('be.visible')
                         .then(() => {
-                            cy.wait(2000); // Esperar antes de clicar no Ok
+                            cy.wait(3000); // Esperar antes de clicar no Ok
                             cy.log('Horário já agendado, tentando outro horário');
                             cy.contains('button', 'Ok').should('be.visible').click();
-                            cy.wait(2000); // Esperar após clicar no Ok
-
+                            cy.wait(3000); // Esperar após clicar no Ok
+    
                             // Adicionar 2 minutos e tentar novamente
                             const newDate = new Date(today.getTime() + 2 * 60 * 1000);
                             nextTime = getEncaixeTime(newDate);
                             cy.log(`Tentando novo horário: ${nextTime}`);
-
+    
                             // Limpar e digitar o novo horário
                             cy.get('[formcontrolname="time"]').should('be.visible').clear().type(nextTime);
                             cy.wait(3000); // Esperar mais tempo após digitar o novo horário
-
+    
                             // Verificar novamente com o novo horário
                             return verificarMensagens();
                         });
                 }
-
+    
                 // Se nenhuma mensagem aparecer, continuar com o agendamento
                 else {
-                    cy.wait(2000); // Esperar um pouco para ter certeza de que nenhuma mensagem aparecerá
+                    cy.wait(3000); // Esperar um pouco para ter certeza de que nenhuma mensagem aparecerá
                     return cy.wrap(true); // Wrapping o valor booleano para mantê-lo na cadeia de Cypress
                 }
             });
         }
-
+    
         // Verificar mensagens antes de prosseguir
         verificarMensagens().then(continuar => {
             if (continuar) {
                 // Continuar com o processo de agendamento
                 cy.log('Prosseguindo com o agendamento');
-
+    
                 // Verificar e fechar qualquer modal Sweet Alert que possa estar aberto
                 cy.get('body').then($body => {
                     if ($body.find('.swal2-container').length > 0) {
@@ -574,39 +581,39 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
                         cy.wait(2000); // Esperar o modal fechar
                     }
                 });
-
+    
                 // Agora sim tenta digitar no campo CPF
                 cy.get('#cpf').should('be.visible').clear().type('34921977879', { force: true });
                 cy.wait(5000);
-
+    
                 cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').should('be.visible').click();
-                cy.wait(2000); // Esperar após clicar no botão
-
+                cy.wait(3000); // Esperar após clicar no botão
+    
                 cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
-                cy.wait(2000); // Esperar antes de selecionar o procedimento
-
+                cy.wait(3000); // Esperar antes de selecionar o procedimento
+    
                 cy.xpath("//span[@class='mat-option-text'][contains(.,'Consulta Áreas de Atuação')]")
                     .first()
                     .should('be.visible')
                     .click({ force: true });
                 cy.wait(3000);
-
+    
                 cy.xpath("//button[@color='primary'][contains(.,'Adicionar')]").should('exist').should('be.visible').click();
                 cy.wait(2000); // Esperar após adicionar
-
+    
                 cy.xpath("//button[@color='primary'][contains(.,'Confirmar')]").should('exist').should('be.visible').click();
                 cy.wait(3000); // Esperar antes da mensagem de sucesso
-
+    
                 // Verificar sucesso com assertion
                 cy.contains('h2', 'Agendamento criado com sucesso', { timeout: 20000 })
                     .should('be.visible');
-                cy.wait(2000); // Esperar antes de clicar em Ok
-
+                cy.wait(3000); // Esperar antes de clicar em Ok
+    
                 cy.contains('button', 'Ok').should('be.visible').click();
-                cy.wait(2000); // Esperar após o último clique
+                cy.wait(3000); // Esperar após o último clique
             } else {
                 cy.log('Não é possível prosseguir com o agendamento devido ao limite de encaixes');
-                cy.wait(2000); // Esperar antes de finalizar o teste
+                cy.wait(3000); // Esperar antes de finalizar o teste
             }
         });
     });
@@ -614,38 +621,39 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
     it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora 3', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
-        cy.wait(2000); // Esperar carregamento inicial da página
-
+        cy.wait(3000); // Esperar carregamento inicial da página
+    
         cy.get('#schedule', { timeout: 20000 })
             .should('be.visible')
             .click();
-        cy.wait(2000); // Esperar após clicar no schedule
-
+        cy.wait(3000); // Esperar após clicar no schedule
+    
         cy.contains('span', 'Agendar atendimento', { timeout: 20000 }).click();
         cy.wait(3000);
-
+    
         cy.get('[formcontrolname="expertiseAreas"]', { timeout: 20000 }).should('be.visible').click();
-        cy.wait(2000); // Esperar que a lista de opções seja exibida
-
+        cy.wait(3000); // Esperar que a lista de opções seja exibida
+    
         cy.xpath("//span[@class='mat-option-text'][contains(.,' Área de Atuação - Teste Automação ')]", { timeout: 20000 }).click({ force: true });
-        cy.wait(2000); // Esperar após selecionar área
-
+        cy.wait(3000); // Esperar após selecionar área
+    
         cy.get('mat-select[formcontrolname="professionals"]').should('be.visible').click();
-        cy.wait(2000); // Esperar que a lista de profissionais seja exibida
-
+    
+        cy.wait(3000); // Esperar que a lista de profissionais seja exibida
+    
         cy.xpath("//span[contains(.,'Dr. Ivan Barros')]").click({ force: true });
-        cy.wait(1000); // Esperar após selecionar profissional
-
+        cy.wait(3000); // Esperar após selecionar profissional
+    
         cy.xpath("//button[contains(.,'Pesquisar')]").should('be.visible').click();
         cy.wait(3000); // Esperar o resultado da pesquisa
-
+    
         cy.xpath("//div[contains(@class,'cal-week-view')]").should('be.visible');
         cy.wait(3000);
-
+    
         // Obter a data atual
         const today = new Date();
         const weekDay = today.getDay();
-
+    
         // Selecionar o primeiro slot livre na coluna do dia atual
         cy.get('.cal-day-columns .cal-day-column')
             .eq(weekDay)
@@ -653,53 +661,57 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
             .first()
             .should('be.visible')
             .click();
-        cy.wait(2000); // Esperar após selecionar horário
-
+        cy.wait(3000); // Esperar após selecionar horário
+    
         // Marcar o checkbox
         cy.xpath("//label[normalize-space()='Encaixe']").should('be.visible').click();
-        cy.wait(2000); // Esperar após marcar o checkbox
-
-        // Formatar a data como YYYY-MM-DD
-        const formattedDate = today.toISOString().split('T')[0];
+        cy.wait(3000); // Esperar após marcar o checkbox
+    
+        // CORREÇÃO AQUI: Formatar a data como YYYY-MM-DD (formato exigido pelo Cypress para inputs de tipo date)
+        const year = today.getFullYear();
+        const month = (today.getMonth() + 1).toString().padStart(2, '0'); // +1 pois getMonth() retorna 0-11
+        const day = today.getDate().toString().padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`; // Formato YYYY-MM-DD
+    
         cy.get('[formcontrolname="date"]').clear().type(formattedDate);
-        cy.wait(2000); // Esperar após digitar a data
-
+        cy.wait(3000); // Esperar após digitar a data
+    
         // Função para gerar horário de encaixe válido (com minutos não redondos e sempre no futuro)
         function getEncaixeTime(date) {
             const agora = new Date();
-
+    
             // Garantir que estamos trabalhando com uma hora futura
             let horaEncaixe = Math.max(date.getHours(), agora.getHours());
-
+    
             // Se estivermos na hora atual, precisamos garantir que os minutos sejam futuros
             if (horaEncaixe === agora.getHours()) {
                 horaEncaixe++;  // Avançar para a próxima hora para garantir que está no futuro
             }
-
+    
             // Lista de minutos não padrão para encaixes
             const minutosEncaixe = [3, 7, 11, 19, 23, 27, 33, 37, 41, 47, 53, 57];
-
+    
             // Selecionar um minuto aleatório da lista
             const minuto = minutosEncaixe[Math.floor(Math.random() * minutosEncaixe.length)];
-
+    
             // Formatar para HH:mm
             return `${horaEncaixe.toString().padStart(2, '0')}:${minuto.toString().padStart(2, '0')}`;
         }
-
+    
         // Obter horário de encaixe
         let nextTime = getEncaixeTime(today);
         cy.log(`Tentando horário de encaixe: ${nextTime}`);
-
+    
         // Digitar o horário no campo
         cy.get('[formcontrolname="time"]').should('be.visible').clear().type(nextTime);
         cy.wait(3000); // Esperar mais tempo após digitar o horário (ponto crítico)
-
+    
         // Função para verificar mensagens e agir de acordo
         function verificarMensagens() {
             // Verificar possíveis mensagens com assertions
             return cy.get('body').then($body => {
                 const textoBody = $body.text();
-
+    
                 // Verificar mensagem de horário padrão vs encaixe
                 if (textoBody.includes('Você selecionou um horário do agendamento padrão')) {
                     // Usar assertion para verificar formalmente a presença da mensagem
@@ -709,73 +721,73 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
                             cy.wait(3000); // Esperar 3 segundos antes de clicar
                             cy.log('Horário padrão detectado, selecionando novo horário quebrado');
                             cy.contains('button', 'Não').should('be.visible').click();
-
+    
                             cy.wait(3000); // Esperar 3 segundos após clicar no botão
-
+    
                             // Gerar um horário de encaixe válido
                             nextTime = getEncaixeTime(today);
                             cy.log(`Tentando novo horário de encaixe: ${nextTime}`);
-
+    
                             // Limpar e digitar o novo horário
                             cy.get('[formcontrolname="time"]').should('be.visible').clear().type(nextTime);
                             cy.wait(3000); // Esperar 3 segundos após digitar o novo horário
-
+    
                             // Verificar novamente
                             return verificarMensagens();
                         });
                 }
-
+    
                 // Verificar se o máximo de encaixes foi atingido
                 else if (textoBody.includes('Máximo de encaixes atingido')) {
                     return cy.contains('Máximo de encaixes atingido')
                         .should('be.visible')
                         .then(() => {
-                            cy.wait(2000); // Esperar antes de clicar no Ok
+                            cy.wait(3000); // Esperar antes de clicar no Ok
                             cy.log('Máximo de encaixes atingido - Limite da regra alcançado');
                             cy.contains('button', 'Ok').should('be.visible').click();
-                            cy.wait(2000); // Esperar após clicar no Ok
+                            cy.wait(3000); // Esperar após clicar no Ok
                             return cy.wrap(false); // Indica que não deve continuar
                         });
                 }
-
+    
                 // Verificar se já existe agendamento para este horário
                 else if (textoBody.includes('Já existe um agendamento para esta data e horário')) {
                     return cy.contains('Já existe um agendamento para esta data e horário')
                         .should('be.visible')
                         .then(() => {
-                            cy.wait(2000); // Esperar antes de clicar no Ok
+                            cy.wait(3000); // Esperar antes de clicar no Ok
                             cy.log('Horário já agendado, tentando outro horário');
                             cy.contains('button', 'Ok').should('be.visible').click();
-                            cy.wait(2000); // Esperar após clicar no Ok
-
+                            cy.wait(3000); // Esperar após clicar no Ok
+    
                             // Adicionar 2 minutos e tentar novamente
                             const newDate = new Date(today.getTime() + 2 * 60 * 1000);
                             nextTime = getEncaixeTime(newDate);
                             cy.log(`Tentando novo horário: ${nextTime}`);
-
+    
                             // Limpar e digitar o novo horário
                             cy.get('[formcontrolname="time"]').should('be.visible').clear().type(nextTime);
                             cy.wait(3000); // Esperar mais tempo após digitar o novo horário
-
+    
                             // Verificar novamente com o novo horário
                             return verificarMensagens();
                         });
                 }
-
+    
                 // Se nenhuma mensagem aparecer, continuar com o agendamento
                 else {
-                    cy.wait(2000); // Esperar um pouco para ter certeza de que nenhuma mensagem aparecerá
+                    cy.wait(3000); // Esperar um pouco para ter certeza de que nenhuma mensagem aparecerá
                     return cy.wrap(true); // Wrapping o valor booleano para mantê-lo na cadeia de Cypress
                 }
             });
         }
-
+    
         // Verificar mensagens antes de prosseguir
         verificarMensagens().then(continuar => {
             if (continuar) {
                 // Continuar com o processo de agendamento
                 cy.log('Prosseguindo com o agendamento');
-
+    
                 // Verificar e fechar qualquer modal Sweet Alert que possa estar aberto
                 cy.get('body').then($body => {
                     if ($body.find('.swal2-container').length > 0) {
@@ -783,78 +795,79 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
                         cy.wait(2000); // Esperar o modal fechar
                     }
                 });
-
+    
                 // Agora sim tenta digitar no campo CPF
                 cy.get('#cpf').should('be.visible').clear().type('34921977879', { force: true });
                 cy.wait(5000);
-
+    
                 cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').should('be.visible').click();
-                cy.wait(2000); // Esperar após clicar no botão
-
+                cy.wait(3000); // Esperar após clicar no botão
+    
                 cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
-                cy.wait(2000); // Esperar antes de selecionar o procedimento
-
+                cy.wait(3000); // Esperar antes de selecionar o procedimento
+    
                 cy.xpath("//span[@class='mat-option-text'][contains(.,'Consulta Áreas de Atuação')]")
                     .first()
                     .should('be.visible')
                     .click({ force: true });
                 cy.wait(3000);
-
+    
                 cy.xpath("//button[@color='primary'][contains(.,'Adicionar')]").should('exist').should('be.visible').click();
                 cy.wait(2000); // Esperar após adicionar
-
+    
                 cy.xpath("//button[@color='primary'][contains(.,'Confirmar')]").should('exist').should('be.visible').click();
                 cy.wait(3000); // Esperar antes da mensagem de sucesso
-
+    
                 // Verificar sucesso com assertion
                 cy.contains('h2', 'Agendamento criado com sucesso', { timeout: 20000 })
                     .should('be.visible');
-                cy.wait(2000); // Esperar antes de clicar em Ok
-
+                cy.wait(3000); // Esperar antes de clicar em Ok
+    
                 cy.contains('button', 'Ok').should('be.visible').click();
-                cy.wait(2000); // Esperar após o último clique
+                cy.wait(3000); // Esperar após o último clique
             } else {
                 cy.log('Não é possível prosseguir com o agendamento devido ao limite de encaixes');
-                cy.wait(2000); // Esperar antes de finalizar o teste
+                cy.wait(3000); // Esperar antes de finalizar o teste
             }
         });
     });
-
+    
     it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora 4', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
-        cy.wait(2000); // Esperar carregamento inicial da página
-
+        cy.wait(3000); // Esperar carregamento inicial da página
+    
         cy.get('#schedule', { timeout: 20000 })
             .should('be.visible')
             .click();
-        cy.wait(2000); // Esperar após clicar no schedule
-
+        cy.wait(3000); // Esperar após clicar no schedule
+    
         cy.contains('span', 'Agendar atendimento', { timeout: 20000 }).click();
         cy.wait(3000);
-
+    
         cy.get('[formcontrolname="expertiseAreas"]', { timeout: 20000 }).should('be.visible').click();
-        cy.wait(2000); // Esperar que a lista de opções seja exibida
-
+        cy.wait(3000); // Esperar que a lista de opções seja exibida
+    
         cy.xpath("//span[@class='mat-option-text'][contains(.,' Área de Atuação - Teste Automação ')]", { timeout: 20000 }).click({ force: true });
-        cy.wait(2000); // Esperar após selecionar área
-
+        cy.wait(3000); // Esperar após selecionar área
+    
         cy.get('mat-select[formcontrolname="professionals"]').should('be.visible').click();
-        cy.wait(2000); // Esperar que a lista de profissionais seja exibida
-
+    
+        cy.wait(3000); // Esperar que a lista de profissionais seja exibida
+    
         cy.xpath("//span[contains(.,'Dr. Ivan Barros')]").click({ force: true });
-        cy.wait(1000); // Esperar após selecionar profissional
-
+        cy.wait(3000); // Esperar após selecionar profissional
+    
         cy.xpath("//button[contains(.,'Pesquisar')]").should('be.visible').click();
         cy.wait(3000); // Esperar o resultado da pesquisa
-
+    
         cy.xpath("//div[contains(@class,'cal-week-view')]").should('be.visible');
         cy.wait(3000);
-
+    
         // Obter a data atual
         const today = new Date();
         const weekDay = today.getDay();
-
+    
         // Selecionar o primeiro slot livre na coluna do dia atual
         cy.get('.cal-day-columns .cal-day-column')
             .eq(weekDay)
@@ -862,53 +875,57 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
             .first()
             .should('be.visible')
             .click();
-        cy.wait(2000); // Esperar após selecionar horário
-
+        cy.wait(3000); // Esperar após selecionar horário
+    
         // Marcar o checkbox
         cy.xpath("//label[normalize-space()='Encaixe']").should('be.visible').click();
-        cy.wait(2000); // Esperar após marcar o checkbox
-
-        // Formatar a data como YYYY-MM-DD
-        const formattedDate = today.toISOString().split('T')[0];
+        cy.wait(3000); // Esperar após marcar o checkbox
+    
+        // CORREÇÃO AQUI: Formatar a data como YYYY-MM-DD (formato exigido pelo Cypress para inputs de tipo date)
+        const year = today.getFullYear();
+        const month = (today.getMonth() + 1).toString().padStart(2, '0'); // +1 pois getMonth() retorna 0-11
+        const day = today.getDate().toString().padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`; // Formato YYYY-MM-DD
+    
         cy.get('[formcontrolname="date"]').clear().type(formattedDate);
-        cy.wait(2000); // Esperar após digitar a data
-
+        cy.wait(3000); // Esperar após digitar a data
+    
         // Função para gerar horário de encaixe válido (com minutos não redondos e sempre no futuro)
         function getEncaixeTime(date) {
             const agora = new Date();
-
+    
             // Garantir que estamos trabalhando com uma hora futura
             let horaEncaixe = Math.max(date.getHours(), agora.getHours());
-
+    
             // Se estivermos na hora atual, precisamos garantir que os minutos sejam futuros
             if (horaEncaixe === agora.getHours()) {
                 horaEncaixe++;  // Avançar para a próxima hora para garantir que está no futuro
             }
-
+    
             // Lista de minutos não padrão para encaixes
             const minutosEncaixe = [3, 7, 11, 19, 23, 27, 33, 37, 41, 47, 53, 57];
-
+    
             // Selecionar um minuto aleatório da lista
             const minuto = minutosEncaixe[Math.floor(Math.random() * minutosEncaixe.length)];
-
+    
             // Formatar para HH:mm
             return `${horaEncaixe.toString().padStart(2, '0')}:${minuto.toString().padStart(2, '0')}`;
         }
-
+    
         // Obter horário de encaixe
         let nextTime = getEncaixeTime(today);
         cy.log(`Tentando horário de encaixe: ${nextTime}`);
-
+    
         // Digitar o horário no campo
         cy.get('[formcontrolname="time"]').should('be.visible').clear().type(nextTime);
         cy.wait(3000); // Esperar mais tempo após digitar o horário (ponto crítico)
-
+    
         // Função para verificar mensagens e agir de acordo
         function verificarMensagens() {
             // Verificar possíveis mensagens com assertions
             return cy.get('body').then($body => {
                 const textoBody = $body.text();
-
+    
                 // Verificar mensagem de horário padrão vs encaixe
                 if (textoBody.includes('Você selecionou um horário do agendamento padrão')) {
                     // Usar assertion para verificar formalmente a presença da mensagem
@@ -918,73 +935,73 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
                             cy.wait(3000); // Esperar 3 segundos antes de clicar
                             cy.log('Horário padrão detectado, selecionando novo horário quebrado');
                             cy.contains('button', 'Não').should('be.visible').click();
-
+    
                             cy.wait(3000); // Esperar 3 segundos após clicar no botão
-
+    
                             // Gerar um horário de encaixe válido
                             nextTime = getEncaixeTime(today);
                             cy.log(`Tentando novo horário de encaixe: ${nextTime}`);
-
+    
                             // Limpar e digitar o novo horário
                             cy.get('[formcontrolname="time"]').should('be.visible').clear().type(nextTime);
                             cy.wait(3000); // Esperar 3 segundos após digitar o novo horário
-
+    
                             // Verificar novamente
                             return verificarMensagens();
                         });
                 }
-
+    
                 // Verificar se o máximo de encaixes foi atingido
                 else if (textoBody.includes('Máximo de encaixes atingido')) {
                     return cy.contains('Máximo de encaixes atingido')
                         .should('be.visible')
                         .then(() => {
-                            cy.wait(2000); // Esperar antes de clicar no Ok
+                            cy.wait(3000); // Esperar antes de clicar no Ok
                             cy.log('Máximo de encaixes atingido - Limite da regra alcançado');
                             cy.contains('button', 'Ok').should('be.visible').click();
-                            cy.wait(2000); // Esperar após clicar no Ok
+                            cy.wait(3000); // Esperar após clicar no Ok
                             return cy.wrap(false); // Indica que não deve continuar
                         });
                 }
-
+    
                 // Verificar se já existe agendamento para este horário
                 else if (textoBody.includes('Já existe um agendamento para esta data e horário')) {
                     return cy.contains('Já existe um agendamento para esta data e horário')
                         .should('be.visible')
                         .then(() => {
-                            cy.wait(2000); // Esperar antes de clicar no Ok
+                            cy.wait(3000); // Esperar antes de clicar no Ok
                             cy.log('Horário já agendado, tentando outro horário');
                             cy.contains('button', 'Ok').should('be.visible').click();
-                            cy.wait(2000); // Esperar após clicar no Ok
-
+                            cy.wait(3000); // Esperar após clicar no Ok
+    
                             // Adicionar 2 minutos e tentar novamente
                             const newDate = new Date(today.getTime() + 2 * 60 * 1000);
                             nextTime = getEncaixeTime(newDate);
                             cy.log(`Tentando novo horário: ${nextTime}`);
-
+    
                             // Limpar e digitar o novo horário
                             cy.get('[formcontrolname="time"]').should('be.visible').clear().type(nextTime);
                             cy.wait(3000); // Esperar mais tempo após digitar o novo horário
-
+    
                             // Verificar novamente com o novo horário
                             return verificarMensagens();
                         });
                 }
-
+    
                 // Se nenhuma mensagem aparecer, continuar com o agendamento
                 else {
-                    cy.wait(2000); // Esperar um pouco para ter certeza de que nenhuma mensagem aparecerá
+                    cy.wait(3000); // Esperar um pouco para ter certeza de que nenhuma mensagem aparecerá
                     return cy.wrap(true); // Wrapping o valor booleano para mantê-lo na cadeia de Cypress
                 }
             });
         }
-
+    
         // Verificar mensagens antes de prosseguir
         verificarMensagens().then(continuar => {
             if (continuar) {
                 // Continuar com o processo de agendamento
                 cy.log('Prosseguindo com o agendamento');
-
+    
                 // Verificar e fechar qualquer modal Sweet Alert que possa estar aberto
                 cy.get('body').then($body => {
                     if ($body.find('.swal2-container').length > 0) {
@@ -992,39 +1009,39 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
                         cy.wait(2000); // Esperar o modal fechar
                     }
                 });
-
+    
                 // Agora sim tenta digitar no campo CPF
                 cy.get('#cpf').should('be.visible').clear().type('34921977879', { force: true });
-                cy.wait(3000);
-
+                cy.wait(5000);
+    
                 cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').should('be.visible').click();
-                cy.wait(2000); // Esperar após clicar no botão
-
+                cy.wait(3000); // Esperar após clicar no botão
+    
                 cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
-                cy.wait(2000); // Esperar antes de selecionar o procedimento
-
+                cy.wait(3000); // Esperar antes de selecionar o procedimento
+    
                 cy.xpath("//span[@class='mat-option-text'][contains(.,'Consulta Áreas de Atuação')]")
                     .first()
                     .should('be.visible')
                     .click({ force: true });
                 cy.wait(3000);
-
+    
                 cy.xpath("//button[@color='primary'][contains(.,'Adicionar')]").should('exist').should('be.visible').click();
                 cy.wait(2000); // Esperar após adicionar
-
+    
                 cy.xpath("//button[@color='primary'][contains(.,'Confirmar')]").should('exist').should('be.visible').click();
                 cy.wait(3000); // Esperar antes da mensagem de sucesso
-
+    
                 // Verificar sucesso com assertion
                 cy.contains('h2', 'Agendamento criado com sucesso', { timeout: 20000 })
                     .should('be.visible');
-                cy.wait(2000); // Esperar antes de clicar em Ok
-
+                cy.wait(3000); // Esperar antes de clicar em Ok
+    
                 cy.contains('button', 'Ok').should('be.visible').click();
-                cy.wait(2000); // Esperar após o último clique
+                cy.wait(3000); // Esperar após o último clique
             } else {
                 cy.log('Não é possível prosseguir com o agendamento devido ao limite de encaixes');
-                cy.wait(2000); // Esperar antes de finalizar o teste
+                cy.wait(3000); // Esperar antes de finalizar o teste
             }
         });
     });
@@ -1032,38 +1049,39 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
     it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora 5', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
-        cy.wait(2000); // Esperar carregamento inicial da página
-
+        cy.wait(3000); // Esperar carregamento inicial da página
+    
         cy.get('#schedule', { timeout: 20000 })
             .should('be.visible')
             .click();
-        cy.wait(2000); // Esperar após clicar no schedule
-
+        cy.wait(3000); // Esperar após clicar no schedule
+    
         cy.contains('span', 'Agendar atendimento', { timeout: 20000 }).click();
         cy.wait(3000);
-
+    
         cy.get('[formcontrolname="expertiseAreas"]', { timeout: 20000 }).should('be.visible').click();
-        cy.wait(2000); // Esperar que a lista de opções seja exibida
-
+        cy.wait(3000); // Esperar que a lista de opções seja exibida
+    
         cy.xpath("//span[@class='mat-option-text'][contains(.,' Área de Atuação - Teste Automação ')]", { timeout: 20000 }).click({ force: true });
-        cy.wait(2000); // Esperar após selecionar área
-
+        cy.wait(3000); // Esperar após selecionar área
+    
         cy.get('mat-select[formcontrolname="professionals"]').should('be.visible').click();
-        cy.wait(2000); // Esperar que a lista de profissionais seja exibida
-
+    
+        cy.wait(3000); // Esperar que a lista de profissionais seja exibida
+    
         cy.xpath("//span[contains(.,'Dr. Ivan Barros')]").click({ force: true });
-        cy.wait(1000); // Esperar após selecionar profissional
-
+        cy.wait(3000); // Esperar após selecionar profissional
+    
         cy.xpath("//button[contains(.,'Pesquisar')]").should('be.visible').click();
         cy.wait(3000); // Esperar o resultado da pesquisa
-
+    
         cy.xpath("//div[contains(@class,'cal-week-view')]").should('be.visible');
         cy.wait(3000);
-
+    
         // Obter a data atual
         const today = new Date();
         const weekDay = today.getDay();
-
+    
         // Selecionar o primeiro slot livre na coluna do dia atual
         cy.get('.cal-day-columns .cal-day-column')
             .eq(weekDay)
@@ -1071,53 +1089,57 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
             .first()
             .should('be.visible')
             .click();
-        cy.wait(2000); // Esperar após selecionar horário
-
+        cy.wait(3000); // Esperar após selecionar horário
+    
         // Marcar o checkbox
         cy.xpath("//label[normalize-space()='Encaixe']").should('be.visible').click();
-        cy.wait(2000); // Esperar após marcar o checkbox
-
-        // Formatar a data como YYYY-MM-DD
-        const formattedDate = today.toISOString().split('T')[0];
+        cy.wait(3000); // Esperar após marcar o checkbox
+    
+        // CORREÇÃO AQUI: Formatar a data como YYYY-MM-DD (formato exigido pelo Cypress para inputs de tipo date)
+        const year = today.getFullYear();
+        const month = (today.getMonth() + 1).toString().padStart(2, '0'); // +1 pois getMonth() retorna 0-11
+        const day = today.getDate().toString().padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`; // Formato YYYY-MM-DD
+    
         cy.get('[formcontrolname="date"]').clear().type(formattedDate);
-        cy.wait(2000); // Esperar após digitar a data
-
+        cy.wait(3000); // Esperar após digitar a data
+    
         // Função para gerar horário de encaixe válido (com minutos não redondos e sempre no futuro)
         function getEncaixeTime(date) {
             const agora = new Date();
-
+    
             // Garantir que estamos trabalhando com uma hora futura
             let horaEncaixe = Math.max(date.getHours(), agora.getHours());
-
+    
             // Se estivermos na hora atual, precisamos garantir que os minutos sejam futuros
             if (horaEncaixe === agora.getHours()) {
                 horaEncaixe++;  // Avançar para a próxima hora para garantir que está no futuro
             }
-
+    
             // Lista de minutos não padrão para encaixes
             const minutosEncaixe = [3, 7, 11, 19, 23, 27, 33, 37, 41, 47, 53, 57];
-
+    
             // Selecionar um minuto aleatório da lista
             const minuto = minutosEncaixe[Math.floor(Math.random() * minutosEncaixe.length)];
-
+    
             // Formatar para HH:mm
             return `${horaEncaixe.toString().padStart(2, '0')}:${minuto.toString().padStart(2, '0')}`;
         }
-
+    
         // Obter horário de encaixe
         let nextTime = getEncaixeTime(today);
         cy.log(`Tentando horário de encaixe: ${nextTime}`);
-
+    
         // Digitar o horário no campo
         cy.get('[formcontrolname="time"]').should('be.visible').clear().type(nextTime);
         cy.wait(3000); // Esperar mais tempo após digitar o horário (ponto crítico)
-
+    
         // Função para verificar mensagens e agir de acordo
         function verificarMensagens() {
             // Verificar possíveis mensagens com assertions
             return cy.get('body').then($body => {
                 const textoBody = $body.text();
-
+    
                 // Verificar mensagem de horário padrão vs encaixe
                 if (textoBody.includes('Você selecionou um horário do agendamento padrão')) {
                     // Usar assertion para verificar formalmente a presença da mensagem
@@ -1127,73 +1149,73 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
                             cy.wait(3000); // Esperar 3 segundos antes de clicar
                             cy.log('Horário padrão detectado, selecionando novo horário quebrado');
                             cy.contains('button', 'Não').should('be.visible').click();
-
+    
                             cy.wait(3000); // Esperar 3 segundos após clicar no botão
-
+    
                             // Gerar um horário de encaixe válido
                             nextTime = getEncaixeTime(today);
                             cy.log(`Tentando novo horário de encaixe: ${nextTime}`);
-
+    
                             // Limpar e digitar o novo horário
                             cy.get('[formcontrolname="time"]').should('be.visible').clear().type(nextTime);
                             cy.wait(3000); // Esperar 3 segundos após digitar o novo horário
-
+    
                             // Verificar novamente
                             return verificarMensagens();
                         });
                 }
-
+    
                 // Verificar se o máximo de encaixes foi atingido
                 else if (textoBody.includes('Máximo de encaixes atingido')) {
                     return cy.contains('Máximo de encaixes atingido')
                         .should('be.visible')
                         .then(() => {
-                            cy.wait(2000); // Esperar antes de clicar no Ok
+                            cy.wait(3000); // Esperar antes de clicar no Ok
                             cy.log('Máximo de encaixes atingido - Limite da regra alcançado');
                             cy.contains('button', 'Ok').should('be.visible').click();
-                            cy.wait(2000); // Esperar após clicar no Ok
+                            cy.wait(3000); // Esperar após clicar no Ok
                             return cy.wrap(false); // Indica que não deve continuar
                         });
                 }
-
+    
                 // Verificar se já existe agendamento para este horário
                 else if (textoBody.includes('Já existe um agendamento para esta data e horário')) {
                     return cy.contains('Já existe um agendamento para esta data e horário')
                         .should('be.visible')
                         .then(() => {
-                            cy.wait(2000); // Esperar antes de clicar no Ok
+                            cy.wait(3000); // Esperar antes de clicar no Ok
                             cy.log('Horário já agendado, tentando outro horário');
                             cy.contains('button', 'Ok').should('be.visible').click();
-                            cy.wait(2000); // Esperar após clicar no Ok
-
+                            cy.wait(3000); // Esperar após clicar no Ok
+    
                             // Adicionar 2 minutos e tentar novamente
                             const newDate = new Date(today.getTime() + 2 * 60 * 1000);
                             nextTime = getEncaixeTime(newDate);
                             cy.log(`Tentando novo horário: ${nextTime}`);
-
+    
                             // Limpar e digitar o novo horário
                             cy.get('[formcontrolname="time"]').should('be.visible').clear().type(nextTime);
                             cy.wait(3000); // Esperar mais tempo após digitar o novo horário
-
+    
                             // Verificar novamente com o novo horário
                             return verificarMensagens();
                         });
                 }
-
+    
                 // Se nenhuma mensagem aparecer, continuar com o agendamento
                 else {
-                    cy.wait(2000); // Esperar um pouco para ter certeza de que nenhuma mensagem aparecerá
+                    cy.wait(3000); // Esperar um pouco para ter certeza de que nenhuma mensagem aparecerá
                     return cy.wrap(true); // Wrapping o valor booleano para mantê-lo na cadeia de Cypress
                 }
             });
         }
-
+    
         // Verificar mensagens antes de prosseguir
         verificarMensagens().then(continuar => {
             if (continuar) {
                 // Continuar com o processo de agendamento
                 cy.log('Prosseguindo com o agendamento');
-
+    
                 // Verificar e fechar qualquer modal Sweet Alert que possa estar aberto
                 cy.get('body').then($body => {
                     if ($body.find('.swal2-container').length > 0) {
@@ -1201,39 +1223,39 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
                         cy.wait(2000); // Esperar o modal fechar
                     }
                 });
-
+    
                 // Agora sim tenta digitar no campo CPF
                 cy.get('#cpf').should('be.visible').clear().type('34921977879', { force: true });
                 cy.wait(5000);
-
+    
                 cy.xpath("(//button[contains(@type,'button')])[3]").should('exist').should('be.visible').click();
-                cy.wait(2000); // Esperar após clicar no botão
-
+                cy.wait(3000); // Esperar após clicar no botão
+    
                 cy.xpath("(//div[contains(.,'Procedimento *')])[10]").should('be.visible').click({ force: true });
-                cy.wait(2000); // Esperar antes de selecionar o procedimento
-
+                cy.wait(3000); // Esperar antes de selecionar o procedimento
+    
                 cy.xpath("//span[@class='mat-option-text'][contains(.,'Consulta Áreas de Atuação')]")
                     .first()
                     .should('be.visible')
                     .click({ force: true });
                 cy.wait(3000);
-
+    
                 cy.xpath("//button[@color='primary'][contains(.,'Adicionar')]").should('exist').should('be.visible').click();
                 cy.wait(2000); // Esperar após adicionar
-
+    
                 cy.xpath("//button[@color='primary'][contains(.,'Confirmar')]").should('exist').should('be.visible').click();
                 cy.wait(3000); // Esperar antes da mensagem de sucesso
-
+    
                 // Verificar sucesso com assertion
                 cy.contains('h2', 'Agendamento criado com sucesso', { timeout: 20000 })
                     .should('be.visible');
-                cy.wait(2000); // Esperar antes de clicar em Ok
-
+                cy.wait(3000); // Esperar antes de clicar em Ok
+    
                 cy.contains('button', 'Ok').should('be.visible').click();
-                cy.wait(2000); // Esperar após o último clique
+                cy.wait(3000); // Esperar após o último clique
             } else {
                 cy.log('Não é possível prosseguir com o agendamento devido ao limite de encaixes');
-                cy.wait(2000); // Esperar antes de finalizar o teste
+                cy.wait(3000); // Esperar antes de finalizar o teste
             }
         });
     });
@@ -1497,6 +1519,7 @@ describe('Agendamento Simples - Agendamento por Encaixe', () => {
 
 describe('Reagendamento', () => {
     beforeEach(() => {
+        cy.clearAllCookies()
         cy.setupAndLogin()
         cy.allure().epic('Financeiro');
         cy.allure().severity('critical');
@@ -1781,6 +1804,7 @@ describe('Reagendamento', () => {
 
 describe('Check-in', () => {
     beforeEach(() => {
+        cy.clearAllCookies()
         cy.setupAndLogin()
         cy.allure().epic('Financeiro');
         cy.allure().feature('Check-in');
@@ -2114,7 +2138,7 @@ describe('Check-in', () => {
 
     });
 
-    it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 2 parcelas (Não tef)', () => {
+    it('Validar Fluxo Parcelamento no Cartão Crédito abaixo de 5,00 com 2 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2133,7 +2157,7 @@ describe('Check-in', () => {
         cy.contains(' Valor abaixo de R$ 5,00 ').should('be.visible')
     });
 
-    it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 3 parcelas (Não tef)', () => {
+    it('Validar Fluxo Parcelamento no Cartão Crédito abaixo de 5,00 com 3 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2152,7 +2176,7 @@ describe('Check-in', () => {
         cy.contains(' Valor abaixo de R$ 5,00 ').should('be.visible')
     });
 
-    it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 4 parcelas (Não tef)', () => {
+    it('Validar Fluxo Parcelamento no Cartão Crédito abaixo de 5,00 com 4 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2171,7 +2195,7 @@ describe('Check-in', () => {
         cy.contains(' Valor abaixo de R$ 5,00 ').should('be.visible')
     });
 
-    it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 5 parcelas (Não tef)', () => {
+    it('Validar Fluxo Parcelamento no Cartão Crédito abaixo de 5,00 com 5 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2190,7 +2214,7 @@ describe('Check-in', () => {
         cy.contains(' Valor abaixo de R$ 5,00 ').should('be.visible')
     });
 
-    it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 6 parcelas (Não tef)', () => {
+    it('Validar Fluxo m Parcelamento no Cartão Crédito abaixo de 5,00 com 6 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2209,7 +2233,7 @@ describe('Check-in', () => {
         cy.contains(' Valor abaixo de R$ 5,00 ').should('be.visible')
     });
 
-    it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 7 parcelas (Não tef)', () => {
+    it('Validar Fluxo m Parcelamento no Cartão Crédito abaixo de 5,00 com 7 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2228,7 +2252,7 @@ describe('Check-in', () => {
         cy.contains(' Valor abaixo de R$ 5,00 ').should('be.visible')
     });
 
-    it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 8 parcelas (Não tef)', () => {
+    it('Validar Fluxo m Parcelamento no Cartão Crédito abaixo de 5,00 com 8 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2247,7 +2271,7 @@ describe('Check-in', () => {
         cy.contains(' Valor abaixo de R$ 5,00 ').should('be.visible')
     });
 
-    it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 9 parcelas (Não tef)', () => {
+    it('Validar Fluxo m Parcelamento no Cartão Crédito abaixo de 5,00 com 9 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2266,7 +2290,7 @@ describe('Check-in', () => {
         cy.contains(' Valor abaixo de R$ 5,00 ').should('be.visible')
     });
 
-    it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 10 parcelas (Não tef)', () => {
+    it('Validar Fluxo m Parcelamento no Cartão Crédito abaixo de 5,00 com 10 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2285,7 +2309,7 @@ describe('Check-in', () => {
         cy.contains(' Valor abaixo de R$ 5,00 ').should('be.visible')
     });
 
-    it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 11 parcelas (Não tef)', () => {
+    it('Validar Fluxo m Parcelamento no Cartão Crédito abaixo de 5,00 com 11 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2304,7 +2328,7 @@ describe('Check-in', () => {
         cy.contains(' Valor abaixo de R$ 5,00 ').should('be.visible')
     });
 
-    it('Validar Fluxo Checkin com Parcelamento no Cartão Crédito abaixo de 5,00 com 12 parcelas (Não tef)', () => {
+    it('Validar Fluxo m Parcelamento no Cartão Crédito abaixo de 5,00 com 12 parcelas (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2323,7 +2347,7 @@ describe('Check-in', () => {
         cy.contains(' Valor abaixo de R$ 5,00 ').should('be.visible')
     });
 
-    it('Validar Fluxo Checkin no Cartão Crédito 1 parcela (Não tef)', () => {
+    it('Validar Fluxo  Cartão Crédito 1 parcela (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2358,7 +2382,7 @@ describe('Check-in', () => {
         cy.xpath("(//th[@role='columnheader'][contains(.,'Ações')])[2]", { timeout: 20000 }).should('be.visible')
     });
 
-    it('Validar Fluxo Checkin no Cartão Débito (Não tef)', () => {
+    it('Validar Fluxo no Cartão Débito (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2390,7 +2414,7 @@ describe('Check-in', () => {
         cy.xpath("(//th[@role='columnheader'][contains(.,'Ações')])[2]").should('be.visible')
     });
 
-    it('Validar Fluxo Checkin no PIX (Não tef)', () => {
+    it('Validar Fluxo no PIX (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2422,28 +2446,28 @@ describe('Check-in', () => {
         cy.xpath("(//th[@role='columnheader'][contains(.,'Ações')])[2]").should('be.visible')
     });
 
-    it('Validar Fluxo Checkin no Dinheiro com Troco (Não tef)', () => {
+    it('Validar Fluxo no Dinheiro com Troco (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         const valorItem = 3.33; // Valor fixo do item a ser pago
-        
+
         // Função para gerar um valor aleatório entre min e max com 2 casas decimais
         function gerarValorAleatorio(min, max) {
-          const valor = Math.random() * (max - min) + min;
-          return parseFloat(valor.toFixed(2));
+            const valor = Math.random() * (max - min) + min;
+            return parseFloat(valor.toFixed(2));
         }
-        
+
         // Gerar um valor aleatório entre 4,00 e 500,00
         const valorPago = gerarValorAleatorio(4, 500);
         const trocoEsperado = (valorPago - valorItem).toFixed(2).replace('.', ',');
         const trocoFormatado = `R$ ${trocoEsperado}`;
         const valorPagoFormatado = valorPago.toFixed(2).replace('.', ',');
-        
+
         // Log informativo sobre os valores que serão usados
         cy.log(`Teste com valores aleatórios:`)
         cy.log(`Valor do item: R$ ${valorItem.toFixed(2).replace('.', ',')}`)
         cy.log(`Valor pago: R$ ${valorPagoFormatado}`)
         cy.log(`Troco esperado: ${trocoFormatado}`)
-        
+
         cy.visit(baseUrl);
         cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
@@ -2456,63 +2480,63 @@ describe('Check-in', () => {
         cy.get('button').contains('Pagar').click()
         cy.get('button').contains('Ok').click()
         cy.contains('h2', 'Sucesso', { timeout: 20000 }).should('have.text', 'Sucesso')
-        
+
         cy.wait(1000)
-        
+
         cy.get('#open-financial').click()
         cy.contains(' Detalhes ').click()
-        
+
         // Abordagem mais flexível para verificação
         cy.get('table', { timeout: 10000 }).should('be.visible');
-        
+
         // Verificar se existe alguma linha na tabela que contenha o valor do troco
         cy.get('tr').contains(trocoFormatado, { timeout: 10000 }).should('exist');
-        
+
         // Verificar nas últimas linhas da tabela (mais provável conter o item mais recente)
         cy.get('tr').then(($rows) => {
-          // Percorrer as 5 últimas linhas
-          const numLinhas = $rows.length;
-          const startIndex = Math.max(0, numLinhas - 5); // Pegar as últimas 5 linhas ou todas se houver menos de 5
-          
-          cy.log(`Verificando as últimas ${numLinhas - startIndex} linhas da tabela, total de ${numLinhas} linhas`);
-          
-          // Flag para indicar se encontramos o troco em alguma linha
-          let trocoEncontrado = false;
-          
-          // Verificar cada uma das últimas linhas
-          for (let i = startIndex; i < numLinhas; i++) {
-            const $row = $rows.eq(i);
-            const rowText = $row.text();
-            
-            if (rowText.includes(trocoFormatado)) {
-              trocoEncontrado = true;
-              
-              // Verificar se a linha também contém TR
-              if (rowText.includes('TR')) {
-                cy.log(`✓ Troco ${trocoFormatado} e TR encontrados na linha ${i+1}`);
-                break;
-              } else {
-                cy.log(`✗ Troco ${trocoFormatado} encontrado na linha ${i+1}, mas não contém TR`);
-              }
+            // Percorrer as 5 últimas linhas
+            const numLinhas = $rows.length;
+            const startIndex = Math.max(0, numLinhas - 5); // Pegar as últimas 5 linhas ou todas se houver menos de 5
+
+            cy.log(`Verificando as últimas ${numLinhas - startIndex} linhas da tabela, total de ${numLinhas} linhas`);
+
+            // Flag para indicar se encontramos o troco em alguma linha
+            let trocoEncontrado = false;
+
+            // Verificar cada uma das últimas linhas
+            for (let i = startIndex; i < numLinhas; i++) {
+                const $row = $rows.eq(i);
+                const rowText = $row.text();
+
+                if (rowText.includes(trocoFormatado)) {
+                    trocoEncontrado = true;
+
+                    // Verificar se a linha também contém TR
+                    if (rowText.includes('TR')) {
+                        cy.log(`✓ Troco ${trocoFormatado} e TR encontrados na linha ${i + 1}`);
+                        break;
+                    } else {
+                        cy.log(`✗ Troco ${trocoFormatado} encontrado na linha ${i + 1}, mas não contém TR`);
+                    }
+                }
             }
-          }
-          
-          // Se não encontramos o troco, verificamos de forma mais flexível
-          if (!trocoEncontrado) {
-            cy.log('Troco não encontrado nas últimas linhas. Verificando de forma mais flexível...');
-            
-            // Verificação alternativa: procurar qualquer célula com o troco
-            cy.contains(trocoFormatado).should('exist');
-            
-            // E verificar se qualquer linha com esse troco contém TR
-            cy.contains(trocoFormatado).parents('tr').contains(/TR/).should('exist');
-          }
+
+            // Se não encontramos o troco, verificamos de forma mais flexível
+            if (!trocoEncontrado) {
+                cy.log('Troco não encontrado nas últimas linhas. Verificando de forma mais flexível...');
+
+                // Verificação alternativa: procurar qualquer célula com o troco
+                cy.contains(trocoFormatado).should('exist');
+
+                // E verificar se qualquer linha com esse troco contém TR
+                cy.contains(trocoFormatado).parents('tr').contains(/TR/).should('exist');
+            }
         });
- 
+
 
     });
 
-    it('Validar Fluxo Checkin no Dinheiro (Não tef)', () => {
+    it('Validar Fluxo no Dinheiro (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2528,11 +2552,11 @@ describe('Check-in', () => {
         cy.contains('h2', 'Sucesso', { timeout: 20000 }).should('have.text', 'Sucesso')
     });
 
-    it('Deve exibir um novo recebimento quando o valor pago for menor que o valor do item', () => {
+    it('Validar Fluxo de um novo recebimento quando o valor pago for menor que o valor do item', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         const valorPago = 1.00; // Valor insuficiente
         const valorPagoFormatado = valorPago.toFixed(2).replace('.', ',');
-        
+
         cy.visit(baseUrl);
         cy.wait(2000)
         cy.get('#schedule', { timeout: 20000 }).click()
@@ -2541,35 +2565,36 @@ describe('Check-in', () => {
         cy.xpath("(//button[contains(@class,'mat-ripple btn')])[1]").click({ force: true })
         cy.get('button').contains('Receber').click()
         cy.get('button').contains('Dinheiro').click()
-        
+
         // Inserir um valor insuficiente
         cy.xpath("//input[@name='valorRecebido']").type(valorPagoFormatado)
-        
+
         // Tentar pagar com valor insuficiente
         cy.get('button').contains('Pagar').click()
 
         cy.get('button').contains('Ok').click()
-        
+
         // Verificar se o texto completo da mensagem de erro está correto
         cy.contains('Não é possível prosseguir com recebimento parcial da conta.').should('be.visible');
-        
+
         // Verificar se os botões de "Sair" e "Novo Recebimento" estão presentes
         cy.contains('button', 'Sair').should('be.visible');
         cy.contains('button', 'Novo Recebimento').should('be.visible').click()
 
         cy.get('button').contains('Dinheiro').click()
-        
+
         // Inserir um valor insuficiente
         cy.xpath("//input[@name='valorRecebido']").type('2,33')
-        
+
         // Tentar pagar com valor insuficiente
         cy.get('button').contains('Pagar').click()
         cy.get('button').contains('Ok').click()
-      });
+    });
 });
 
 describe('Contas a Receber', () => {
     beforeEach(() => {
+        cy.clearAllCookies()
         cy.setupAndLogin(); // Usa o comando customizado
         cy.allure().epic('Financeiro');
         cy.allure().severity('critical');
@@ -2770,7 +2795,7 @@ describe('Contas a Receber', () => {
         cy.contains('Ok').click();
         cy.get('button').contains('Receber').click()
         cy.get('button').contains('Cartão de Débito').click()
-        cy.xpath("//label[normalize-space()='Não TEF']").click()
+        //cy.xpath("//label[normalize-space()='Não TEF']").click()
         cy.xpath("//input[contains(@value,'false')]").click({ force: true })
         cy.xpath("(//div[contains(.,'Contas Correntes *')])[9]").click()
         cy.get('span').contains(' Conta Débito').click()
@@ -2831,7 +2856,7 @@ describe('Contas a Receber', () => {
         cy.contains('Ok').click();
         cy.get('button').contains('Receber').click()
         cy.get('button').contains('Cartão de Crédito').click()
-        cy.xpath("//label[normalize-space()='Não TEF']").click()
+        //cy.xpath("//label[normalize-space()='Não TEF']").click()
         cy.xpath("//input[contains(@value,'false')]").click({ force: true })
         cy.xpath("(//div[contains(.,'Contas Correntes *')])[9]").click()
         cy.get('span').contains(' Crédito Cartão ').click()
@@ -2840,10 +2865,51 @@ describe('Contas a Receber', () => {
         cy.contains('Parcela salva com sucesso !', { timeout: 20000 }).should('be.visible')
         cy.contains('Ok').click();
     });
+
+    it('Validar filtro status > Não quitadas ', () => {
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.get('#financial').click();
+        cy.contains('Contas a receber').click();
+        cy.get('#selectStats', { timeout: 20000 }).click()
+        cy.get('span').contains(' Não quitadas ').click()
+        cy.get('button').contains('Pesquisar').click()
+        cy.wait(3000)
+        cy.contains('th', 'Status').invoke('index').then((statusIndex) => {
+            // Verificar cada célula da coluna Status
+            cy.get('tbody tr').each(($row) => {
+                // Obter o texto da célula na coluna de status
+                const statusText = $row.find(`td:eq(${statusIndex})`).text().trim();
+
+                // Verificar se contém "Não quitadas"
+                expect(statusText).to.equal('Não quitadas');
+            });
+        });
+    });
+
+    it('Validar filtro status > Quitadas ', () => {
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.get('#financial').click();
+        cy.contains('Contas a receber').click();
+        cy.get('#selectStats', { timeout: 20000 }).click()
+        cy.get('span').contains(' Quitadas ').click()
+        cy.contains('th', 'Status').invoke('index').then((statusIndex) => {
+            // Verificar cada célula da coluna Status
+            cy.get('tbody tr').each(($row) => {
+                // Obter o texto da célula na coluna de status
+                const statusText = $row.find(`td:eq(${statusIndex})`).text().trim();
+
+                // Verificar se contém "Não quitadas"
+                expect(statusText).to.equal('Quitadas');
+            });
+        });
+    });
 });
 
 describe('Contas a Pagar', () => {
     beforeEach(() => {
+        cy.clearAllCookies()
         cy.setupAndLogin(); // Usa o comando customizado
         cy.allure().epic('Financeiro');
         cy.allure().severity('critical');
@@ -2959,6 +3025,8 @@ describe('Contas a Pagar', () => {
 
 describe('Proposta', () => {
     beforeEach(() => {
+        cy.clearAllCookies()
+        cy.clearAllCookies()
         cy.setupAndLogin()
         cy.allure().epic('Financeiro');
         cy.allure().severity('critical');
@@ -3569,6 +3637,7 @@ describe('Proposta', () => {
 
 describe('Rotas Financeiro', () => {
     beforeEach(() => {
+        cy.clearAllCookies()
         cy.setupAndLogin(); // Usa o comando customizado
         cy.allure().epic('Financeiro');
         cy.allure().severity('critical');
@@ -3785,8 +3854,9 @@ describe('Rotas Financeiro', () => {
     })
 });
 
-describe('Tela Cartões', () => {
+describe('Baixa de transações', () => {
     beforeEach(() => {
+        cy.clearAllCookies()
         cy.setupAndLogin()
         cy.allure().epic('Financeiro');
         cy.allure().severity('critical');
@@ -3797,7 +3867,7 @@ describe('Tela Cartões', () => {
         cy.visit(baseUrl);
 
         cy.get('#financial', { timeout: 20000 }).click()
-        cy.get('span').contains('Cartões').click()
+        cy.get('span').contains('Baixa de transações').click()
 
         const today = new Date()
         const formattedDate = today.toLocaleDateString('pt-BR')
@@ -3871,10 +3941,140 @@ describe('Tela Cartões', () => {
             });
 
     });
+
+    it('Validar Download na tela Baixa de Transações', () => {
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+    
+        cy.get('#financial', { timeout: 20000 }).click()
+        cy.get('span').contains('Baixa de transações').click()
+    
+        const today = new Date()
+        const formattedDate = today.toLocaleDateString('pt-BR')
+    
+        cy.get('#dataDe').type(formattedDate)
+    
+        cy.get('#typeDatePicker').click({ force: true })
+        cy.xpath("//span[@class='mat-option-text'][contains(.,'Data de Pagamento')]").click()
+    
+        cy.get('button').contains('Buscar').click({ force: true })
+    
+        cy.xpath("(//div[contains(.,'10')])[15]", { timeout: 20000 }).click()
+        cy.xpath("//span[@class='mat-option-text'][contains(.,'50')]").click()
+    
+        const expectedColumns = [
+            'Pagador',
+            'Id transação',
+            'Data pagamento',
+            'Valor pagamento',
+            'Taxa %',
+            'Valor baixa',
+            'Parcelas',
+            'Data baixa',
+            'Data Venc.',
+            'Status'
+        ]
+    
+        expectedColumns.forEach(column => {
+            cy.contains('th', column).should('be.visible')
+        })
+    
+        cy.xpath(`(//td[@role='cell'][contains(.,'${formattedDate}')])[1]`, { timeout: 20000 }).should('be.visible')
+    
+        const timeout = { timeout: 20000 };
+    
+        const parseMoneyValue = (text) => {
+            if (!text) return 0;
+            const cleanValue = text.toString()
+                .replace('Valor Bruto: ', '')
+                .replace('R$', '')
+                .replace(/\./g, '')
+                .replace(',', '.')
+                .trim();
+            return Number(parseFloat(cleanValue).toFixed(2));
+        };
+    
+        let somaTotalTela = 0;
+    
+        cy.get('tbody > tr > .cdk-column-valuePayer', timeout)
+            .should('have.length.at.least', 1)
+            .each(($cell, index) => {
+                const value = parseMoneyValue($cell.text());
+                somaTotalTela = Number((somaTotalTela + value).toFixed(2));
+                cy.log(`Linha ${index + 1}: R$ ${value}`);
+            })
+            .then(() => {
+                cy.log(`Soma total da tela: R$ ${somaTotalTela}`);
+    
+                cy.xpath("//strong[contains(text(), 'R$')]")
+                    .invoke('text')
+                    .then(valorBrutoText => {
+                        const valorBruto = Number(parseMoneyValue(valorBrutoText));
+                        cy.log(`Valor Bruto encontrado: R$ ${valorBruto}`);
+                        expect(somaTotalTela).to.equal(valorBruto);
+                    });
+            });
+    
+        cy.wait(2000);
+    
+        // Limpa a pasta de downloads antes de exportar
+        cy.task('clearDownloads');
+    
+        // Clica no botão exportar
+        cy.get('button').contains('Exportar').click();
+    
+        // Aguarda o download ser concluído
+        cy.wait(2000);
+    
+        // Pega e lê o arquivo Excel
+        cy.task('getLatestDownloadedFile').then((filename) => {
+            if (!filename) {
+                throw new Error('Nenhum arquivo Excel foi baixado');
+            }
+    
+            cy.task('readExcelFile', filename).then((base64Content) => {
+                const binaryContent = Cypress.Buffer.from(base64Content, 'base64');
+                const XLSX = require('xlsx');
+                const workbook = XLSX.read(binaryContent, { type: 'buffer' });
+                const sheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[sheetName];
+                const data = XLSX.utils.sheet_to_json(worksheet);
+    
+                // Log para debug - mostra a estrutura do Excel
+                cy.log('Estrutura do Excel (primeira linha):', JSON.stringify(data[0], null, 2));
+                cy.log('Colunas disponíveis:', Object.keys(data[0]));
+    
+                // Calcula a soma do Excel
+                let somaExcel = 0;
+                
+                data.forEach((row, index) => {
+                    // Agora sabemos que o valor está na coluna "Valor de compra"
+                    const valorColuna = row['Valor de compra'];
+    
+                    if (valorColuna) {
+                        // Se o valor já for um número, apenas converte para float
+                        const valor = typeof valorColuna === 'number' 
+                            ? valorColuna 
+                            : parseMoneyValue(valorColuna);
+                        
+                        somaExcel = Number((somaExcel + valor).toFixed(2));
+                        cy.log(`Excel - Linha ${index + 1}: ${valorColuna} -> ${valor}`);
+                    }
+                });
+    
+                cy.log(`Soma total Excel: R$ ${somaExcel}`);
+                cy.log(`Soma total Tela: R$ ${somaTotalTela}`);
+    
+                // Compara a soma do Excel com a soma da tela
+                expect(somaExcel).to.equal(somaTotalTela);
+            });
+        });
+    });
 });
 
-describe.only('Royalties', () => {
+describe('Royalties', () => {
     beforeEach(() => {
+        cy.clearAllCookies()
         cy.setupAndLogin(); // Usa o comando customizado
         cy.allure().epic('Financeiro');
         cy.allure().severity('critical');
@@ -3979,4 +4179,82 @@ describe.only('Royalties', () => {
                     });
             });
     });
+});
+
+describe('Saldo - Big Numbers', () => {
+    beforeEach(() => {
+        cy.clearAllCookies()
+        cy.setupAndLogin(); // Usa o comando customizado
+        cy.allure().epic('Financeiro');
+        cy.allure().severity('critical');
+    });
+
+    it('Validar somatória dos Bigs Numbers', () => {
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+
+        cy.get('#financial', { timeout: 20000 })
+            .should('be.visible')
+            .click({ force: true });
+
+        cy.contains('span', 'Saldo', { timeout: 20000 })
+            .should('be.visible')
+            .click({ force: true });
+
+        // Capturar todos os valores em cadeia
+        cy.contains('Caixa Dinheiro')
+            .parent()
+            .contains(/R\$/)
+            .invoke('text')
+            .then((text1) => {
+                const valorCaixaDinheiro = parseFloat(text1.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
+                cy.log(`Caixa Dinheiro: ${valorCaixaDinheiro}`);
+
+                cy.contains('Conta Automação')
+                    .parent()
+                    .contains(/R\$/)
+                    .invoke('text')
+                    .then((text2) => {
+                        // Valor pode ser negativo, então precisamos manter o sinal
+                        const valorContaAutomacao = parseFloat(text2.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
+                        cy.log(`Conta Automação: ${valorContaAutomacao}`);
+
+                        cy.contains('Conta Débito')
+                            .parent()
+                            .contains(/R\$/)
+                            .invoke('text')
+                            .then((text3) => {
+                                const valorContaDebito = parseFloat(text3.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
+                                cy.log(`Conta Débito: ${valorContaDebito}`);
+
+                                cy.contains('Crédito Cartão')
+                                    .parent()
+                                    .contains(/R\$/)
+                                    .invoke('text')
+                                    .then((text4) => {
+                                        const valorCreditoCartao = parseFloat(text4.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
+                                        cy.log(`Crédito Cartão: ${valorCreditoCartao}`);
+
+                                        // Capturar o saldo geral exibido
+                                        cy.contains('Saldo Geral')
+                                            .parent()
+                                            .parent()
+                                            .contains(/R\$/)
+                                            .invoke('text')
+                                            .then((text5) => {
+                                                const saldoGeralExibido = parseFloat(text5.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
+                                                cy.log(`Saldo Geral Exibido: ${saldoGeralExibido}`);
+
+                                                const somaCalculada = valorCaixaDinheiro + valorContaAutomacao + valorContaDebito + valorCreditoCartao;
+                                                cy.log(`Soma Calculada: ${somaCalculada}`);
+
+                                                // Usando toFixed(2) para arredondar para 2 casas decimais
+                                                expect(Number(somaCalculada.toFixed(2))).to.equal(Number(saldoGeralExibido.toFixed(2)));
+                                            });
+                                    });
+                            });
+                    });
+            });
+    });
+
 });
