@@ -1,4 +1,3 @@
-# Lista de Cenários - Grade do Profissional
 
 Scenario: Validar Fluxo Abertura de Grade do Profissional
 Scenario: Validar abertura da grade do profissional com acolhimento

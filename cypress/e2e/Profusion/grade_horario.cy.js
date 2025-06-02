@@ -4,7 +4,7 @@
 describe('Grade do Profissional', () => {
     beforeEach(() => {
         cy.clearAllCookies()
-          cy.setupAndLogin(); // Usa o comando customizado
+        cy.setupAndLogin(); // Usa o comando customizado
     });
 
     it('Validar fluxo de abertura de grade do profissional', () => {
@@ -192,12 +192,9 @@ describe('Grade do Profissional', () => {
         cy.wait(2000)
         cy.contains('span', ' Consulta Áreas de Atuação ').click()
         cy.contains('button', ' Confirmar ').click({ force: true })
-        cy.wait(2000)
-        cy.get('#amei-crashOverlay')
-            .contains('https://amei-homolog.amorsaude.com.br/register/professional/schedule/3901')
-            .click()
-        cy.contains('h2', 'Erro ao incluir grade.').should('be.visible')
-        cy.contains('esperando correção do edgar kkk')
+
+        cy.contains('Não foi possível criar a grade de atendimento.')
+            .should('be.visible')
     })
 
     it('Validar fluxo de exclusão da grade do profissional', () => { /*Alterei colocar mensagem final*/
@@ -256,6 +253,54 @@ describe('Grade do Profissional', () => {
         cy.wait(3000)
         cy.get('button').contains('Finalizar cadastro').click()
         cy.url().should('include', '/register/professional')
+    });
+
+    it('Validar fluxo de abertura de grade do profissional para regra de bloqueio', () => {
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
+        cy.get('#register').click()
+        cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
+        cy.wait(5000)
+        cy.contains('div', 'Procure por CPF ou nome', { timeout: 20000 }).type('322.354.320-18{enter}', { timeout: 20000 })
+        cy.contains('span', 'edit').click()
+        cy.contains('span', 'Horários de atendimento').click()
+        cy.contains('button', 'Incluir').click()
+
+        const today = new Date();
+        const dayOfWeek = today.getDay()
+
+        const checkboxSelectorMap = {
+            0: "//span[@class='checkbox-label'][contains(.,'Domingo')]",         // Supondo que o id do checkbox de domingo seja 'checkbox-domingo'
+            1: "//span[@class='checkbox-label'][contains(.,'Segunda-feira')]",   // Supondo que o id do checkbox de segunda seja 'checkbox-segunda'
+            2: "//span[@class='checkbox-label'][contains(.,'Terça-feira')]",     // Supondo que o id do checkbox de terça seja 'checkbox-terca'
+            3: "//span[@class='checkbox-label'][contains(.,'Quarta-feira')]",    // Supondo que o id do checkbox de quarta seja 'checkbox-quarta'
+            4: "//span[@class='checkbox-label'][contains(.,'Quinta-feira')]",    // Supondo que o id do checkbox de quinta seja 'checkbox-quinta'
+            5: "//span[@class='checkbox-label'][contains(.,'Sexta-feira')]",     // Supondo que o id do checkbox de sexta seja 'checkbox-sexta'
+            6: "//span[@class='checkbox-label'][contains(.,'Sábado')]"           // Supondo que o id do checkbox de sábado seja 'checkbox-sabado'
+        };
+
+        const checkboxSelector = checkboxSelectorMap[dayOfWeek];
+        if (checkboxSelector) {
+            cy.wait(3000)
+            cy.xpath(checkboxSelector, { timeout: 20000 }).click();
+        } else {
+            throw new Error('Não foi possível determinar o checkbox correspondente ao dia da semana atual.');
+        }
+
+        cy.get('#horaInicial').type('08:00')
+        cy.get('#horaFinal').type('17:00')
+        cy.contains('div', 'Áreas de atuação').click()
+        cy.wait(2000)
+        cy.contains('span', ' Área de Atuação - Teste Automação ').click()
+        cy.wait(2000)
+        cy.contains('div', 'Limitar procedimentos realizados no período').click()
+        cy.wait(2000)
+        cy.contains('span', ' Consulta Áreas de Atuação ').click()
+        cy.contains('button', ' Confirmar ').click({ force: true })
+        cy.wait(2000)
+        cy.contains('h2', 'Grade criada com sucesso.').should('be.visible')
+        cy.contains('button', 'Ok').click()
     });
 
     it('Validar fluxo na criação do bloqueio de agenda do profissional', () => { /*Alterei*/
@@ -412,6 +457,32 @@ describe('Grade do Profissional', () => {
         }
     });
 
+    it('Validar fluxo para edição do bloqueio da agenda do profissional', () => {/*Alterei*/
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
+        cy.get('#register').click()
+        cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
+        cy.wait(2000)
+        cy.contains('div', 'Procure por CPF ou nome', { timeout: 20000 }).type('322.354.320-18{enter}', { timeout: 20000 })
+        cy.contains('span', 'edit').click()
+        cy.contains('span', 'Horários de atendimento').click()
+
+        cy.wait(1000)
+        cy.xpath("(//button[.//mat-icon[contains(text(), ' edit ')]])").click()
+        cy.get('input[formcontrolname="description"]', { timeout: 20000 })
+            .clear()
+            .type('Testando o fluxo de edição do bloqueio de grade')
+        cy.get('button')
+            .contains('span', ' Salvar ')
+            .click()
+        cy.wait(2000)
+        cy.contains('button', 'Ok')
+            .click()
+
+        cy.contains('h2', 'Bloqueio(s) adicionado(s) com sucesso').should('be.visible')
+    })
+
     it('Validar fluxo para exclusão do bloqueio de agenda do profissional', () => { /*Alterei*/
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
@@ -429,32 +500,6 @@ describe('Grade do Profissional', () => {
         cy.contains('h2', 'Bloqueio deletado com sucesso')
             .should('be.visible')
     });
-
-    it('Validar fluxo para edição do bloqueio da agenda do profissional', () => {/*Alterei*/
-        const baseUrl = Cypress.env('currentBaseUrl');
-        cy.visit(baseUrl);
-        cy.wait(2000)
-        cy.get('#register').click()
-        cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
-        cy.wait(2000)
-        cy.contains('div', 'Procure por CPF ou nome', { timeout: 20000 }).type('322.354.320-18{enter}', { timeout: 20000 })
-        cy.contains('span', 'edit').click()
-        cy.contains('span', 'Horários de atendimento').click()
-
-        cy.wait(1000)
-        cy.xpath("(//button[.//mat-icon[contains(text(), ' edit ')]])").click()
-        cy.get('input[formcontrolname="description"]')
-            .clear()
-            .type('Testando o fluxo de edição do bloqueio de grade')
-        cy.get('button')
-            .contains('span', ' Salvar ')
-            .click()
-        cy.wait(2000)
-        cy.contains('button', 'Ok')
-            .click()
-
-        cy.contains('h2', 'Bloqueio(s) adicionado(s) com sucesso').should('be.visible')
-    })
 
     it('Validar data inicio e fim na criação da grade com intervalo de 30 dias', () => {/*Alterei*/
         const baseUrl = Cypress.env('currentBaseUrl');
@@ -824,4 +869,133 @@ describe('Grade do Profissional', () => {
             .contains('span', 'Nenhum horário definido')
             .should('have.text', 'Nenhum horário definido')
     });
+
+    it('Validar fluxo de exclusão da grade do profissional 1', () => { /*Alterei colocar mensagem final*/
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
+        cy.get('#register').click()
+        cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
+        cy.wait(2000)
+        cy.contains('div', 'Procure por CPF ou nome', { timeout: 20000 }).type('322.354.320-18{enter}', { timeout: 20000 })
+        cy.contains('span', 'edit').click()
+        cy.contains('span', 'Horários de atendimento').click()
+
+        cy.wait(2000)
+
+        const today = new Date();
+        const dayOfWeek = today.getDay()
+
+        const checkboxSelectorMap = {
+            0: "//h5[@class='title'][contains(., ' Domingo ')]",
+            1: "//h5[@class='title'][contains(., ' Segunda-feira ')]",
+            2: "//h5[@class='title'][contains(., ' Terça-feira ')]",
+            3: "//h5[@class='title'][contains(., ' Quarta-feira ')]",
+            4: "//h5[@class='title'][contains(., ' Quinta-feira ')]",
+            5: "//h5[@class='title'][contains(., ' Sexta-feira ')]",
+            6: "//h5[@class='title'][contains(., ' Sábado ')]"
+        }
+
+        const dayOfWeekSelector = checkboxSelectorMap[dayOfWeek]
+        if (dayOfWeekSelector) {
+            cy.wait(3000)
+            cy.xpath(dayOfWeekSelector, { timeout: 20000 })
+            const xpathDoClose = `${dayOfWeekSelector}/ancestor::div[contains(@class, 'col')]//button[.//mat-icon[text()='close']]`;
+            cy.xpath(xpathDoClose).first().click();
+            cy.contains('button', ' Sim ').click()
+            cy.wait(2000)
+            cy.contains('button', 'Ok').click()
+
+            cy.contains('h2', 'Grade deletada com sucesso.').should('be.visible')
+
+        } else {
+            throw new Error("Não foi possível encontrar a grade");
+        }
+    })
+
+    it('Validar fluxo de exclusão da grade do profissional 2', () => { /*Alterei colocar mensagem final*/
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
+        cy.get('#register').click()
+        cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
+        cy.wait(2000)
+        cy.contains('div', 'Procure por CPF ou nome', { timeout: 20000 }).type('322.354.320-18{enter}', { timeout: 20000 })
+        cy.contains('span', 'edit').click()
+        cy.contains('span', 'Horários de atendimento').click()
+
+        cy.wait(2000)
+
+        const today = new Date();
+        const dayOfWeek = today.getDay()
+
+        const checkboxSelectorMap = {
+            0: "//h5[@class='title'][contains(., ' Domingo ')]",
+            1: "//h5[@class='title'][contains(., ' Segunda-feira ')]",
+            2: "//h5[@class='title'][contains(., ' Terça-feira ')]",
+            3: "//h5[@class='title'][contains(., ' Quarta-feira ')]",
+            4: "//h5[@class='title'][contains(., ' Quinta-feira ')]",
+            5: "//h5[@class='title'][contains(., ' Sexta-feira ')]",
+            6: "//h5[@class='title'][contains(., ' Sábado ')]"
+        }
+
+        const dayOfWeekSelector = checkboxSelectorMap[dayOfWeek]
+        if (dayOfWeekSelector) {
+            cy.wait(3000)
+            cy.xpath(dayOfWeekSelector, { timeout: 20000 })
+            const xpathDoClose = `${dayOfWeekSelector}/ancestor::div[contains(@class, 'col')]//button[.//mat-icon[text()='close']]`;
+            cy.xpath(xpathDoClose).first().click();
+            cy.contains('button', ' Sim ').click()
+            cy.wait(2000)
+            cy.contains('button', 'Ok').click()
+
+            cy.contains('h2', 'Grade deletada com sucesso.').should('be.visible')
+
+        } else {
+            throw new Error("Não foi possível encontrar a grade");
+        }
+    })
+
+    it('Validar fluxo de exclusão da grade do profissional 3', () => { /*Alterei colocar mensagem final*/
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
+        cy.get('#register').click()
+        cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
+        cy.wait(2000)
+        cy.contains('div', 'Procure por CPF ou nome', { timeout: 20000 }).type('322.354.320-18{enter}', { timeout: 20000 })
+        cy.contains('span', 'edit').click()
+        cy.contains('span', 'Horários de atendimento').click()
+
+        cy.wait(2000)
+
+        const today = new Date();
+        const dayOfWeek = today.getDay()
+
+        const checkboxSelectorMap = {
+            0: "//h5[@class='title'][contains(., ' Domingo ')]",
+            1: "//h5[@class='title'][contains(., ' Segunda-feira ')]",
+            2: "//h5[@class='title'][contains(., ' Terça-feira ')]",
+            3: "//h5[@class='title'][contains(., ' Quarta-feira ')]",
+            4: "//h5[@class='title'][contains(., ' Quinta-feira ')]",
+            5: "//h5[@class='title'][contains(., ' Sexta-feira ')]",
+            6: "//h5[@class='title'][contains(., ' Sábado ')]"
+        }
+
+        const dayOfWeekSelector = checkboxSelectorMap[dayOfWeek]
+        if (dayOfWeekSelector) {
+            cy.wait(3000)
+            cy.xpath(dayOfWeekSelector, { timeout: 20000 })
+            const xpathDoClose = `${dayOfWeekSelector}/ancestor::div[contains(@class, 'col')]//button[.//mat-icon[text()='close']]`;
+            cy.xpath(xpathDoClose).first().click();
+            cy.contains('button', ' Sim ').click()
+            cy.wait(2000)
+            cy.contains('button', 'Ok').click()
+
+            cy.contains('h2', 'Grade deletada com sucesso.').should('be.visible')
+
+        } else {
+            throw new Error("Não foi possível encontrar a grade");
+        }
+    })
 });
