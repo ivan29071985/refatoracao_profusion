@@ -2153,7 +2153,7 @@ describe('Check-in', () => {
         cy.get('span').contains(' 2 ').click()
         cy.wait(2000)
         cy.xpath("(//div[contains(.,'Contas Correntes *')])[9]").click()
-        cy.get('span').contains(' Crédito Cartão').click()
+        cy.get('span').contains(' Crédito Cartão ').click()
         cy.contains(' Valor abaixo de R$ 5,00 ').should('be.visible')
     });
 
@@ -2172,7 +2172,7 @@ describe('Check-in', () => {
         cy.get('span').contains(' 3 ').click()
         cy.wait(1000)
         cy.xpath("(//div[contains(.,'Contas Correntes *')])[9]").click()
-        cy.get('span').contains(' Crédito Cartão').click()
+        cy.get('span').contains(' Crédito Cartão ').click()
         cy.contains(' Valor abaixo de R$ 5,00 ').should('be.visible')
     });
 
@@ -3120,95 +3120,6 @@ describe('Proposta', () => {
 
     })
 
-    it('Validar Fluxo de Proposta para 1 exame com pagamento no Dinheiro com busca por Nome (Não tef)', () => {
-        const baseUrl = Cypress.env('currentBaseUrl');
-        cy.visit(baseUrl);
-
-        // Listar Paciente que eu quero
-        cy.get('#patient').click()
-        cy.xpath("//span[@class='ms-4 item-size ng-star-inserted'][contains(.,'Lista de pacientes')]").click({ force: true })
-        cy.wait(3000)
-        cy.xpath("//input[contains(@aria-required,'false')]").click({ force: true }).type('Ivan Barros');
-        cy.get('button').contains('Pesquisar').click()
-
-        // Solução 2: Primeiro localizar o CPF, depois buscar no mesmo contexto
-        cy.contains('349.219.778-79').then($cpf => {
-            // Pegar o elemento pai comum que contém tanto o CPF quanto o botão
-            const $row = $cpf.closest('.row-container, .mat-row, [role="row"]');
-            // Dentro desse elemento, buscar o ícone de edição
-            cy.wrap($row).find('mat-icon').contains(' edit ').click();
-        })
-
-        cy.xpath("//button[@type='button'][contains(.,'Ok')]").click()
-        cy.xpath("//span[contains(.,'Propostas')]").click();
-        cy.xpath("//button[contains(.,'Nova Proposta')]").click();
-        cy.wait(3000)
-        cy.waitUntil(() => cy.xpath("(//div[contains(.,'Parceria *')])[12]").click(), {
-            timeout: 20000, // Tempo máximo de espera em milissegundos
-            interval: 20 // Intervalo de verificação em milissegundos
-        });
-        cy.wait(3000)
-        cy.waitUntil(() => cy.xpath("//span[contains(.,'Cartão de TODOS')]").click({ force: true }), {
-            timeout: 20000, // Tempo máximo de espera em milissegundos
-            interval: 500 // Intervalo de verificação em milissegundos
-        });
-        cy.wait(2000)
-        cy.get('#proposalAreaExpertise').click({ force: true })
-        cy.waitUntil(() => cy.contains('span', 'Área de Atuação - Teste Automação').should('exist').click(), {
-            timeout: 10000, // Tempo máximo de espera em milissegundos
-            interval: 500 // Intervalo de verificação em milissegundos
-        });
-        cy.get('#proposalProfessionalRequesting').click()
-        cy.contains('span', ' Dr. Ivan Barros ').click()
-        cy.contains('span', 'Aguardando aprovação do cliente').should('exist')
-        cy.get('#proposalProcedure').type('Consulta Áreas de Atuação')
-        cy.waitUntil(() => cy.xpath("//span[contains(.,'Consulta Áreas de Atuação')]").should('be.visible').click(), {
-            timeout: 10000, // Tempo máximo de espera em milissegundos
-            interval: 100 // Intervalo de verificação em milissegundos
-        });
-        cy.xpath("(//div[contains(.,'Executantes')])[13]").click()
-
-        cy.waitUntil(() => cy.xpath("//span[@class='mat-option-text'][contains(.,' Teste Fran Tavares  ')]").should('exist').click(), {
-            timeout: 10000, // Tempo máximo de espera em milissegundos
-            interval: 500 // Intervalo de verificação em milissegundos
-        });
-        cy.contains('button', 'Adicionar').click()
-        cy.wait(2000)
-        cy.xpath("(//span[@class='mat-checkbox-inner-container mat-checkbox-inner-container-no-side-margin'])[2]").click()
-        cy.contains('Salvar proposta').click()
-        cy.contains('button', 'Ok').click()
-        cy.wait(3000)
-        cy.get("#proposalPayment").click()
-        cy.contains('Sim').click()
-        cy.contains('button', 'Ok').click()
-        cy.contains('span', 'Aprovada pelo cliente').should('exist')
-        cy.wait(3000)
-        cy.get("#proposalPayment").click()
-        cy.contains('button', 'Dinheiro').click()
-
-        // Pegar o valor do pagamento e usar no campo de valor recebido
-        cy.get('input[name="valorPagamento"]')
-            .invoke('val')
-            .then((valorPagamento) => {
-                // Remove o R$ e espaços, e garante que use vírgula como separador decimal
-                const valor = valorPagamento
-                    .replace('R$ ', '')
-                    .replace('.', ',')
-
-                // Preenche o valor recebido com o mesmo valor do pagamento
-                cy.xpath("//input[@name='valorRecebido']")
-                    .clear()
-                    .type(valor)
-
-                // Verifica se foi preenchido corretamente (com vírgula)
-                cy.xpath("//input[@name='valorRecebido']")
-
-            })
-        cy.contains('button', 'Pagar').click()
-        cy.contains('button', 'Ok').click()
-
-    })
-
     it('Validar Fluxo de Proposta para 1 exame com pagamento no Credito com busca por CPF (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
@@ -3288,79 +3199,6 @@ describe('Proposta', () => {
 
     })
 
-    it('Validar Fluxo de Proposta para 1 exame com pagamento no Credito com busca por Nome (Não tef)', () => {
-        const baseUrl = Cypress.env('currentBaseUrl');
-        cy.visit(baseUrl);
-        // Listar Paciente que eu quero
-        cy.get('#patient').click()
-        cy.xpath("//span[@class='ms-4 item-size ng-star-inserted'][contains(.,'Lista de pacientes')]").click({ force: true })
-        cy.wait(3000)
-        cy.xpath("//input[contains(@aria-required,'false')]").click({ force: true }).type('Ivan Barros');
-        cy.get('button').contains('Pesquisar').click()
-        //botão editar
-        // Solução 2: Primeiro localizar o CPF, depois buscar no mesmo contexto
-        cy.contains('349.219.778-79').then($cpf => {
-            // Pegar o elemento pai comum que contém tanto o CPF quanto o botão
-            const $row = $cpf.closest('.row-container, .mat-row, [role="row"]');
-            // Dentro desse elemento, buscar o ícone de edição
-            cy.wrap($row).find('mat-icon').contains(' edit ').click();
-        })
-        cy.xpath("//button[@type='button'][contains(.,'Ok')]").click()
-        cy.xpath("//span[contains(.,'Propostas')]").click();
-        cy.xpath("//button[contains(.,'Nova Proposta')]").click();
-        cy.wait(3000)
-        cy.waitUntil(() => cy.xpath("(//div[contains(.,'Parceria *')])[12]").click(), {
-            timeout: 20000, // Tempo máximo de espera em milissegundos
-            interval: 20 // Intervalo de verificação em milissegundos
-        });
-        cy.wait(3000)
-        cy.waitUntil(() => cy.xpath("//span[contains(.,'Cartão de TODOS')]").click({ force: true }), {
-            timeout: 20000, // Tempo máximo de espera em milissegundos
-            interval: 500 // Intervalo de verificação em milissegundos
-        });
-        cy.wait(2000)
-        cy.get('#proposalAreaExpertise').click({ force: true })
-        cy.waitUntil(() => cy.contains('span', 'Área de Atuação - Teste Automação').should('exist').click(), {
-            timeout: 10000, // Tempo máximo de espera em milissegundos
-            interval: 500 // Intervalo de verificação em milissegundos
-        });
-        cy.get('#proposalProfessionalRequesting').click()
-        cy.contains('span', ' Dr. Ivan Barros ').click()
-        cy.contains('span', 'Aguardando aprovação do cliente').should('exist')
-        cy.get('#proposalProcedure').type('Consulta Áreas de Atuação')
-        cy.waitUntil(() => cy.xpath("//span[contains(.,'Consulta Áreas de Atuação')]").should('be.visible').click(), {
-            timeout: 10000, // Tempo máximo de espera em milissegundos
-            interval: 100 // Intervalo de verificação em milissegundos
-        });
-        cy.xpath("(//div[contains(.,'Executantes')])[13]").click()
-        cy.waitUntil(() => cy.xpath("//span[@class='mat-option-text'][contains(.,' Teste Fran Tavares  ')]").should('exist').click(), {
-            timeout: 10000, // Tempo máximo de espera em milissegundos
-            interval: 500 // Intervalo de verificação em milissegundos
-        });
-        cy.contains('button', 'Adicionar').click()
-        cy.wait(2000)
-        cy.xpath("(//span[@class='mat-checkbox-inner-container mat-checkbox-inner-container-no-side-margin'])[2]").click()
-        cy.contains('Salvar proposta').click()
-        cy.contains('button', 'Ok').click()
-        cy.wait(3000)
-        cy.get("#proposalPayment").click()
-        cy.contains('Sim').click()
-        cy.contains('button', 'Ok').click()
-        cy.contains('span', 'Aprovada pelo cliente').should('exist')
-        cy.wait(3000)
-        cy.get("#proposalPayment").click()
-        cy.get('button').contains('Cartão de Crédito').click()
-        cy.xpath("//input[contains(@value,'false')]").click({ force: true })
-        cy.xpath("(//div[contains(.,'1Parcelas *')])[9]").click({ force: true })
-        cy.get('span').contains(' 2 ').click()
-        cy.xpath("(//div[contains(.,'Contas Correntes *')])[9]").click()
-        cy.get('span').contains(' Crédito Cartão').click()
-        cy.get('button').contains('Pagar').click()
-        cy.get('button').contains('Sim').click()
-        cy.contains('h2', 'Sucesso', { timeout: 20000 }).should('have.text', 'Sucesso')
-        cy.get('button').contains('Ok').click()
-    })
-
     it('Validar Fluxo de Proposta para 1 exame com pagamento no Pix com busca por CPF (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
@@ -3426,78 +3264,6 @@ describe('Proposta', () => {
         cy.contains('button', 'Ok').click()
     })
 
-    it('Validar Fluxo de Proposta para 1 exame com pagamento no Pix com busca por Nome (Não tef)', () => {
-        const baseUrl = Cypress.env('currentBaseUrl');
-        cy.visit(baseUrl);
-        // Listar Paciente que eu quero
-        cy.get('#patient').click()
-        cy.xpath("//span[@class='ms-4 item-size ng-star-inserted'][contains(.,'Lista de pacientes')]").click({ force: true })
-        cy.wait(3000)
-        cy.xpath("//input[contains(@aria-required,'false')]").click({ force: true }).type('Ivan Barros');
-        cy.get('button').contains('Pesquisar').click()
-        //botão editar
-        // Solução 2: Primeiro localizar o CPF, depois buscar no mesmo contexto
-        cy.contains('349.219.778-79').then($cpf => {
-            // Pegar o elemento pai comum que contém tanto o CPF quanto o botão
-            const $row = $cpf.closest('.row-container, .mat-row, [role="row"]');
-            // Dentro desse elemento, buscar o ícone de edição
-            cy.wrap($row).find('mat-icon').contains(' edit ').click();
-        })
-        cy.xpath("//button[@type='button'][contains(.,'Ok')]").click()
-        cy.xpath("//span[contains(.,'Propostas')]").click();
-        cy.xpath("//button[contains(.,'Nova Proposta')]").click();
-        cy.wait(3000)
-        cy.waitUntil(() => cy.xpath("(//div[contains(.,'Parceria *')])[12]").click(), {
-            timeout: 20000, // Tempo máximo de espera em milissegundos
-            interval: 20 // Intervalo de verificação em milissegundos
-        });
-        cy.wait(3000)
-        cy.waitUntil(() => cy.xpath("//span[contains(.,'Cartão de TODOS')]").click({ force: true }), {
-            timeout: 20000, // Tempo máximo de espera em milissegundos
-            interval: 500 // Intervalo de verificação em milissegundos
-        });
-        cy.wait(2000)
-        cy.get('#proposalAreaExpertise').click({ force: true })
-        cy.waitUntil(() => cy.contains('span', 'Área de Atuação - Teste Automação').should('exist').click(), {
-            timeout: 10000, // Tempo máximo de espera em milissegundos
-            interval: 500 // Intervalo de verificação em milissegundos
-        });
-        cy.get('#proposalProfessionalRequesting').click()
-        cy.contains('span', ' Dr. Ivan Barros ').click()
-        cy.contains('span', 'Aguardando aprovação do cliente').should('exist')
-        cy.get('#proposalProcedure').type('Consulta Áreas de Atuação')
-        cy.waitUntil(() => cy.xpath("//span[contains(.,'Consulta Áreas de Atuação')]").should('be.visible').click(), {
-            timeout: 10000, // Tempo máximo de espera em milissegundos
-            interval: 100 // Intervalo de verificação em milissegundos
-        });
-        cy.xpath("(//div[contains(.,'Executantes')])[13]").click()
-        cy.waitUntil(() => cy.xpath("//span[@class='mat-option-text'][contains(.,' Teste Fran Tavares  ')]").should('exist').click(), {
-            timeout: 10000, // Tempo máximo de espera em milissegundos
-            interval: 500 // Intervalo de verificação em milissegundos
-        });
-        cy.contains('button', 'Adicionar').click()
-        cy.wait(2000)
-        cy.xpath("(//span[@class='mat-checkbox-inner-container mat-checkbox-inner-container-no-side-margin'])[2]").click()
-        cy.contains('Salvar proposta').click()
-        cy.contains('button', 'Ok').click()
-        cy.wait(3000)
-        cy.get("#proposalPayment").click()
-        cy.contains('Sim').click()
-        cy.contains('button', 'Ok').click()
-        cy.contains('span', 'Aprovada pelo cliente').should('exist')
-        cy.wait(3000)
-        cy.get("#proposalPayment").click()
-        cy.contains('button', 'PIX').click()
-        cy.xpath("(//div[contains(.,'Conta Vinculada *')])[10]").click({ force: true })
-        cy.xpath("//span[@class='mat-option-text'][contains(.,'Conta Automação')]").click()
-        // Preenche o campo de valor recebido
-        cy.xpath("//input[@name='valorRecebido']")
-            .clear()
-            .type('358,00')
-        cy.contains('button', 'Pagar').click()
-        cy.contains('button', 'Ok').click()
-    })
-
     it('Validar Fluxo de Proposta para 1 exame com pagamento no Debito com busca por CPF (Não tef)', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
@@ -3508,77 +3274,6 @@ describe('Proposta', () => {
         cy.xpath("//input[contains(@aria-required,'false')]").click({ force: true }).type('349.219.778-79');
         cy.get('button').contains('Pesquisar').click()
         cy.get('button').contains(' edit ').click()
-        cy.xpath("//button[@type='button'][contains(.,'Ok')]").click()
-        cy.xpath("//span[contains(.,'Propostas')]").click();
-        cy.xpath("//button[contains(.,'Nova Proposta')]").click();
-        cy.wait(3000)
-        cy.waitUntil(() => cy.xpath("(//div[contains(.,'Parceria *')])[12]").click(), {
-            timeout: 20000, // Tempo máximo de espera em milissegundos
-            interval: 20 // Intervalo de verificação em milissegundos
-        });
-        cy.wait(3000)
-        cy.waitUntil(() => cy.xpath("//span[contains(.,'Cartão de TODOS')]").click({ force: true }), {
-            timeout: 20000, // Tempo máximo de espera em milissegundos
-            interval: 500 // Intervalo de verificação em milissegundos
-        });
-        cy.wait(2000)
-        cy.get('#proposalAreaExpertise').click({ force: true })
-        cy.waitUntil(() => cy.contains('span', 'Área de Atuação - Teste Automação').should('exist').click(), {
-            timeout: 10000, // Tempo máximo de espera em milissegundos
-            interval: 500 // Intervalo de verificação em milissegundos
-        });
-        cy.get('#proposalProfessionalRequesting').click()
-        cy.contains('span', ' Dr. Ivan Barros ').click()
-        cy.contains('span', 'Aguardando aprovação do cliente').should('exist')
-        cy.get('#proposalProcedure').type('Consulta Áreas de Atuação')
-        cy.waitUntil(() => cy.xpath("//span[contains(.,'Consulta Áreas de Atuação')]").should('be.visible').click(), {
-            timeout: 10000, // Tempo máximo de espera em milissegundos
-            interval: 100 // Intervalo de verificação em milissegundos
-        });
-        cy.xpath("(//div[contains(.,'Executantes')])[13]").click()
-        cy.waitUntil(() => cy.xpath("//span[@class='mat-option-text'][contains(.,' Teste Fran Tavares  ')]").should('exist').click(), {
-            timeout: 10000, // Tempo máximo de espera em milissegundos
-            interval: 500 // Intervalo de verificação em milissegundos
-        });
-        cy.contains('button', 'Adicionar').click()
-        cy.wait(2000)
-        cy.xpath("(//span[@class='mat-checkbox-inner-container mat-checkbox-inner-container-no-side-margin'])[2]").click()
-        cy.contains('Salvar proposta').click()
-        cy.contains('button', 'Ok').click()
-        cy.wait(3000)
-        cy.get("#proposalPayment").click()
-        cy.contains('Sim').click()
-        cy.contains('button', 'Ok').click()
-        cy.contains('span', 'Aprovada pelo cliente').should('exist')
-        cy.wait(3000)
-        cy.get("#proposalPayment").click()
-        cy.get('button').contains('Cartão de Débito').click()
-        cy.xpath("//input[contains(@value,'false')]").click({ force: true })
-        cy.xpath("(//div[contains(.,'Contas Correntes *')])[9]").click()
-        cy.get('span').contains(' Conta Débito').click()
-        cy.get('button').contains('Pagar').click()
-        cy.get('button').contains('Sim').click()
-        cy.contains('h2', 'Sucesso', { timeout: 20000 }).should('have.text', 'Sucesso')
-        cy.get('button').contains('Ok').click()
-    })
-
-    it('Validar Fluxo de Proposta para 1 exame com pagamento no Debito com busca por Nome (Não tef)', () => {
-        const baseUrl = Cypress.env('currentBaseUrl');
-        cy.visit(baseUrl);
-        // Listar Paciente que eu quero
-        cy.get('#patient').click()
-        cy.xpath("//span[@class='ms-4 item-size ng-star-inserted'][contains(.,'Lista de pacientes')]").click({ force: true })
-        cy.wait(3000)
-        cy.xpath("//input[contains(@aria-required,'false')]").click({ force: true }).type('Ivan Barros');
-        cy.get('button').contains('Pesquisar').click()
-        //botão editar
-        // Solução 2: Primeiro localizar o CPF, depois buscar no mesmo contexto
-        cy.contains('349.219.778-79').then($cpf => {
-            // Pegar o elemento pai comum que contém tanto o CPF quanto o botão
-            const $row = $cpf.closest('.row-container, .mat-row, [role="row"]');
-            // Dentro desse elemento, buscar o ícone de edição
-            cy.wrap($row).find('mat-icon').contains(' edit ').click();
-        })
         cy.xpath("//button[@type='button'][contains(.,'Ok')]").click()
         cy.xpath("//span[contains(.,'Propostas')]").click();
         cy.xpath("//button[contains(.,'Nova Proposta')]").click();
@@ -4071,7 +3766,7 @@ describe('Baixa de transações', () => {
     });
 });
 
-describe('Royalties', () => {
+describe.only('Royalties', () => {
     beforeEach(() => {
         cy.clearAllCookies()
         cy.setupAndLogin(); // Usa o comando customizado

@@ -1,0 +1,61 @@
+describe.only('Agendamento', () => {
+    beforeEach(() => {
+        cy.clearAllCookies()
+        cy.setupAndLogin()
+        cy.allure().epic('Financeiro');
+        cy.allure().severity('critical');
+    });
+
+    Cypress._.times(144, (index) => {
+        it.only(`Agendamento ${index + 1}`, () => {
+            const baseUrl = Cypress.env('currentBaseUrl');
+            cy.visit(baseUrl);
+            cy.wait(2000)
+            cy.get('#schedule')
+                .click()
+            cy.wait(1000)
+            cy.contains('span', 'Agendar atendimento')
+                .should('be.visible')
+                .should('exist')
+                .click()
+            cy.wait(1000)
+            cy.get('mat-select[formcontrolname="expertiseAreas"]')
+                .click()
+            cy.contains('span', 'Acupuntura')
+                .click()
+            cy.get('mat-select[formcontrolname="professionals"]')
+                .click()
+            cy.contains('span', ' Barreiro Teste 03 ') // <=
+                .click()
+            cy.contains('span', ' Pesquisar ')
+                .should('be.visible')
+                .click()
+            //const today = new Date()
+            //const weekDay = today.getDay()
+            cy.get('.cal-day-columns .cal-day-column')
+                //.eq(weekDay)
+                .find('.livre')
+                .first()
+                .click()
+            cy.get('#cpf')
+                .type('349.219.778-79')
+                .should('have.value', '349.219.778-79')
+            cy.wait(3000)
+            cy.contains('button', ' + Incluir procedimento ')
+                .click()
+            cy.get('mat-select[id="AdProcedimento"]')
+                .click()
+            cy.contains('span', 'Consulta Áreas de Atuação')
+                .click()
+            cy.wait(1000)
+            cy.contains('button', ' Adicionar ')
+                .click()
+            cy.wait(1000)
+            cy.contains('button', ' Confirmar ')
+                .click()
+            cy.get('button')
+                .contains('Ok')
+                .click()
+        })
+    })
+})

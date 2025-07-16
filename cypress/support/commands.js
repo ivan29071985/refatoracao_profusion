@@ -1,6 +1,6 @@
 Cypress.Commands.add('setupAndLogin', (email = 'ivan.santos+1@amorsaude.com', password = 'Iv@n198529') => {
   const sessionVersion = 'v3';
-  const sessionId = `login_${email}_${sessionVersion}`;
+  const sessionId = `login_${email}_${sessionVersion}_${Date.now()}`; // Adicionei timestamp único
 
   const environment = Cypress.env('environment') || Cypress.env('CYPRESS_ENV');
   const baseUrl = environment === 'staging'
@@ -14,13 +14,11 @@ Cypress.Commands.add('setupAndLogin', (email = 'ivan.santos+1@amorsaude.com', pa
   cy.session(sessionId, () => {
     cy.visit(baseUrl);
 
-
     cy.get('#E-mail').type(email, { timeout: 30000 });
     cy.get('#Senha').type(password, { log: false, timeout: 30000 });
     cy.contains('Entrar', { timeout: 1000 }).click();
     cy.wait(500);
 
-    
     cy.contains('span', /Automação (Staging|Homolog|Prod)/, { timeout: 10000 }).click({ force: true });
     cy.contains('button', ' Entrar ', { timeout: 10000 }).click();
     cy.wait(500);
@@ -45,10 +43,9 @@ Cypress.Commands.add('setupAndLogin', (email = 'ivan.santos+1@amorsaude.com', pa
         expect(isLoggedIn).to.be.true;
       });
     },
-    cacheAcrossSpecs: true
+    cacheAcrossSpecs: false // Mudei para false para evitar conflitos
   });
 });
-
 
 // Tratamento global para erros não capturados
 Cypress.on('uncaught:exception', (err, runnable) => {
@@ -65,7 +62,7 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 
 Cypress.Commands.add('loginDrBarros', () => {
   // Criando um ID de sessão personalizado com timestamp atual
-  const sessionId = `sessao_personalizada_${Date.now()}`;
+  const sessionId = `sessao_drbarros_${Date.now()}`; // Mudei o nome para ser mais específico
 
   const environment = Cypress.env('environment') || Cypress.env('CYPRESS_ENV');
   const baseUrl = environment === 'staging'
@@ -103,10 +100,10 @@ Cypress.Commands.add('loginDrBarros', () => {
       }
     });
 
-
+  }, {
+    cacheAcrossSpecs: false // Adicionei esta configuração
   });
 
   // Log para confirmar a criação do ID de sessão
   cy.log(`Sessão criada com ID: ${sessionId}`);
 });
-
