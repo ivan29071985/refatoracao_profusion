@@ -5,8 +5,8 @@ describe('Grade do Profissional', () => {
     beforeEach(() => {
         cy.clearAllCookies()
         cy.setupAndLogin()
-       // cy.visit('/')
-       // cy.loginIvan()
+        // cy.visit('/')
+        // cy.loginIvan()
     });
 
     it('Validar fluxo de abertura de grade do profissional', () => {
@@ -195,7 +195,7 @@ describe('Grade do Profissional', () => {
         cy.contains('span', ' Consulta Áreas de Atuação ').click()
         cy.contains('button', ' Confirmar ').click({ force: true })
         cy.wait(2000)
-        
+
         cy.contains('h2', 'Não foi possível criar a grade de atendimento.').should('be.visible')
     })
 
@@ -824,5 +824,6 @@ describe('Grade do Profissional', () => {
             .contains('span', 'Nenhum horário definido')
             .should('have.text', 'Nenhum horário definido')
     });
+
 
 });
