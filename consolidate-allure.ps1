@@ -34,7 +34,7 @@ Set-Content -Path "allure-results\categories.json" -Value '[
 
 # Criar o arquivo executor.json
 Set-Content -Path "allure-results\executor.json" -Value '{
-  "name": "Ivan Santos"
+  "name": "Ivan Barros"
 }'
 
 # Criar o arquivo para configuração de etiquetas/tags
@@ -48,3 +48,4 @@ Set-Content -Path "allure-results\labels.json" -Value '{
   }'
 
 Write-Host "Arquivos de configuração do Allure consolidados para todos os navegadores no ambiente: $Stand"
+

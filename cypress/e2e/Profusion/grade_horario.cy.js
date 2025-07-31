@@ -4,15 +4,15 @@
 describe('Grade do Profissional', () => {
     beforeEach(() => {
         /*cy.clearAllCookies()
-          cy.setupAndLogin(); // Usa o comando customizado*/
+          cy.setupAndLogin(); // Usa o comando customizado*/ // **
         cy.visit('/')
-        cy.loginIvan()
+        cy.setupAndLogin()
     });
 
     it('Validar fluxo de abertura de grade do profissional 1', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        //cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(5000)
@@ -58,9 +58,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar fluxo de abertura da grade do profissional com acolhimento 2', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(5000)
@@ -108,10 +108,9 @@ describe('Grade do Profissional', () => {
     })
 
     it('Validar fluxo de edição da grade do profissional 3', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        //cy.visit(baseUrl);
-        //cy.wait(2000)
-    
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -151,9 +150,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar fluxo de grade do profissional em duplicidade 4', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(5000)
@@ -196,14 +195,14 @@ describe('Grade do Profissional', () => {
         cy.contains('span', ' Consulta Áreas de Atuação ').click()
         cy.contains('button', ' Confirmar ').click({ force: true })
         cy.wait(2000)
-        
+
         cy.contains('h2', 'Não foi possível criar a grade de atendimento.').should('be.visible')
     })
 
     it('Validar fluxo na criação do bloqueio de agenda do profissional 5', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         let horaInicial = '16:30'
         let horaFinal = '17:00'
         cy.get('#register').click()
@@ -277,10 +276,10 @@ describe('Grade do Profissional', () => {
         }
     });
 
-    it('Validar fluxo para criação do bloqueio de agenda do profissional em duplicidade 6', () => { 
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+    it('Validar fluxo para criação do bloqueio de agenda do profissional em duplicidade 6', () => {
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         let horaInicial = '16:30'
         let horaFinal = '17:00'
         cy.get('#register').click()
@@ -355,9 +354,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar fluxo para edição do bloqueio da agenda do profissional 7', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -382,9 +381,9 @@ describe('Grade do Profissional', () => {
     })
 
     it('Validar fluxo de exclusão da grade do profissional 8', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -424,10 +423,10 @@ describe('Grade do Profissional', () => {
         }
     })
 
-    it('Validar fluxo de exclusão da grade do profissional com acolhimento 9', () => { 
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+    it('Validar fluxo de exclusão da grade do profissional com acolhimento 9', () => {
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -468,9 +467,9 @@ describe('Grade do Profissional', () => {
     })
 
     it('Validar fluxo de finalizar cadastro com direcionamento para o menu lista de profissionais 10', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -483,9 +482,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar fluxo para exclusão do bloqueio de agenda do profissional 11', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
 
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
@@ -501,9 +500,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar data inicio e fim na criação da grade com intervalo de 30 dias 12', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -562,9 +561,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar fluxo de exclusão da grade do profissional com intervalo de 30 dias 13', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -605,9 +604,9 @@ describe('Grade do Profissional', () => {
     })
 
     it('Validar breadcrumbs Home na tela agenda do profissional', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -619,9 +618,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar breadcrumbs Cadastro na tela agenda do profissional', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -633,9 +632,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar breadcrumbs Profissionais na tela agenda do profissional', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -647,9 +646,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar Coluna Data inicio na tela agenda do profissional', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -661,9 +660,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar Coluna Data fim na tela agenda do profissional', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -675,9 +674,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar Coluna Hora Inicio na tela agenda do profissional', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -689,9 +688,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar Coluna Hora fim na tela agenda do profissional', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -703,9 +702,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar Coluna Especialidades na tela agenda do profissional', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -717,9 +716,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar Coluna Dia na tela agenda do profissional', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -731,9 +730,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar Coluna Descrição na tela agenda do profissional', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -745,9 +744,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar Coluna Ações na tela agenda do profissional', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -759,9 +758,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar Coluna Domingo', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -775,9 +774,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar Coluna Segunda', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -791,9 +790,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar Coluna Terça', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -807,9 +806,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar Coluna Quarta', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -823,9 +822,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar Coluna Quinta', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -839,9 +838,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar Coluna Sexta', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -855,9 +854,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar Coluna Sabado', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -871,9 +870,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar filtro da Grade Vigente Data inicial vs Data final', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -897,9 +896,9 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar fraseologia quando não há abertura de grade (Nenhum horário definido)', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        // cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)

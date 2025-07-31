@@ -6,7 +6,7 @@ describe('Overbooking', () => {
         cy.visit('/')
         cy.loginIvan()
         //cy.clearAllCookies()
-        //cy.setupAndLogin(); // Usa o comando customizado
+        //cy.setupAndLogin(); // Usa o comando customizadoo
     })
 
     it('Validar abertura da grade com Overbooking 14', () => {
