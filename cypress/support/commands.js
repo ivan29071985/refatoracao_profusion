@@ -1,3 +1,18 @@
+Cypress.Commands.add('loginIvan', () => {
+    cy.get('#E-mail')
+        .type('ivan.santos+1@amorsaude.com')
+    cy.get('#Senha')
+        .type('Iv@n198529')
+    cy.get('#login')
+        .click()
+    cy.contains('span', ' Automação Staging  ') // Automação Staging //AmorSaúde Ribeirão Preto
+        .scrollIntoView()
+        .should('be.visible')
+        .click()
+    cy.get('#EntrarUnidade')
+        .click()
+})
+
 Cypress.Commands.add('setupAndLogin', (email = 'ivan.santos+1@amorsaude.com', password = 'Iv@n198529') => {
   const sessionVersion = 'v3';
   const sessionId = `login_${email}_${sessionVersion}_${Date.now()}`; // Adicionei timestamp único
@@ -18,7 +33,7 @@ Cypress.Commands.add('setupAndLogin', (email = 'ivan.santos+1@amorsaude.com', pa
     cy.get('#Senha').type(password, { log: false, timeout: 30000 });
     cy.contains('Entrar', { timeout: 1000 }).click();
     cy.wait(500);
-
+    ///Automação (Staging|Homolog|Prod)/    AmorSaúde Ribeirão Preto 
     cy.contains('span', /Automação (Staging|Homolog|Prod)/, { timeout: 10000 }).click({ force: true });
     cy.contains('button', ' Entrar ', { timeout: 10000 }).click();
     cy.wait(500);
