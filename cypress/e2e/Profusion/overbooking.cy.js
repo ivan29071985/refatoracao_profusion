@@ -6,13 +6,8 @@ describe('Overbooking', () => {
 
         cy.visit('/')
         //cy.loginIvan()
-        //cy.clearAllCookies()
-        cy.setupAndLogin(); // Usa o comando customizadoo
-
-        //cy.visit('/')
-        //cy.loginIvan()
         cy.clearAllCookies()
-        cy.setupAndLogin(); // Usa o comando customizado
+        cy.setupAndLogin(); // Usa o comando customizadoo
 
     })
 
@@ -760,9 +755,6 @@ describe('Overbooking', () => {
                 .click()
         })
     })
-
-
-    it('Validar a exclusão da grade do profissional*', () => {
 
         it('Validar a exclusão da grade do profissional 30', () => {
             const baseUrl = Cypress.env('currentBaseUrl');
@@ -1933,8 +1925,9 @@ describe('Overbooking', () => {
                 cy.wait(2000)
                 cy.get('#schedule')
                     .click()
-                cy.contains('span', 'Confirmar agendamento')
-                    .click()
+                cy.intercept('GET', '**/api/v1/features**').as('carregarProfissionais')
+                cy.wait('@carregarProfissionais')
+                cy.contains('span', 'Confirmar agendamento').click()
                 cy.get('button span')
                     .contains('Pesquisar')
                     .click()
@@ -2005,7 +1998,5 @@ describe('Overbooking', () => {
         })
 
     })
-})
 
 
-// IVAN
