@@ -804,7 +804,7 @@ describe('Overbooking', () => {
         }
     })
 
-    it('Validar abertura da grade com Overbooking para fluxo de encaixe', () => {
+    it('Validar abertura da grade com Overbooking para fluxo de encaixe ', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -1924,14 +1924,15 @@ describe('Overbooking', () => {
     });
 
     Cypress._.times(4, (index) => {
-        it(`Validar liberação de Slot ao desmarcar agendamento 25 ${index + 1}`, () => {
+        it(`Validar liberação de Slot ao desmarcar agendamento com Overbooking para fluxo de encaixe ${index + 1}`, () => {
             const baseUrl = Cypress.env('currentBaseUrl');
             cy.visit(baseUrl);
             cy.wait(2000)
             cy.get('#schedule')
                 .click()
-            cy.contains('span', 'Confirmar agendamento')
-                .click()
+            cy.intercept('GET', '**/api/v1/features**').as('carregarProfissionais')
+            cy.wait('@carregarProfissionais')
+            cy.contains('span', 'Confirmar agendamento').click()
             cy.get('button span')
                 .contains('Pesquisar')
                 .click()
