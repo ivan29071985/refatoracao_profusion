@@ -524,8 +524,9 @@ describe('Overbooking', () => {
             cy.wait(2000)
             cy.get('#schedule')
                 .click()
-            cy.contains('span', 'Confirmar agendamento')
-                .click()
+            cy.intercept('GET', '**/api/v1/features**').as('carregarProfissionais')
+            cy.wait('@carregarProfissionais')
+            cy.contains('span', 'Confirmar agendamento').click()
             cy.get('button span')
                 .contains('Pesquisar')
                 .click()
@@ -714,8 +715,9 @@ describe('Overbooking', () => {
             cy.wait(2000)
             cy.get('#schedule')
                 .click()
-            cy.contains('span', 'Confirmar agendamento')
-                .click()
+            cy.intercept('GET', '**/api/v1/features**').as('carregarProfissionais')
+            cy.wait('@carregarProfissionais')
+            cy.contains('span', 'Confirmar agendamento').click()
             cy.get('button span')
                 .contains('Pesquisar')
                 .click()
@@ -1910,8 +1912,11 @@ describe('Overbooking', () => {
             cy.wait(2000)
             cy.get('#schedule')
                 .click()
-            cy.contains('span', 'Confirmar agendamento')
-                .click()
+
+            cy.intercept('GET', '**/api/v1/features**').as('carregarProfissionais')
+            cy.wait('@carregarProfissionais')
+            cy.contains('span', 'Confirmar agendamento').click()
+
             cy.get('button span')
                 .contains('Pesquisar')
                 .click()
@@ -1980,3 +1985,4 @@ describe('Overbooking', () => {
         }
     })
 })
+//Roger - teste
