@@ -4,15 +4,15 @@
 describe('Overbooking', () => {
     beforeEach(() => {
         cy.visit('/')
-        cy.loginIvan()
+        //cy.loginIvan()
         //cy.clearAllCookies()
-        //cy.setupAndLogin(); // Usa o comando customizadoo
+        cy.setupAndLogin(); // Usa o comando customizadoo
     })
 
     it('Validar abertura da grade com Overbooking 14', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        //cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -59,9 +59,9 @@ describe('Overbooking', () => {
     })
 
     it('Validar abertura da grade com acolhimento e overbooking 15', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        //cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -109,9 +109,9 @@ describe('Overbooking', () => {
     })
 
     it('Validar abertura da grade com Overbooking em duplicidade 16', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        //cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -157,9 +157,9 @@ describe('Overbooking', () => {
     })
 
     it('Validar edição da grade do profissional com Overbooking 17', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        //cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -202,9 +202,9 @@ describe('Overbooking', () => {
 
         const horaInicial = '17:30'
         const horaFinal = '18:00'
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        //cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -278,9 +278,9 @@ describe('Overbooking', () => {
     })
 
     it('Validar fluxo para edição do bloqueio da agenda com Overbooking 19', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        //cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -304,9 +304,9 @@ describe('Overbooking', () => {
     })
 
     it('Validar a exclusão da grade do profissional 20', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        //cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -347,9 +347,9 @@ describe('Overbooking', () => {
     })
 
     it('Validar a exclusão da grade do profissional 21', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        //cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -389,9 +389,9 @@ describe('Overbooking', () => {
     })
 
     it('Validar a exclusão do bloqueio da agenda do profissional 22', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        //cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
 
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
@@ -410,9 +410,9 @@ describe('Overbooking', () => {
     })
 
     it('Validar abertura de grade com Overbooking com intervalo de 1 hora 23', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        //cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -460,10 +460,9 @@ describe('Overbooking', () => {
 
     Cypress._.times(8, (index) => {
         it(`Validar distribuição percentual de slots com Overbooking conforme horário da grade com intervalo de 1 hora 24 ${index + 1}`, () => {
-            //const baseUrl = Cypress.env('currentBaseUrl');
-            //cy.visit(baseUrl);
-            //cy.wait(3000); // Esperar carregamento inicial da página
-
+            const baseUrl = Cypress.env('currentBaseUrl');
+            cy.visit(baseUrl);
+            cy.wait(3000); // Esperar carregamento inicial da página
             cy.get('#schedule').click()
             cy.wait(2000); // Esperar após clicar no schedule
             cy.contains('span', 'Agendar atendimento').click()
@@ -519,21 +518,23 @@ describe('Overbooking', () => {
 
     Cypress._.times(8, (index) => {
         it(`Validar liberação de Slot ao desmarcar agendamento 25 ${index + 1}`, () => {
-            //const baseUrl = Cypress.env('currentBaseUrl');
-            //cy.visit(baseUrl);
-            //cy.wait(2000)
+            const baseUrl = Cypress.env('currentBaseUrl');
+            cy.visit(baseUrl);
+            cy.wait(2000)
             cy.get('#schedule')
                 .click()
-            cy.contains('span', 'Confirmar agendamento')
-                .click()
-            cy.get('button span')
-                .contains('Pesquisar')
+
+            cy.intercept('GET', '**/api/v1/features**').as('carregarProfissionais')
+            cy.wait('@carregarProfissionais')
+            cy.contains('span', 'Confirmar agendamento').click()
+
+            cy.contains('span', 'Pesquisar')
                 .click()
             cy.get('mat-select[aria-label="Items per page:"]')
                 .click({ timeout: 5000 })
             cy.get('mat-option').contains('50')
                 .click()
-            cy.contains('tr', 'Paulo J Rick').within(() => {
+            cy.contains('tr', 'Paulo Rick').within(() => {
                 cy.get('button')
                     .click()
             })
@@ -552,9 +553,9 @@ describe('Overbooking', () => {
     })
 
     it('Validar a exclusão da grade do profissional 26', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        //cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -595,9 +596,9 @@ describe('Overbooking', () => {
     })
 
     it('Validar abertura de grade com Overbooking com intervalo de 2 horas 27', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        //cy.visit(baseUrl);
-        //cy.wait(2000)
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -643,10 +644,9 @@ describe('Overbooking', () => {
 
     Cypress._.times(16, (index) => {
         it(`Validar distribuição percentual de slots com Overbooking conforme horário da grade com intervalo de 2 hora 28 ${index + 1}`, () => {
-            //const baseUrl = Cypress.env('currentBaseUrl');
-            //cy.visit(baseUrl);
-            //cy.wait(3000); // Esperar carregamento inicial da página
-
+            const baseUrl = Cypress.env('currentBaseUrl');
+            cy.visit(baseUrl);
+            cy.wait(3000); // Esperar carregamento inicial da página
             cy.get('#schedule').click()
             cy.wait(2000); // Esperar após clicar no schedule
             cy.contains('span', 'Agendar atendimento').click()
@@ -709,21 +709,20 @@ describe('Overbooking', () => {
 
     Cypress._.times(16, (index) => {
         it(`Validar liberação de Slot ao desmarcar agendamento 29 ${index + 1}`, () => {
-            //const baseUrl = Cypress.env('currentBaseUrl');
-            //cy.visit(baseUrl);
-            //cy.wait(2000)
+            const baseUrl = Cypress.env('currentBaseUrl');
+            cy.visit(baseUrl);
+            cy.wait(2000)
             cy.get('#schedule')
                 .click()
-            cy.contains('span', 'Confirmar agendamento')
+
+            cy.intercept('GET', '**/api/v1/features**').as('carregarProfissionais')
+            cy.wait('@carregarProfissionais')
+            cy.contains('span', 'Confirmar agendamento').click()
+
+            cy.contains('Pesquisar')
                 .click()
-            cy.get('button span')
-                .contains('Pesquisar')
-                .click()
-            cy.get('mat-select[aria-label="Items per page:"]')
-                .click({ timeout: 5000 })
-            cy.get('mat-option').contains('50')
-                .click()
-            cy.contains('tr', 'Paulo J Rick').within(() => {
+            cy.wait(5000)
+            cy.contains('tr', 'Paulo Rick').within(() => {
                 cy.get('button')
                     .click()
             })
@@ -741,10 +740,10 @@ describe('Overbooking', () => {
         })
     })
 
-    it('Validar a exclusão da grade do profissional 30', () => {
-        //const baseUrl = Cypress.env('currentBaseUrl');
-        //cy.visit(baseUrl);
-        //cy.wait(2000)
+    it('Validar a exclusão da grade do profissional*', () => {
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -775,12 +774,13 @@ describe('Overbooking', () => {
             cy.xpath(xpathDoClose).first().click();
             cy.contains('button', ' Sim ').click()
             cy.wait(2000)
-            cy.contains('button', 'Ok').click()
-
             cy.contains('h2', 'Grade deletada com sucesso.').should('be.visible')
+
+            cy.contains('button', 'Ok').click()
 
         } else {
             throw new Error("Não foi possível encontrar a grade");
         }
     })
+
 })

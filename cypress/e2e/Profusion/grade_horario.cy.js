@@ -347,6 +347,7 @@ describe('Grade do Profissional', () => {
                 .click()
 
             cy.contains('h2', 'Erro ao adicionar bloqueio na agenda').should('be.visible')
+            cy.contains('Erro desconhecido').should('not.be.visible')
 
         } else {
             throw new Error("Não foi possível encontrar a grade");
