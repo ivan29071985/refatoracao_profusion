@@ -730,14 +730,10 @@ describe('Overbooking', () => {
             cy.get('#schedule')
                 .click()
 
+
             cy.intercept('GET', '**/api/v1/features**').as('carregarProfissionais')
             cy.wait('@carregarProfissionais')
             cy.contains('span', 'Confirmar agendamento').click()
-
-            cy.contains('Pesquisar')
-                .click()
-
-            cy.wait(5000)
 
             cy.get('button span')
                 .contains('Pesquisar')
@@ -2010,5 +2006,5 @@ describe('Overbooking', () => {
 
     })
 })
-//IVAN
+
 
