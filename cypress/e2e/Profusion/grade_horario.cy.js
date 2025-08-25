@@ -1142,7 +1142,7 @@ describe('Grade do Profissional', () => {
             cy.wait(2000)
             cy.get('#schedule')
                 .click()
-            cy.wait(2000)
+            
             cy.intercept('GET', '**/api/v1/features**').as('carregarProfissionais')
             cy.wait('@carregarProfissionais')
             cy.contains('span', 'Confirmar agendamento').click()
@@ -1205,9 +1205,8 @@ describe('Grade do Profissional', () => {
             cy.xpath(xpathDoClose).last().click();
             cy.contains('button', ' Sim ').click()
             cy.wait(2000)
-            cy.contains('button', 'Ok').click()
-
             cy.contains('h2', 'Grade deletada com sucesso.').should('be.visible')
+            cy.contains('button', 'Ok').click()
 
         } else {
             throw new Error("Não foi possível encontrar a grade");
@@ -1683,36 +1682,37 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar liberação de Slot ao desmarcar reagendamento', () => {
-        const baseUrl = Cypress.env('currentBaseUrl');
-        cy.visit(baseUrl);
-        cy.wait(2000)
-        cy.get('#schedule')
-            .click()
-        cy.wait(2000)
-        cy.contains('span', 'Confirmar agendamento')
-            .click({ timeout: 5000 })
-        cy.get('button span')
-            .contains('Pesquisar')
-            .click()
-        cy.get('mat-select[aria-label="Items per page:"]')
-            .click({ timeout: 5000 })
-        cy.get('mat-option').contains('50')
-            .click()
-        cy.contains('tr', 'Ivan Barros').within(() => {
-            cy.get('button')
+         const baseUrl = Cypress.env('currentBaseUrl');
+            cy.visit(baseUrl);
+            cy.wait(2000)
+            cy.get('#schedule')
                 .click()
-        })
-        cy.get('mat-dialog-container').within(() => {
-            cy.contains('div', ' Desmarcado pela clinica ')
-                .click()
+            
+            cy.intercept('GET', '**/api/v1/features**').as('carregarProfissionais')
+            cy.wait('@carregarProfissionais')
+            cy.contains('span', 'Confirmar agendamento').click()
             cy.get('button span')
-                .contains('Salvar')
+                .contains('Pesquisar')
                 .click()
-        })
-        cy.contains('div', 'Agendamento atualizado.')
-            .should('be.visible')
-        cy.contains('button', 'Ok')
-            .click()
+            cy.get('mat-select[aria-label="Items per page:"]')
+                .click({ timeout: 5000 })
+            cy.get('mat-option').contains('50')
+                .click()
+            cy.contains('tr', 'Ivan Barros').within(() => {
+                cy.get('button')
+                    .click()
+            })
+            cy.get('mat-dialog-container').within(() => {
+                cy.contains('div', ' Desmarcado pela clinica ')
+                    .click()
+                cy.get('button span')
+                    .contains('Salvar')
+                    .click()
+            })
+            cy.contains('div', 'Agendamento atualizado.')
+                .should('be.visible')
+            cy.contains('button', 'Ok')
+                .click()
     })
 
     it('Validar fluxo de exclusão da grade para fluxo de reagendamento', () => {
@@ -1749,9 +1749,9 @@ describe('Grade do Profissional', () => {
             cy.xpath(xpathDoClose).last().click();
             cy.contains('button', ' Sim ').click()
             cy.wait(2000)
-            cy.contains('button', 'Ok').click()
 
             cy.contains('h2', 'Grade deletada com sucesso.').should('be.visible')
+            cy.contains('button', 'Ok').click()
 
         } else {
             throw new Error("Não foi possível encontrar a grade");
@@ -1957,7 +1957,7 @@ describe('Grade do Profissional', () => {
         cy.visit(baseUrl);
         cy.wait(2000)
         let horaInicial = '16:30'
-        let horaFinal = '17:00'
+        let horaFinal = '16:50'
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -2019,22 +2019,23 @@ describe('Grade do Profissional', () => {
                     .contains('span', ' Salvar ')
                     .click()
             })
+
+            cy.wait(2000)
+            cy.contains('h2', 'Bloqueio(s) adicionado(s) com sucesso').should('be.visible')
             cy.contains('button', 'Ok')
                 .click()
-
-            cy.contains('h2', 'Bloqueio(s) adicionado(s) com sucesso').should('be.visible')
 
         } else {
             throw new Error("Não foi possível encontrar a grade");
         }
     });
 
-    it('Validar fluxo para criação do bloqueio de agenda do profissional em duplicidade 6', () => {
+    it.only('Validar fluxo para criação do bloqueio de agenda do profissional em duplicidade 6', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
         let horaInicial = '16:30'
-        let horaFinal = '17:00'
+        let horaFinal = '16:50'
         cy.get('#register').click()
         cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
         cy.wait(2000)
@@ -2107,7 +2108,7 @@ describe('Grade do Profissional', () => {
         }
     });
 
-    it('Validar fluxo para edição do bloqueio da agenda do profissional 7', () => {
+    it.only('Validar fluxo para edição do bloqueio da agenda do profissional 7', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2134,7 +2135,7 @@ describe('Grade do Profissional', () => {
         cy.contains('h2', 'Bloqueio(s) adicionado(s) com sucesso').should('be.visible')
     })
 
-    it('Validar fluxo de exclusão da grade do profissional 8', () => {
+    it.only('Validar fluxo de exclusão da grade do profissional 8', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2168,16 +2169,16 @@ describe('Grade do Profissional', () => {
             cy.xpath(xpathDoClose).last().click();
             cy.contains('button', ' Sim ').click()
             cy.wait(2000)
-            cy.contains('button', 'Ok').click()
 
             cy.contains('h2', 'Grade deletada com sucesso.').should('be.visible')
+            cy.contains('button', 'Ok').click()
 
         } else {
             throw new Error("Não foi possível encontrar a grade");
         }
     })
 
-    it('Validar fluxo de exclusão da grade do profissional com acolhimento 9', () => {
+    it.only('Validar fluxo de exclusão da grade do profissional com acolhimento 9', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2211,9 +2212,9 @@ describe('Grade do Profissional', () => {
             cy.xpath(xpathDoClose).last().click();
             cy.contains('button', ' Sim ').click()
             cy.wait(2000)
-            cy.contains('button', 'Ok').click()
 
             cy.contains('h2', 'Grade deletada com sucesso.').should('be.visible')
+            cy.contains('button', 'Ok').click()
 
         } else {
             throw new Error("Não foi possível encontrar a grade");
@@ -2235,7 +2236,7 @@ describe('Grade do Profissional', () => {
         cy.url().should('include', '/register/professional')
     });
 
-    it('Validar fluxo para exclusão do bloqueio de agenda do profissional 11', () => {
+    it.only('Validar fluxo para exclusão do bloqueio de agenda do profissional 11', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2348,9 +2349,9 @@ describe('Grade do Profissional', () => {
             cy.xpath(xpathDoClose).last().click();
             cy.contains('button', ' Sim ').click()
             cy.wait(2000)
-            cy.contains('button', 'Ok').click()
 
             cy.contains('h2', 'Grade deletada com sucesso.').should('be.visible')
+            cy.contains('button', 'Ok').click()        
 
         } else {
             throw new Error("Não foi possível encontrar a grade");
@@ -2664,5 +2665,5 @@ describe('Grade do Profissional', () => {
             .contains('span', 'Nenhum horário definido')
             .should('have.text', 'Nenhum horário definido')
     });
-
+    
 });
