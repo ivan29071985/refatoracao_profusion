@@ -5,7 +5,7 @@ Cypress.Commands.add('loginIvan', () => {
         .type('Iv@n198529')
     cy.get('#login')
         .click()
-    cy.contains('span', ' Automação Staging  ') // Automação Staging //AmorSaúde Ribeirão Preto
+    cy.contains('span', ' AmorSaúde Staging  ') // Automação Staging //AmorSaúde Ribeirão Preto
         .scrollIntoView()
         .should('be.visible')
         .click()

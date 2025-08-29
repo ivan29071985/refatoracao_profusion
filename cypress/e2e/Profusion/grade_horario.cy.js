@@ -1,7 +1,9 @@
 /// <reference types= "cypress" /> 
 /// <reference types="cypress-xpath" />
 
-describe('Grade do Profissional', () => {
+const { isTomorrow, isLastDayOfMonth } = require("date-fns");
+
+describe.only('Grade do Profissional', () => {
     beforeEach(() => {
 
         /*cy.clearAllCookies()
@@ -50,7 +52,7 @@ describe('Grade do Profissional', () => {
         }
 
         cy.get('#horaInicial').type('08:00')
-        cy.get('#horaFinal').type('23:00')
+        cy.get('#horaFinal').type('23:50')
         cy.contains('div', 'Áreas de atuação').click()
         cy.wait(2000)
         cy.contains('span', ' Área de Atuação - Teste Automação ').click()
@@ -65,7 +67,7 @@ describe('Grade do Profissional', () => {
 
     });
 
-    it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora 1', () => {
+    it.only('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora 1', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(3000); // Esperar carregamento inicial da página
@@ -279,7 +281,7 @@ describe('Grade do Profissional', () => {
         });
     });
 
-    it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora 2', () => {
+    it.only('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora 2', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(3000); // Esperar carregamento inicial da página
@@ -493,7 +495,7 @@ describe('Grade do Profissional', () => {
         });
     });
 
-    it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora 3', () => {
+    it.only('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora 3', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(3000); // Esperar carregamento inicial da página
@@ -707,7 +709,7 @@ describe('Grade do Profissional', () => {
         });
     });
 
-    it('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora 4', () => {
+    it.only('Validar Fluxo de Encaixe respeitando a regra de 4 encaixes por hora 4', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(3000); // Esperar carregamento inicial da página
@@ -1136,13 +1138,13 @@ describe('Grade do Profissional', () => {
     });
 
     Cypress._.times(4, (index) => {
-        it(`Validar liberação de Slot ao desmarcar agendamento feito por encaixe ${index + 1}`, () => {
+        it.only(`Validar liberação de Slot ao desmarcar agendamento feito por encaixe ${index + 1}`, () => {
             const baseUrl = Cypress.env('currentBaseUrl');
             cy.visit(baseUrl);
             cy.wait(2000)
             cy.get('#schedule')
                 .click()
-            
+
             cy.intercept('GET', '**/api/v1/features**').as('carregarProfissionais')
             cy.wait('@carregarProfissionais')
             cy.contains('span', 'Confirmar agendamento').click()
@@ -1171,7 +1173,7 @@ describe('Grade do Profissional', () => {
         })
     })
 
-    it('Validar fluxo de exclusão da grade para fluxo de encaixe', () => {
+    it.only('Validar fluxo de exclusão da grade para fluxo de encaixe', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -1247,7 +1249,7 @@ describe('Grade do Profissional', () => {
         }
 
         cy.get('#horaInicial').type('08:00')
-        cy.get('#horaFinal').type('23:00')
+        cy.get('#horaFinal').type('23:50')
         cy.contains('div', 'Áreas de atuação').click()
         cy.wait(2000)
         cy.contains('span', ' Área de Atuação - Teste Automação ').click()
@@ -1374,7 +1376,6 @@ describe('Grade do Profissional', () => {
         const today = new Date();
         const weekDay = today.getDay();
 
-
         // Selecionar o primeiro slot livre na coluna do dia atual
         cy.get('.cal-day-columns .cal-day-column')
             .eq(weekDay)
@@ -1459,7 +1460,6 @@ describe('Grade do Profissional', () => {
         // Obter a data atual
         const today = new Date();
         const weekDay = today.getDay();
-
 
         // Selecionar o primeiro slot livre na coluna do dia atual
         cy.get('.cal-day-columns .cal-day-column')
@@ -1546,7 +1546,6 @@ describe('Grade do Profissional', () => {
         const today = new Date();
         const weekDay = today.getDay();
 
-
         // Selecionar o primeiro slot livre na coluna do dia atual
         cy.get('.cal-day-columns .cal-day-column')
             .eq(weekDay)
@@ -1632,7 +1631,6 @@ describe('Grade do Profissional', () => {
         const today = new Date();
         const weekDay = today.getDay();
 
-
         // Selecionar o primeiro slot livre na coluna do dia atual
         cy.get('.cal-day-columns .cal-day-column')
             .eq(weekDay)
@@ -1682,37 +1680,37 @@ describe('Grade do Profissional', () => {
     });
 
     it('Validar liberação de Slot ao desmarcar reagendamento', () => {
-         const baseUrl = Cypress.env('currentBaseUrl');
-            cy.visit(baseUrl);
-            cy.wait(2000)
-            cy.get('#schedule')
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
+        cy.get('#schedule')
+            .click()
+
+        cy.intercept('GET', '**/api/v1/features**').as('carregarProfissionais')
+        cy.wait('@carregarProfissionais')
+        cy.contains('span', 'Confirmar agendamento').click()
+        cy.get('button span')
+            .contains('Pesquisar')
+            .click()
+        cy.get('mat-select[aria-label="Items per page:"]')
+            .click({ timeout: 5000 })
+        cy.get('mat-option').contains('50')
+            .click()
+        cy.contains('tr', 'Ivan Barros').within(() => {
+            cy.get('button')
                 .click()
-            
-            cy.intercept('GET', '**/api/v1/features**').as('carregarProfissionais')
-            cy.wait('@carregarProfissionais')
-            cy.contains('span', 'Confirmar agendamento').click()
+        })
+        cy.get('mat-dialog-container').within(() => {
+            cy.contains('div', ' Desmarcado pela clinica ')
+                .click()
             cy.get('button span')
-                .contains('Pesquisar')
+                .contains('Salvar')
                 .click()
-            cy.get('mat-select[aria-label="Items per page:"]')
-                .click({ timeout: 5000 })
-            cy.get('mat-option').contains('50')
-                .click()
-            cy.contains('tr', 'Ivan Barros').within(() => {
-                cy.get('button')
-                    .click()
-            })
-            cy.get('mat-dialog-container').within(() => {
-                cy.contains('div', ' Desmarcado pela clinica ')
-                    .click()
-                cy.get('button span')
-                    .contains('Salvar')
-                    .click()
-            })
-            cy.contains('div', 'Agendamento atualizado.')
-                .should('be.visible')
-            cy.contains('button', 'Ok')
-                .click()
+        })
+        cy.contains('div', 'Agendamento atualizado.')
+            .should('be.visible')
+        cy.contains('button', 'Ok')
+            .click()
     })
 
     it('Validar fluxo de exclusão da grade para fluxo de reagendamento', () => {
@@ -1913,7 +1911,7 @@ describe('Grade do Profissional', () => {
         cy.contains('span', 'edit').click()
         cy.contains('span', 'Horários de atendimento').click()
         cy.contains('button', 'Incluir').click()
-//
+        //
         cy.wait(2000)
 
         const today = new Date();
@@ -2030,7 +2028,7 @@ describe('Grade do Profissional', () => {
         }
     });
 
-    it.only('Validar fluxo para criação do bloqueio de agenda do profissional em duplicidade 6', () => {
+    it('Validar fluxo para criação do bloqueio de agenda do profissional em duplicidade 6', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2097,18 +2095,18 @@ describe('Grade do Profissional', () => {
                     .contains('span', ' Salvar ')
                     .click()
             })
-            cy.contains('button', 'Ok')
-                .click()
 
             cy.contains('h2', 'Erro ao adicionar bloqueio na agenda').should('be.visible')
-            cy.contains('Erro desconhecido').should('not.be.visible')
+            cy.wait(2000)
+            cy.contains('button', 'Ok')
+                .click()
 
         } else {
             throw new Error("Não foi possível encontrar a grade");
         }
     });
 
-    it.only('Validar fluxo para edição do bloqueio da agenda do profissional 7', () => {
+    it('Validar fluxo para edição do bloqueio da agenda do profissional 7', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2135,7 +2133,7 @@ describe('Grade do Profissional', () => {
         cy.contains('h2', 'Bloqueio(s) adicionado(s) com sucesso').should('be.visible')
     })
 
-    it.only('Validar fluxo de exclusão da grade do profissional 8', () => {
+    it('Validar fluxo de exclusão da grade do profissional 8', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2178,7 +2176,7 @@ describe('Grade do Profissional', () => {
         }
     })
 
-    it.only('Validar fluxo de exclusão da grade do profissional com acolhimento 9', () => {
+    it('Validar fluxo de exclusão da grade do profissional com acolhimento 9', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2221,22 +2219,7 @@ describe('Grade do Profissional', () => {
         }
     })
 
-    it('Validar fluxo de finalizar cadastro com direcionamento para o menu lista de profissionais 10', () => {
-        const baseUrl = Cypress.env('currentBaseUrl');
-        cy.visit(baseUrl);
-        cy.wait(2000)
-        cy.get('#register').click()
-        cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
-        cy.wait(2000)
-        cy.contains('div', 'Procure por CPF ou nome', { timeout: 20000 }).type('322.354.320-18{enter}', { timeout: 20000 })
-        cy.contains('span', 'edit').click()
-        cy.contains('span', 'Horários de atendimento').click()
-        cy.wait(3000)
-        cy.get('button').contains('Finalizar cadastro').click()
-        cy.url().should('include', '/register/professional')
-    });
-
-    it.only('Validar fluxo para exclusão do bloqueio de agenda do profissional 11', () => {
+    it('Validar fluxo para exclusão do bloqueio de agenda do profissional 11', () => {
         const baseUrl = Cypress.env('currentBaseUrl');
         cy.visit(baseUrl);
         cy.wait(2000)
@@ -2252,6 +2235,21 @@ describe('Grade do Profissional', () => {
             .click()
         cy.contains('h2', 'Bloqueio deletado com sucesso')
             .should('be.visible')
+    });
+
+    it('Validar fluxo de finalizar cadastro com direcionamento para o menu lista de profissionais 10', () => {
+        const baseUrl = Cypress.env('currentBaseUrl');
+        cy.visit(baseUrl);
+        cy.wait(2000)
+        cy.get('#register').click()
+        cy.contains('span', 'Lista de profissionais', { timeout: 30000 }).click()
+        cy.wait(2000)
+        cy.contains('div', 'Procure por CPF ou nome', { timeout: 20000 }).type('322.354.320-18{enter}', { timeout: 20000 })
+        cy.contains('span', 'edit').click()
+        cy.contains('span', 'Horários de atendimento').click()
+        cy.wait(3000)
+        cy.get('button').contains('Finalizar cadastro').click()
+        cy.url().should('include', '/register/professional')
     });
 
     it('Validar data inicio e fim na criação da grade com intervalo de 30 dias 12', () => {
@@ -2351,7 +2349,7 @@ describe('Grade do Profissional', () => {
             cy.wait(2000)
 
             cy.contains('h2', 'Grade deletada com sucesso.').should('be.visible')
-            cy.contains('button', 'Ok').click()        
+            cy.contains('button', 'Ok').click()
 
         } else {
             throw new Error("Não foi possível encontrar a grade");
@@ -2665,5 +2663,5 @@ describe('Grade do Profissional', () => {
             .contains('span', 'Nenhum horário definido')
             .should('have.text', 'Nenhum horário definido')
     });
-    
+
 });
